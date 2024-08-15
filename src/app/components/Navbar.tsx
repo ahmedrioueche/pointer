@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
-import { FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
+import { useState } from "react";
+import { FaMoon, FaSun, FaBars, FaTimes, FaHome, FaInfoCircle, FaPhone, FaAppStore, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 
 const Navbar = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [activeLink, setActiveLink] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);  // Ref for the dropdown menu
 
   const toggleDarkMode = () => {
     setIsDarkMode((prevMode) => {
@@ -22,25 +21,6 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen((prevOpen) => !prevOpen);
   };
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-      document.documentElement.classList.add("dark");
-    }
-
-    const menuRef = useRef<HTMLDivElement>(null); // Typing the ref to HTMLDivElement
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    };
-    
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   return (
     <nav className="relative z-1000 top-0 left-0 w-full py-4 px-6 shadow-md bg-light-background dark:bg-dark-background">
@@ -106,32 +86,41 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div ref={menuRef} className="md:hidden flex flex-col items-center bg-light-background dark:bg-dark-background shadow-md py-4 mt-2 rounded-lg">
-          {["Home", "App", "About", "Contact"].map((item, index) => (
+        <div className="absolute top-full right-0 w-56 md:hidden flex flex-col items-start bg-light-background dark:bg-dark-background shadow-md py-4 mt-2 rounded-lg z-50">
+          {[
+            { name: "Home", icon: FaHome },
+            { name: "App", icon: FaAppStore },
+            { name: "About", icon: FaInfoCircle },
+            { name: "Contact", icon: FaPhone },
+          ].map((item, index) => (
             <Link
               key={index}
-              href={`/${item.toLowerCase()}`}
-              className="block px-4 py-2 w-full text-center text-lg font-medium text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary hover:text-light-text dark:hover:text-dark-text transition-colors duration-300"
+              href={`/${item.name.toLowerCase()}`}
+              className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               onClick={() => {
-                setActiveLink(item.toLowerCase());
+                setActiveLink(item.name.toLowerCase());
                 setIsMenuOpen(false);
               }}
             >
-              {item}
+              <item.icon className="mr-2 text-lg" />
+              {item.name}
             </Link>
           ))}
+          <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
           <Link
             href="/login"
-            className="block px-4 py-2 mt-2 mb-2 w-full text-center text-lg font-medium bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background rounded-md hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300"
+            className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
             onClick={() => setIsMenuOpen(false)}
           >
+            <FaSignInAlt className="mr-2 text-lg" />
             Login
           </Link>
           <Link
             href="/signup"
-            className="block px-4 py-2 w-full text-center text-lg font-medium bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background rounded-md hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300"
+            className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
             onClick={() => setIsMenuOpen(false)}
           >
+            <FaUserPlus className="mr-2 text-lg" />
             Signup
           </Link>
         </div>

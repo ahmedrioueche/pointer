@@ -24,8 +24,8 @@ const Hero = () => {
 
   return (
     <section className="relative w-full h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text flex items-center justify-center">
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center px-6 py-8">
-        <div className="text-center max-w-3xl">
+      <div className="relative w-full h-full flex items-center justify-center px-6 py-8">
+        <div className="text-center max-w-3xl mx-auto mt-0">
           <h1 className="text-5xl font-bold mb-6 font-stix">
             Welcome to <span className="text-light-primary dark:text-dark-primary">Pointer</span>
           </h1>

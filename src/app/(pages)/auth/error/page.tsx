@@ -10,14 +10,7 @@ const ErrorPage: React.FC = () => {
             <div className="container mx-auto flex flex-col items-center">
                 <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix">
                     <FaExclamationTriangle className="text-5xl mb-4 text-red-500 dark:text-red-400" />
-                    <h2 className={`text-3xl font-bold mb-4
-                        ${document.documentElement.classList.contains('dark') ? 
-                            'bg-gradient-to-r from-dark-primary to-dark-accent text-transparent bg-clip-text' 
-                            : 
-                            'bg-gradient-to-r from-light-primary to-light-accent text-transparent bg-clip-text'}
-                        leading-snug
-                    `}
-                    >
+                    <h2 className={`text-3xl font-bold mb-4 bg-gradient-to-r from-dark-primary to-dark-accent text-transparent bg-clip-text`}>
                         Something Went Wrong
                     </h2>
                     <p className={`text-lg mb-6 ${document.documentElement.classList.contains('dark') ? 'text-dark-text' : 'text-light-text'}`}>

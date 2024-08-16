@@ -83,44 +83,28 @@ const ContactForm: React.FC = () => {
                                 value={formDetails.firstName}
                                 placeholder="First Name"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('firstName', e.target.value)}
-<<<<<<< HEAD
                                 className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
-=======
-                                className="w-full bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
                             />
                             <input
                                 type="text"
                                 value={formDetails.lastName}
                                 placeholder="Last Name"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('lastName', e.target.value)}
-<<<<<<< HEAD
                                 className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
-=======
-                                className="w-full bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
                             />
                             <input
                                 type="email"
                                 value={formDetails.email}
                                 placeholder="Email"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('email', e.target.value)}
-<<<<<<< HEAD
                                 className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
-=======
-                                className="w-full bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
                             />
                             <input
                                 type="tel"
                                 value={formDetails.phone}
                                 placeholder="Phone Number"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('phone', e.target.value)}
-<<<<<<< HEAD
                                 className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
-=======
-                                className="w-full bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
                             />
                         </div>
                         <textarea
@@ -133,31 +117,19 @@ const ContactForm: React.FC = () => {
                                     textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
                                 }
                             }}
-<<<<<<< HEAD
                             className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-3 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background resize-none overflow-y-hidden"
-=======
-                            className="w-full bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-3 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background resize-none overflow-y-hidden"
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
                             rows={5}
                             ref={textareaRef}
                         />
 
                         <button
                             type="submit"
-<<<<<<< HEAD
                             className={`w-full font-stix px-6 py-3 rounded-md font-medium transition-colors duration-300 ${isDarkMode ? 'bg-dark-primary text-dark-background hover:bg-dark-accent' : 'bg-light-primary text-light-background hover:bg-light-accent'}`}>
-=======
-                            className={`w-full px-6 py-3 rounded-md font-medium transition-colors duration-300 ${isDarkMode ? 'bg-dark-primary text-dark-background hover:bg-dark-accent' : 'bg-light-primary text-light-background hover:bg-light-accent'}`}>
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
                             <span className='text-dark-text'>{buttonText}</span>
                         </button>
                         {status && (
                             <div className="flex justify-center w-full mt-4">
-<<<<<<< HEAD
                                 <p className={`text-center font-stix ${status.success ? 'text-green-400' : 'text-red-400'}`}>{status.message}</p>
-=======
-                                <p className={`text-center ${status.success ? 'text-green-400' : 'text-red-400'}`}>{status.message}</p>
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
                             </div>
                         )}
                     </form>

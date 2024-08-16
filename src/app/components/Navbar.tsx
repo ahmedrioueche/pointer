@@ -58,19 +58,19 @@ const Navbar = () => {
         <div className="flex items-center space-x-4">
           <Link
             href="/login"
-            className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300"
+            className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             Login
           </Link>
           <Link
             href="/signup"
-            className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300"
+            className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             Signup
           </Link>
           <button
             onClick={toggleDarkMode}
-            className="p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300"
+            className="p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text  hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             {isDarkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
           </button>

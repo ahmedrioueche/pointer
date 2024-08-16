@@ -57,21 +57,13 @@ const Navbar = () => {
         </ul>
         <div className="flex items-center space-x-4">
           <Link
-<<<<<<< HEAD
             href="/auth/login"
-=======
-            href="/login"
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
             className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             Login
           </Link>
           <Link
-<<<<<<< HEAD
             href="/auth/signup"
-=======
-            href="/signup"
->>>>>>> 01b269fbd6d192225bf6f8f307ae17677704c7fb
             className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             Signup

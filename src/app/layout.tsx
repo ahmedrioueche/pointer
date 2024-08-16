@@ -24,7 +24,6 @@ export default async function RootLayout({
       <body className={inter.className}>
        <NextAuthProvider>
           {children}
-          <Footer />
         </NextAuthProvider>
       </body>
     </html>

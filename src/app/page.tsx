@@ -7,7 +7,7 @@ import CTA from './components/home/CTA';
 import Pricing from './components/home/Pricing';
 import FAQ from './components/home/FAQ';
 import Contact from './components/home/Contact';
-
+import Footer from './components/Footer';
 const Home = () => {
   return (
     <div>
@@ -20,6 +20,7 @@ const Home = () => {
       <Pricing/>
       <FAQ/>
       <Contact/>
+      <Footer />
     </div>
   );
 };

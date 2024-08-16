@@ -18,18 +18,20 @@ const Dashboard = () => {
     return null;
   }
 
+  // Extract the first name from the session data
+  const firstName = session.user?.name?.split(' ')[0];
+
   return (
     <div className="flex flex-col min-h-screen bg-light-background dark:bg-dark-background">
-        <Navbar />
-        <div className="flex flex-1">
-            <SideMenu />
-            <main className="flex-1 p-6">
-                <h1 className="text-3xl font-bold mb-6 text-dark-text dark:text-light-text">Dashboard</h1>
-                <MainMenu />
-            </main>
-        </div>
+      <Navbar firstName={firstName} />
+      <div className="flex flex-1">
+        <SideMenu />
+        <main className="flex-1 p-6">
+          <MainMenu />
+        </main>
+      </div>
     </div>
-);
+  );
 };
 
 export default Dashboard;

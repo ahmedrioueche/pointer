@@ -126,7 +126,7 @@ const Login: React.FC = () => {
                             ) : (
                                 <>
                                     <FaGoogle />
-                                    <span>Sign up with Google</span>
+                                    <span>Continue with Google</span>
                                 </>
                             )}
                         </button>

@@ -18,8 +18,11 @@ const authHandler = NextAuth({
     },
     callbacks: {
         async redirect({ url, baseUrl }) {
-            // This manages where users are redirected after login
-            return baseUrl; // Default behavior is to redirect to the home page
+            // Redirect to the dashboard page after login
+            if (url === '/api/auth/session' || url === baseUrl) {
+              return `${baseUrl}/main/dashboard`;  // Replace with your dashboard path
+            }
+            return baseUrl;
         },
         async jwt({ token, user }) {
             if (user) {

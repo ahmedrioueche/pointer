@@ -63,18 +63,19 @@ const Testimonial: React.FC = () => {
   ];
 
   return (
-    <section className={`py-16 bg-light-background dark:bg-dark-background`}>
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold font-satisfy mb-12 text-center text-light-primary dark:text-dark-text">
-          What People Are Saying
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard key={index} {...testimonial} />
-          ))}
-        </div>
+    <section className="py-16 bg-light-background dark:bg-dark-background mb-0">
+    <div className="container mx-auto px-4">
+      <h2 className="text-3xl font-bold font-satisfy mb-12 text-center text-light-primary dark:text-dark-text">
+        What People Are Saying
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {testimonials.map((testimonial, index) => (
+          <TestimonialCard key={index} {...testimonial} />
+        ))}
       </div>
-    </section>
+    </div>
+  </section>
+  
   );
 };
 

@@ -39,12 +39,12 @@ const Hero = () => {
           <div className="flex justify-center gap-4">
             <button
               onClick={toggleDarkMode}
-              className="px-6 py-3 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+              className="font-stix px-6 py-3 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             >
               Get Started
             </button>
             <button
-              className="px-6 py-3 rounded-md bg-light-background dark:bg-dark-background text-light-primary dark:text-dark-primary border-2 border-light-primary dark:border-dark-primary font-medium hover:bg-light-primary dark:hover:bg-dark-primary hover:text-light-background dark:hover:text-dark-background transition-colors duration-300"
+              className="font-stix px-6 py-3 rounded-md bg-light-background dark:bg-dark-background text-light-primary dark:text-dark-primary border-2 border-light-primary dark:border-dark-primary font-medium hover:bg-light-primary dark:hover:bg-dark-primary hover:text-light-background dark:hover:text-dark-background transition-colors duration-300"
             >
               Learn More
             </button>

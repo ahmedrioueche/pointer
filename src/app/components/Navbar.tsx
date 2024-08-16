@@ -57,13 +57,13 @@ const Navbar = () => {
         </ul>
         <div className="flex items-center space-x-4">
           <Link
-            href="/login"
+            href="/auth/login"
             className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             Login
           </Link>
           <Link
-            href="/signup"
+            href="/auth/signup"
             className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             Signup
@@ -77,7 +77,7 @@ const Navbar = () => {
           {/* Mobile Menu Icon */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300"
+            className="md:hidden p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
@@ -108,7 +108,7 @@ const Navbar = () => {
           ))}
           <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
           <Link
-            href="/login"
+            href="/auth/login"
             className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
             onClick={() => setIsMenuOpen(false)}
           >
@@ -116,7 +116,7 @@ const Navbar = () => {
             Login
           </Link>
           <Link
-            href="/signup"
+            href="/auth/signup"
             className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
             onClick={() => setIsMenuOpen(false)}
           >

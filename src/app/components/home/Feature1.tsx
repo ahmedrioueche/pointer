@@ -12,8 +12,8 @@ interface FeatureProps {
 const Feature: React.FC<FeatureProps> = ({ icon, title, description }) => (
   <div className="flex flex-col items-center p-6 bg-dark-background dark:bg-light-background rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
     <div className="text-4xl text-light-primary dark:text-dark-primary mb-4">{icon}</div>
-    <h3 className="text-lg font-semibold mb-2 text-dark-text dark:text-light-text">{title}</h3>
-    <p className="text-light-secondary dark:text-dark-secondary text-center">{description}</p>
+    <h3 className="text-lg font-stix font-semibold mb-2 text-dark-text dark:text-light-text">{title}</h3>
+    <p className="text-light-secondary font-stix dark:text-dark-secondary text-center">{description}</p>
   </div>
 );
 

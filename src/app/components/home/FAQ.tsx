@@ -20,7 +20,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
     <div className={`border-b ${isDarkMode ? 'border-dark-secondary' : 'border-light-secondary'} mb-4`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full text-left py-4 px-6 flex justify-between items-center rounded-md
+        className={`w-full font-stix text-left py-4 px-6 flex justify-between items-center rounded-md
           ${isDarkMode ? 'bg-dark-background text-dark-text hover:bg-dark-accent' : 'bg-light-background text-light-text hover:bg-light-accent'}
           transition-colors`}
       >
@@ -30,7 +30,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer }) => {
         </span>
       </button>
       {isOpen && (
-        <div className={`px-6 py-4 mt-2 rounded-md shadow-md
+        <div className={`px-6 py-4 mt-2 rounded-md shadow-md font-stix
           ${isDarkMode ? 'bg-dark-background text-dark-text border border-dark-secondary' : 'bg-light-background text-light-text border border-light-secondary'}
           transition-colors transition-shadow`}
         >

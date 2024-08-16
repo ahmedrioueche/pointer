@@ -23,12 +23,12 @@ const CTA: React.FC = () => {
       <h2 className={`text-3xl font-bold font-satisfy mb-4 dark:text-dark-text text-light-primary`}>
         Ready to Get Started?
       </h2>
-      <p className={`text-lg mb-8 text-light-secondary dark:text-dark-secondary `}>
+      <p className={`text-lg mb-8 font-stix text-light-secondary dark:text-dark-secondary `}>
         Join us today and take the first step towards achieving your goals with our amazing tool.
       </p>
       <button
         onClick={handleClick}
-        className={`px-6 py-3 rounded-md ${isDarkMode ? 'bg-dark-primary text-dark-background hover:bg-dark-accent' : 'bg-light-primary text-light-background hover:bg-light-accent'} font-medium transition-colors duration-300`}
+        className={`px-6 py-3 font-stix rounded-md ${isDarkMode ? 'bg-dark-primary text-dark-background hover:bg-dark-accent' : 'bg-light-primary text-light-background hover:bg-light-accent'} font-medium transition-colors duration-300`}
       >
         Get Started Now <FaRocket className="inline ml-2" />
       </button>

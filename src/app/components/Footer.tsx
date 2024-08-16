@@ -9,8 +9,8 @@ const Footer = () => {
     <div className="container mx-auto px-6">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="text-center md:text-left">
-          <h3 className="text-lg font-semibold text-light-text dark:text-dark-text mb-2">Pointer</h3>
-          <p className="text-sm text-light-text dark:text-dark-text">
+          <h3 className="text-lg font-semibold font-stix text-light-text dark:text-dark-text mb-2">Pointer</h3>
+          <p className="text-sm text-light-text font-stix dark:text-dark-text">
             &copy; {new Date().getFullYear()} Pointer. All rights reserved.
           </p>
         </div>
@@ -59,7 +59,7 @@ const Footer = () => {
             <li key={index}>
               <Link
                 href={`/${item.toLowerCase()}`}
-                className="text-light-text dark:text-dark-text hover:text-light-primary dark:hover:text-dark-primary transition-colors duration-300"
+                className="text-light-text font-stix dark:text-dark-text hover:text-light-primary dark:hover:text-dark-primary transition-colors duration-300"
               >
                 {item}
               </Link>

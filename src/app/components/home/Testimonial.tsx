@@ -13,7 +13,7 @@ const TestimonialCard: React.FC<TestimonialProps> = ({ quote, author, role }) =>
   <div className="flex flex-col p-6 bg-dark-background dark:bg-light-background rounded-lg shadow-md mb-0 md:mb-0 transition-transform transform hover:scale-105 hover:shadow-lg">
     <div className="flex items-start text-light-primary dark:text-dark-primary mb-4">
       <FaQuoteLeft className="text-3xl" />
-      <p className="ml-2 text-dark-text dark:text-light-text">{quote}</p>
+      <p className="ml-2 text-dark-text dark:text-light-text font-stix">{quote}</p>
       <FaQuoteRight className="text-3xl ml-2" />
     </div>
     <h3 className="text-lg font-semibold font-satisfy mt-4 text-dark-text dark:text-light-text">{author}</h3>

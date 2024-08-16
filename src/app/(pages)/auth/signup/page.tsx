@@ -116,12 +116,7 @@ const Signup: React.FC = () => {
                         <button
                             type="submit"
                             className={`w-full px-6 py-3 rounded-md font-medium transition-colors duration-100 
-                                ${isDarkMode ? 
-                                    'bg-dark-primary text-dark-background hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent' 
-                                    : 
-                                    'bg-light-primary text-light-background hover:bg-gradient-to-r hover:from-light-primary hover:to-light-accent'}
-                            `}
-                        >   
+                                    bg-dark-primary text-dark-text hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent`}>   
                             {buttonText}
                         </button>
 

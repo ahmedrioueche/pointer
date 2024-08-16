@@ -28,7 +28,7 @@ const Navbar = () => {
         <div className="text-3xl font-bold">
           <Link
             href="/"
-            className={`relative cursor-pointer ${isDarkMode ? 'text-dark-text' : 'text-light-text'} transition-colors duration-300 hover:text-light-primary dark:hover:text-dark-primary`}
+            className={`relative cursor-pointer dark:text-dark-text text-light-text transition-colors duration-300 hover:text-light-primary dark:hover:text-dark-primary`}
             onClick={() => setActiveLink("home")}
           >
             Pointer

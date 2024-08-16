@@ -137,7 +137,7 @@ const Signup: React.FC = () => {
                             </div>
                         )}
                     </form>
-                    <div className="w-full flex flex-col items-center text-center mt-4 space-y-4">
+                    <div className="w-full max-w-lg flex flex-col items-center text-center mt-4 space-y-4">
                         <button 
                             onClick={handleGoogleSignup} 
                             disabled={isLoading} // Disable button when loading

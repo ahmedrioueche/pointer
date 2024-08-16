@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { FaSun, FaMoon, FaGoogle } from 'react-icons/fa';
 import Link from 'next/link';
@@ -73,7 +72,6 @@ const Login: React.FC = () => {
         <section className={`py-16 flex items-center justify-center min-h-screen dark:bg-dark-background bg-light-background`}>
             <div className="container mx-auto flex flex-col items-center">
                 <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix">
-                    {/* Theme Toggle Button */}
                     <button 
                         onClick={toggleTheme} 
                         className="absolute top-4 right-4 text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
@@ -118,13 +116,13 @@ const Login: React.FC = () => {
                             </div>
                         )}
                     </form>
-                    <div className="w-full flex flex-col items-center text-center mt-4 space-y-4">
+                    <div className="w-full max-w-lg flex flex-col items-center text-center mt-4 space-y-4">
                         <button 
                             onClick={handleGoogleSignup} 
-                            disabled={isLoading} // Disable button when loading
-                            className="w-full px-6 py-3 rounded-md bg-light-primary dark:bg-dark-primary text-white font-medium flex items-center justify-center gap-2 transition-colors duration-100 hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent">
+                            disabled={isLoading} 
+                            className="w-full px-6 py-3 rounded-md font-medium bg-light-primary dark:bg-dark-primary text-white flex items-center justify-center gap-2 transition-colors duration-100 hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent">
                             {isLoading ? (
-                                <span>Loading...</span> // Show loading text
+                                <span>Loading...</span> 
                             ) : (
                                 <>
                                     <FaGoogle />

@@ -17,6 +17,10 @@ const authHandler = NextAuth({
         strategy: 'jwt',
     },
     callbacks: {
+        async redirect({ url, baseUrl }) {
+            // This manages where users are redirected after login
+            return baseUrl; // Default behavior is to redirect to the home page
+        },
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id as string;

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog } from "react-icons/fa";
+import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser } from "react-icons/fa";
 import { signOut } from "next-auth/react"; // Import signOut
 
 const DashboardNavbar = ({ firstName }: any) => {
@@ -35,7 +35,7 @@ const DashboardNavbar = ({ firstName }: any) => {
         <div className="text-3xl font-bold">
           <Link
             href="/dashboard"
-            className={`relative font-satisfy cursor-pointer text-dark-primary transition-colors duration-300 hover:text-light-accent dark:hover:text-dark-accent`}
+            className="relative font-satisfy cursor-pointer text-dark-primary transition-colors duration-300 hover:text-light-accent dark:hover:text-dark-accent"
           >
             Pointer
           </Link>
@@ -88,51 +88,95 @@ const DashboardNavbar = ({ firstName }: any) => {
                 onClick={handleLogout}
                 className="flex items-center px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
               >
-                <FaSignOutAlt className="mr-2 text-lg" />
-                Logout
+                <FaSignOutAlt className="mr-2" /> Logout
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="absolute top-full right-0 w-56 md:hidden flex flex-col items-start bg-light-background dark:bg-dark-background shadow-md py-4 mt-2 rounded-lg z-50">
-          <Link
-            href="/notifications"
-            className="flex items-center px-4 py-2 mb-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <FaBell className="mr-2 text-lg" />
-            Notifications
-          </Link>
-          <Link
-            href="/settings"
-            className="flex items-center px-4 py-2 mb-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <FaCog className="mr-2 text-lg" />
-            Settings
-          </Link>
-          <Link
-            href="/profile"
-            className="flex items-center px-4 py-2 mb-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-bold text-xl cursor-pointer hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300">
-              {firstLetter}
-            </div>
-            <span className="ml-2">Profile</span>
-          </Link>
-          <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
+        <div className="md:hidden items-center fixed top-0 left-0 w-full h-screen bg-light-background dark:bg-dark-background flex flex-col p-4 space-y-4">
           <button
-            onClick={handleLogout}
-            className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+            onClick={toggleMenu}
+            className="absolute top-4 right-4 p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
-            <FaSignOutAlt className="mr-2 text-lg" />
-            Logout
+            <FaTimes size={20} />
           </button>
+          <div className="flex flex-col items-start w-full">
+            <Link
+              href="/dashboard"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={toggleMenu}
+            >
+              <FaChartBar className="mr-2 text-lg" /> Dashboard
+            </Link>
+            <Link
+              href="/tasks"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={toggleMenu}
+            >
+              <FaTasks className="mr-2 text-lg" /> Tasks
+            </Link>
+            <Link
+              href="/points"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={toggleMenu}
+            >
+              <FaCoins className="mr-2 text-lg" /> Points
+            </Link>
+            <Link
+              href="/rewards"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={toggleMenu}
+            >
+              <FaGift className="mr-2 text-lg" /> Rewards
+            </Link>
+            <Link
+              href="/profile"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={toggleMenu}
+            >
+              <FaUser className="mr-2 text-lg" /> Profile
+            </Link>
+
+            <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
+            <Link
+              href="/notifications"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <FaBell className="mr-2 text-lg" />
+              Notifications
+            </Link>
+            <Link
+              href="/settings"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <FaCog className="mr-2 text-lg" />
+              Settings
+            </Link>
+            <Link
+              href="/profile"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-bold text-xl cursor-pointer hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300">
+                {firstLetter}
+              </div>
+              <span className="ml-2">Profile</span>
+            </Link>
+            <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
+            <button
+              onClick={handleLogout}
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+            >
+              <FaSignOutAlt className="mr-2 text-lg" />
+              Logout
+            </button>
+          </div>
         </div>
       )}
     </nav>

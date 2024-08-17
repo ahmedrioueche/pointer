@@ -13,6 +13,19 @@
   font-weight: 100 900; /* Adjust weight range if necessary */
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Satisfy', serif;
+}
+
+.modal-content::-webkit-scrollbar {
+  display: none;
+}
+
+.modal-content {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

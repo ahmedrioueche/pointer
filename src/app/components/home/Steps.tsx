@@ -1,7 +1,8 @@
 "use client";
 
+import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { FaTasks, FaCoins, FaGift } from 'react-icons/fa';
+import { FaTasks, FaCoins, FaGift, FaChartLine } from 'react-icons/fa';
 
 interface StepProps {
   icon: React.ReactNode;
@@ -41,22 +42,29 @@ const Steps: React.FC = () => {
       title: "Redeem Rewards",
       description: "Allow children to redeem points for various rewards, from money to exciting experiences.",
     },
+    {
+      icon: <FaChartLine />,
+      title: "Track Progress",
+      description: "Monitor your child's progress over time and adjust tasks and rewards to optimize their motivation and development.",
+    },
   ];
 
   return (
-    <section className="py-16 bg-light-background dark:bg-dark-background">
+    <section id="how-it-works" className="py-16 bg-light-background dark:bg-dark-background">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="w-full md:w-1/2 max-w-md mb-8 md:mb-0">
             <h2 className="text-3xl font-bold font-satisfy mb-4 text-light-primary dark:text-dark-text">
               How It Works
             </h2>
-            <p className="text-lg mb-8 text-light-secondary font-stix dark:text-dark-secondary">
+            <p className="text-lg mb-8 text-light-text font-stix dark:text-dark-text">
               Follow these simple steps to get started with our app and make the most of its features.
             </p>
-            <button className="px-6 py-3 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300">
-              Get Started
-            </button>
+            <Link href={"/auth/login"}>
+              <button className="px-6 py-3 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-300">
+                Get Started
+              </button>
+            </Link>
           </div>
           <div className="w-full md:w-1/2 flex justify-end mt-8 md:mt-0">
             <div className="flex flex-col">

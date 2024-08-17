@@ -55,7 +55,7 @@ const Footer = () => {
       </div>
       <div className="mt-4 text-center md:text-left">
         <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-sm">
-          {["Home", "App", "About", "Contact"].map((item, index) => (
+          {["Home", "How It Works", "Features", "Contact"].map((item, index) => (
             <li key={index}>
               <Link
                 href={`/${item.toLowerCase()}`}

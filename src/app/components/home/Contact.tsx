@@ -83,28 +83,28 @@ const ContactForm: React.FC = () => {
                                 value={formDetails.firstName}
                                 placeholder="First Name"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('firstName', e.target.value)}
-                                className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
+                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
                             />
                             <input
                                 type="text"
                                 value={formDetails.lastName}
                                 placeholder="Last Name"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('lastName', e.target.value)}
-                                className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
+                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
                             />
                             <input
                                 type="email"
                                 value={formDetails.email}
                                 placeholder="Email"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('email', e.target.value)}
-                                className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
+                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
                             />
                             <input
                                 type="tel"
                                 value={formDetails.phone}
                                 placeholder="Phone Number"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('phone', e.target.value)}
-                                className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
+                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
                             />
                         </div>
                         <textarea
@@ -117,7 +117,7 @@ const ContactForm: React.FC = () => {
                                     textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
                                 }
                             }}
-                            className="w-full font-stix bg-light-background dark:bg-dark-background border border-gray-700 rounded-lg px-6 py-3 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background resize-none overflow-y-hidden"
+                            className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-3 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background resize-none overflow-y-hidden"
                             rows={5}
                             ref={textareaRef}
                         />

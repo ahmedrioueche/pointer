@@ -44,7 +44,7 @@ const FeaturesSection: React.FC = () => {
   ];
 
   return (
-    <section className={`py-16 bg-light-background dark:bg-dark-background`}>
+    <section id="features" className={`py-16 bg-light-background dark:bg-dark-background`}>
       <div className="container mx-auto px-4">
         <h2 className={`text-3xl font-bold text-center mb-12 font-satisfy text-light-primary dark:text-dark-text`}>
           Key Features

@@ -18,6 +18,19 @@
       });
     };
 
+    const handleSetActiveLink = (link : any) => {
+      setActiveLink(link);
+  
+      // Scroll to the section
+      const section = document.getElementById(link);
+      if (section) {
+        section.scrollIntoView({
+          behavior: "smooth", // Enables smooth scrolling
+          block: "start",     // Aligns the top of the section with the top of the viewport
+        });
+      }
+    };
+
     const toggleMenu = () => {
       setIsMenuOpen((prevOpen) => !prevOpen);
     };
@@ -36,25 +49,35 @@
           </div>
           {/* Large screens navigation */}
           <ul className="hidden md:flex space-x-6 flex-1 justify-center">
-            {["Home", "App", "About", "Contact"].map((item, index) => (
-              <li key={index}>
-                <Link
-                  href={`/${item.toLowerCase()}`}
-                  className="relative cursor-pointer text-sm sm:text-lg font-medium group"
-                  onClick={() => setActiveLink(item.toLowerCase())}
-                >
-                  <span
-                    className={`relative transition-colors duration-300 ${activeLink === item.toLowerCase() ? "text-light-primary dark:text-dark-primary" : "text-light-text dark:text-dark-text group-hover:text-light-primary dark:group-hover:text-dark-primary"}`}
+            {["Home", "How It Works", "Features", "Contact"].map((item, index) => {
+              const sectionId = item.toLowerCase().replace(/\s+/g, "-");
+              return (
+                <li key={index}>
+                  <Link
+                    href={`/`}
+                    className="relative cursor-pointer text-sm sm:text-lg font-medium group"
+                    onClick={() => handleSetActiveLink(sectionId)}
                   >
-                    {item}
-                  </span>
-                  <span
-                    className={`block h-[2px] w-0 bg-light-primary dark:bg-dark-primary absolute left-0 bottom-[-2px] transition-all duration-300 ${activeLink === item.toLowerCase() ? "w-full" : "group-hover:w-full"}`}
-                  ></span>
-                </Link>
-              </li>
-            ))}
+                    <span
+                      className={`relative transition-colors duration-300 ${
+                        activeLink === item.toLowerCase()
+                          ? "text-light-primary dark:text-dark-primary"
+                          : "text-light-text dark:text-dark-text group-hover:text-light-primary dark:group-hover:text-dark-primary"
+                      }`}
+                    >
+                      {item}
+                    </span>
+                    <span
+                      className={`block h-[2px] w-0 bg-light-primary dark:bg-dark-primary absolute left-0 bottom-[-2px] transition-all duration-300 ${
+                        activeLink === item.toLowerCase() ? "w-full" : "group-hover:w-full"
+                      }`}
+                    ></span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
+
           <div className="flex items-center space-x-4">
             <Link
               href="/auth/login"
@@ -89,16 +112,16 @@
           <div className="absolute top-full right-0 w-56 md:hidden flex flex-col items-start bg-light-background dark:bg-dark-background shadow-md py-4 mt-2 rounded-lg z-50">
             {[
               { name: "Home", icon: FaHome },
-              { name: "App", icon: FaAppStore },
-              { name: "About", icon: FaInfoCircle },
+              { name: "How It Works", icon: FaAppStore },
+              { name: "Features", icon: FaInfoCircle },
               { name: "Contact", icon: FaPhone },
             ].map((item, index) => (
               <Link
                 key={index}
-                href={`/${item.name.toLowerCase()}`}
+                href={`/`}
                 className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
                 onClick={() => {
-                  setActiveLink(item.name.toLowerCase());
+                  handleSetActiveLink(item.name.toLowerCase());
                   setIsMenuOpen(false);
                 }}
               >

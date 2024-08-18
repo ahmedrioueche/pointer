@@ -29,3 +29,49 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Hide the number input spinners */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.no-spinner[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* styles/globals.css or styles.module.css */
+
+/* Hide default radio buttons */
+.radio-hidden {
+  display: none;
+}
+
+/* Custom radio button styling */
+.radio-custom {
+  width: 1.25rem; /* 20px */
+  height: 1.25rem; /* 20px */
+  border: 2px solid #d1d5db; /* Gray border */
+  border-radius: 9999px; /* Fully rounded */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.radio-custom::after {
+  content: '';
+  width: 0.75rem; /* 12px */
+  height: 0.75rem; /* 12px */
+  background-color: #3b82f6; /* Primary color */
+  border-radius: 9999px; /* Fully rounded */
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.radio-hidden:checked + .radio-custom::after {
+  opacity: 1;
+}
+

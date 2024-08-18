@@ -2,7 +2,9 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { FaSun, FaMoon, FaGoogle } from 'react-icons/fa';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; 
 import { signIn } from 'next-auth/react';
+import bcrypt from 'bcryptjs';
 
 interface SignupDetails {
     firstName: string;
@@ -24,6 +26,7 @@ const Signup: React.FC = () => {
     const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false); // New loading state
+    const router = useRouter(); // Initialize useRouter for navigation
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -44,17 +47,46 @@ const Signup: React.FC = () => {
     const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setButtonText("Signing Up...");
-        try {
-            // Simulate an API call
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // Fake delay
+    
+        // Validate input
+        if (!signupDetails.firstName || !signupDetails.lastName || !signupDetails.email || !signupDetails.password) {
             setButtonText("Sign Up");
-            setStatus({ success: true, message: 'Signed up successfully!' });
+            setStatus({ success: false, message: 'Please fill in all required fields.' });
+            return;
+        }
+    
+        if (signupDetails.password.length < 6) {
+            setButtonText("Sign Up");
+            setStatus({ success: false, message: 'Password must be at least 6 characters long.' });
+            return;
+        }
+    
+        try {
+            // Hash the password
+            const hashedPassword = await bcrypt.hash(signupDetails.password, 10);
+    
+            sessionStorage.setItem('signupCredentials', JSON.stringify({
+                firstName: signupDetails.firstName,
+                lastName: signupDetails.lastName,
+                email: signupDetails.email,
+                password: hashedPassword
+            }));
+    
+            // Navigate to the confirmation page
+            router.push('/auth/confirm');
+    
+            // Update button text and status
+            setButtonText("Sign Up");
+            setStatus({ success: true, message: 'Signed up successfully! Please provide additional details.' });
         } catch (error) {
             setButtonText("Sign Up");
             setStatus({ success: false, message: 'Signup failed. Please try again.' });
         }
+    
+        // Reset signup details
         setSignupDetails(initialDetails);
     };
+    
 
     const handleGoogleSignup = async () => {
         setIsLoading(true);

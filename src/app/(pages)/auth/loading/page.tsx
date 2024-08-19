@@ -33,7 +33,7 @@ function LoadingPage() {
                 console.log("parent", parent);
                 
                 if (parent) {
-                    if (parent.children_count === 0) {
+                    if (parent.children_count === null) {
                         router.push('/auth/confirm');
                         return;
                     }

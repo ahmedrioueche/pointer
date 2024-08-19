@@ -47,7 +47,7 @@ const Confirm: React.FC = () => {
     useEffect(()=> {
         if (typeof window !== 'undefined') {
             const parentIdString = sessionStorage.getItem("parentId");
-            console.log("parentIdString", parentIdString)
+            console.log("parentIdString", parentIdString);
             const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
             setParentId(parentId);
         }
@@ -167,7 +167,7 @@ const Confirm: React.FC = () => {
                     </h2>
                     
                     <div className="w-full flex justify-center">
-                        <form onSubmit={handleSubmit} className="w-full space-y-4 max-w-lg min-w-[25rem]">
+                        <form onSubmit={handleSubmit} className="w-full space-y-4 max-w-lg min-w-[21rem]">
                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <input

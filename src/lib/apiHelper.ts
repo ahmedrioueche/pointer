@@ -27,3 +27,21 @@ interface ContactFormData {
     return response.json();
   };
   
+  export const apiUpdateParent = async (parentId : Number | null, updateData : any ) => {    
+    try {
+      const response = await fetch('/api/update-parent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+              parentId,
+              updateData
+           }),
+      });
+
+      return response;
+
+    } catch (error) {
+      console.error('update failed:', error);
+    }
+  } 
+  

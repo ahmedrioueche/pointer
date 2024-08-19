@@ -10,9 +10,10 @@ interface DBUser extends RowDataPacket {
     name?: string;
     image?: string;
     password: string;
+    
 }
 
-export async function getUserDB(email: string, password: string): Promise<User | null> {
+export async function authenticateUser(email: string, password: string): Promise<User | null> {
     try {
         const connection = await pool.getConnection();
         
@@ -47,4 +48,3 @@ export async function getUserDB(email: string, password: string): Promise<User |
     }
 }
 
-export default getUserDB;

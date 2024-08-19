@@ -10,6 +10,7 @@ declare module 'next-auth' {
       name?: string;
       image?: string;
     };
+    isNewUser?: boolean; 
   }
 
   interface Token {
@@ -17,5 +18,6 @@ declare module 'next-auth' {
     email?: string;
     name?: string;
     image?: string;
+    isNewUser?: boolean; 
   }
 }

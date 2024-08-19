@@ -1,16 +1,14 @@
 "use client";
 
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
 import { PricingCard } from '../PricingCard';
 import { useRouter } from 'next/navigation';
-
-
+import { pricingOptions } from '@/data/text'; 
 
 const Pricing: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const router = useRouter(); // Initialize useRouter
+  const [loadingCardIndex, setLoadingCardIndex] = useState<number | null>(null); 
+  const router = useRouter(); 
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -20,39 +18,6 @@ const Pricing: React.FC = () => {
   const handleClick = () => {
     router.push("/auth/signup"); 
   }
-
-  const pricingOptions = [
-    {
-      title: "Basic",
-      price: "$0",
-      description: "Get started with basic features to start rewarding your child for their efforts.",
-      features: [
-        "Track Tasks",
-        "Redeem Points",
-        "Basic Reports"
-      ]
-    },
-    {
-      title: "Standard",
-      price: "$19",
-      description: "Enhance your experience with additional features for a more effective reward system.",
-      features: [
-        "All Basic Features",
-        "Custom Rewards",
-        "Detailed Reports"
-      ]
-    },
-    {
-      title: "Premium",
-      price: "$199",
-      description: "Unlock the full potential of our app with advanced features and premium support.",
-      features: [
-        "All Standard Features",
-        "Priority Support",
-        "Advanced Analytics",
-      ]
-    }
-  ];
 
   return (
     <section className={`py-16 bg-light-background dark:bg-dark-background`}>
@@ -65,7 +30,8 @@ const Pricing: React.FC = () => {
         </p>
         <div className="flex flex-col md:flex-row justify-center gap-8">
           {pricingOptions.map((option, index) => (
-            <PricingCard key={index} {...option} onClick={handleClick}/>
+            <PricingCard key={index} {...option} onClick={handleClick} isLoading={loadingCardIndex === index} 
+            />
           ))}
         </div>
       </div>

@@ -17,17 +17,14 @@ export const apiInsertDB = async (
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 ...data,
-                moreData
+                ...moreData
             }),
         });
 
         const result = await response.json();
 
-        if (response.ok) {
-            return { success: true};
-        } else {
-            return { success: false };
-        }
+        return result;
+
     } catch (error) {
         console.error('Signup error:', error);
         return { success: false };

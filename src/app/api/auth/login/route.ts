@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import pool from '@/db/db'; // Adjust the import path as needed
-import getUserDB from '@/db/userService'; // Adjust the import path as needed
+import { authenticateUser } from '@/db/userService'; // Adjust the import path as needed
 
 interface DBUser {
   id: string;
@@ -19,7 +17,7 @@ async function handlePost(req: Request) {
       return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
     }
 
-    const user = await getUserDB(email, password);
+    const user = await authenticateUser(email, password);
 
     if (user) {
       return NextResponse.json({ user }, { status: 200 });
@@ -32,5 +30,4 @@ async function handlePost(req: Request) {
   }
 }
 
-// Export handlers for different HTTP methods
 export const POST = handlePost;

@@ -1,9 +1,8 @@
 "use client"
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
-import { FaSun, FaMoon, FaGoogle } from 'react-icons/fa';
+import { FaSun, FaMoon, FaGoogle, FaSpinner } from 'react-icons/fa';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import getUserDB from '@/db/userService';
 import { useRouter } from 'next/navigation';
 
 interface LoginDetails {
@@ -77,9 +76,9 @@ const Login: React.FC = () => {
     const handleGoogleSignup = async () => {
         setIsLoading(true);
         try {
-            await signIn('google');
+            await signIn('google', { callbackUrl: '/auth/loading' });
         } catch (error) {
-            setIsLoading(false); // Reset loading state on error
+            setIsLoading(false); 
         }
     };
 
@@ -144,7 +143,7 @@ const Login: React.FC = () => {
                             disabled={isLoading} 
                             className="w-full px-6 py-3 rounded-md font-medium bg-light-primary dark:bg-dark-primary text-white flex items-center justify-center gap-2 transition-colors duration-100 hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent">
                             {isLoading ? (
-                                <span>Loading...</span> 
+                                <FaSpinner className="animate-spin text-white" />
                             ) : (
                                 <>
                                     <FaGoogle />

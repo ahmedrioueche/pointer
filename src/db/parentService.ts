@@ -1,21 +1,21 @@
 import pool from "./db";
 
 // Interface for parent data
-interface Parent {
-    firstName: string;
-    lastName: string;
+export interface Parent {
+    first_name: string;
+    last_name: string;
     email: string;
     password: string;
     age?: number;
     gender?: string;
-    childrenCount?: number;
-    subscriptionType?: string;
-    subscriptionStartDate?: Date;
-    subscriptionEndDate?: Date;
-    isSubscriptionActive?: boolean;
-    paymentMethod?: string;
-    lastPaymentDate?: Date;
-    subscriptionPrice?: number;
+    children_count?: number;
+    subscription_type?: string;
+    subscription_start_date?: Date;
+    subscription_end_date?: Date;
+    is_subscription_active?: boolean;
+    payment_method?: string;
+    last_payment_date?: Date;
+    subscription_price?: number;
 }
 
 // Function to insert a parent into the database
@@ -29,15 +29,15 @@ export const insertParent = async (parent: Parent): Promise<number> => {
                 first_name, last_name, email, password
             ) VALUES (?, ?, ?, ?)`,
             [
-                parent.firstName,
-                parent.lastName,
+                parent.first_name,
+                parent.last_name,
                 parent.email,
                 parent.password,
              
             ]
         );
 
-        const parentId = (result as any).insertId; // Get the auto-incremented ID
+        const parentId = (result as any).insertId; 
 
         await connection.commit();
         
@@ -50,20 +50,18 @@ export const insertParent = async (parent: Parent): Promise<number> => {
     }
 };
 
-// Function to update additional parent information
 export const updateParent = async (parentId: number, updateData: Partial<Parent>): Promise<void> => {
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
 
         if(updateData) {
-            // Build the SQL query dynamically based on provided fields
             const setClause = Object.keys(updateData)
             .map((key) => `${key} = ?`)
             .join(', ');
             const query = `UPDATE parent SET ${setClause} WHERE parent_id = ?`;
             const values = [...Object.values(updateData), parentId];
-
+            console.log("updating parent table values:", values);
             await connection.query(query, values);
 
             await connection.commit();
@@ -78,3 +76,29 @@ export const updateParent = async (parentId: number, updateData: Partial<Parent>
         connection.release();
     }
 };
+
+export async function getParentByEmail(email: string): Promise<any | null> {
+  let connection;
+  try {
+    connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    const [rows] = await connection.query(
+      'SELECT * FROM parent WHERE email = ?',
+      [email]
+    );
+
+    await connection.commit();
+    connection.release();
+
+    return Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+
+  } catch (error) {
+    if (connection) {
+      await connection.rollback();
+      connection.release();
+    }
+    console.error('Error retrieving user from database:', error);
+    return null;
+  }
+}

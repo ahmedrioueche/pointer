@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { getUserDB } from "@/db/userService"
+import { authenticateUser } from "@/db/userService"
 import CredentialsProvider from 'next-auth/providers/credentials'; 
 
 const authHandler = NextAuth({
@@ -19,8 +19,9 @@ const authHandler = NextAuth({
               if (!credentials || !credentials.email || !credentials.password) {
                 return null;
               }
-              let user = await getUserDB(credentials.email, credentials.password);
-              
+
+              let user = await authenticateUser(credentials.email, credentials.password);
+
               if (user) {
                 return user;
               } else {
@@ -40,7 +41,7 @@ const authHandler = NextAuth({
     callbacks: {
         async redirect({ url, baseUrl }) {
             if (url === '/api/auth/session' || url === baseUrl) {
-              return `${baseUrl}/main/dashboard`; 
+              return `${baseUrl}/auth/loading`;
             }
 
             if (url === '/api/auth/signout') {

@@ -5,16 +5,16 @@ import { insertParent } from '@/db/parentService'; // Adjust the path as necessa
 // Handler function for POST requests
 async function handlePost(req: Request) {
     try {
-        const { firstName, lastName, email, password } = await req.json();
+        const { first_name, last_name, email, password } = await req.json();
     
-        if (!firstName || !lastName || !email || !password) {
+        if (!first_name || !last_name || !email || !password) {
             return NextResponse.json({ message: 'Please provide all required fields.' }, { status: 400 });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const parent = {
-            firstName,
-            lastName,
+            first_name,
+            last_name,
             email,
             password: hashedPassword,
         };

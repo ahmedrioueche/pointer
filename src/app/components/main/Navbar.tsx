@@ -23,7 +23,7 @@ const DashboardNavbar = ({ firstName }: any) => {
   };
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: "/auth/login" }); // Redirect to the login page after logout
+    await signOut({ callbackUrl: "/api/auth/signout" }); // Redirect to the login page after logout
   };
 
   // Extract the first letter of the first name

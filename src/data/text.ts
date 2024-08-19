@@ -25,3 +25,39 @@ export const heroText = {
     }
   };
   
+  
+  export const pricingOptions = [
+    {
+      title: "Basic",
+      price: "$0",
+      description: "Get started with basic features to start rewarding your child for their efforts.",
+      duration: "30 Days Free Trial",
+      features: [
+        "Track Tasks",
+        "Redeem Points",
+        "Basic Reports"
+      ]
+    },
+    {
+      title: "Standard",
+      price: "$19",
+      description: "Enhance your experience with additional features for a more effective reward system.",
+      duration: "Per Month",
+      features: [
+        "All Basic Features",
+        "Custom Rewards",
+        "Detailed Reports"
+      ]
+    },
+    {
+      title: "Premium",
+      price: "$199",
+      description: "Unlock the full potential of our app with advanced features and premium support.",
+      duration: "Per Year",
+      features: [
+        "All Standard Features",
+        "Priority Support",
+        "Advanced Analytics",
+      ]
+    }
+  ];

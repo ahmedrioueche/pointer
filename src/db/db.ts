@@ -1,12 +1,11 @@
+import mysql from 'mysql2/promise';
 
-  import mysql from 'mysql2/promise';
+const pool = mysql.createPool({
+  host: process.env.MYSQLHOST || 'localhost', // Use MYSQLHOST from your environment
+  user: process.env.MYSQLUSER || 'root',      // Use MYSQLUSER from your environment
+  password: process.env.MYSQLPASSWORD || '',  // Use MYSQLPASSWORD from your environment
+  database: process.env.MYSQLDATABASE || 'pointer', // Use MYSQLDATABASE from your environment
+  port: parseInt(process.env.MYSQLPORT || '3306', 10), // Convert port to a number
+});
 
-  const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: process.env.DB_PASSWORD,
-    database: 'pointer',
-    port: 3306,
-  });
-
-  export default pool;
+export default pool;

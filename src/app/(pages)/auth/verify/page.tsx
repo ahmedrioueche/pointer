@@ -4,16 +4,27 @@ import React, { useState, useEffect } from 'react';
 import { FaSun, FaMoon, FaSpinner } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import Loading from '@/app/components/Loading';
+
 
 const EmailVerification: React.FC = () => {
     const [userEmail, setUserEmail] = useState<string | null>('');
     const [userVerificationCode, setUserVerificationCode] = useState<string>('');
     const [sentVerificationCode, setSentVerificationCode] = useState<string>('');
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-    const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
+    const [resultStatus, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     let codeSent : boolean = false;
     const router = useRouter();
+    const { data: session, status } = useSession(); 
+
+    if (status === 'loading') {
+        setIsLoading(true);
+    } 
+    if (!session) {
+      router.push('/auth/login');
+    }
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -31,6 +42,8 @@ const EmailVerification: React.FC = () => {
             setUserEmail(email);
             codeSent = true;
         }
+        setIsLoading(false)
+
     }, [])
 
     const sendVerificationCode = async (email : string | null) => {
@@ -90,6 +103,10 @@ const EmailVerification: React.FC = () => {
     };
 
     return (
+        <>
+        {isLoading ? (
+            <Loading />
+        ) : (
         <section className={`py-16 flex items-center justify-center min-h-screen dark:bg-dark-background bg-light-background`}>
             <div className="container mx-auto flex flex-col items-center">
                 
@@ -135,20 +152,23 @@ const EmailVerification: React.FC = () => {
                         >
                             {isLoading ?  <FaSpinner className="animate-spin text-white" /> : 'Verify Code'}
                         </button>
-                        {status && (
+                        {resultStatus && (
                             <div className="flex justify-center w-full mt-4">
-                                <p className={`text-center ${status.success ? 'text-light-primary dark:text-dark-primary' : 'text-red-400'}`}>{status.message}</p>
+                                <p className={`text-center ${resultStatus.success ? 'text-light-primary dark:text-dark-primary' : 'text-red-400'}`}>{resultStatus.message}</p>
                             </div>
                         )}
                     </form>
                     <div className="w-full max-w-lg flex flex-col items-center text-center mt-4 space-y-4">
                         <p className={`text-lg ${isDarkMode ? 'text-dark-text' : 'text-light-text'}`}>
-                            <span onClick={resendCode} className="font-stix text-base text-light-primary dark:text-dark-primary hover:underline cursor-pointer">Didn't receive the code? check spam, or click here to resend</span>
+                            <span onClick={resendCode} className="font-stix text-base text-light-primary dark:text-dark-primary hover:underline cursor-pointer">Did not receive the code? check spam, or click here to resend</span>
                         </p>
                     </div>
                 </div>
             </div>
         </section>
+        
+        )}
+        </>
     );
 };
 

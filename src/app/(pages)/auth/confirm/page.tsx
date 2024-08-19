@@ -20,13 +20,6 @@ interface Child {
 const Confirm: React.FC = () => {
     const router = useRouter();
     const { data: session, status } = useSession(); 
-
-    if (status === 'loading') return <Loading />; 
-    if (!session) {
-      router.push('/auth/login');
-      return null;
-    }
-
     const [parentId, setParentId] = useState<Number | null>(0);
     const [childrenCount, setChildrenCount] = useState('');
     const [children, setChildren] = useState<Child[]>([]);
@@ -37,6 +30,12 @@ const Confirm: React.FC = () => {
     const [gender, setGender] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    if (status === 'loading') {
+        setIsLoading(true)
+    } 
+    if (!session) {
+      router.push('/auth/login');
+    }
     
     const toggleTheme = () => {
         const newTheme = !isDarkMode ? 'dark' : 'light';
@@ -49,6 +48,7 @@ const Confirm: React.FC = () => {
         const parentIdString = sessionStorage.getItem("parentId");
         const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
         setParentId(parentId);
+        setIsLoading(false)
     })
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -117,7 +117,7 @@ const Confirm: React.FC = () => {
 
                     router.push('/auth/plans');
                 }
-                else {
+                else {  
                     setStatus({ success: false, message: 'Ops! An error occured!' });
                 }
 
@@ -145,6 +145,10 @@ const Confirm: React.FC = () => {
     };    
 
     return (
+        <>
+        {isLoading ? (
+            <Loading />
+        ) : (
         <section className={`py-16 flex items-center justify-center min-h-screen dark:bg-dark-background bg-light-background`}>
             <div className="container mx-auto flex flex-col items-center">
                 <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix">
@@ -315,6 +319,8 @@ const Confirm: React.FC = () => {
                 </div>
             </div>
         </section>
+     )}
+     </>
     );
 };
 

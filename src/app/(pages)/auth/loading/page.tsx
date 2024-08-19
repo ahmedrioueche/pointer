@@ -14,7 +14,6 @@ function LoadingPage() {
         if (status === 'loading' || fetching) return;
         if (!session) {
             router.push('/auth/login');
-            return;
         }
 
         const fetchParentData = async () => {
@@ -47,7 +46,7 @@ function LoadingPage() {
                     router.push('/main/dashboard');
                     
                 } else {
-                    const parentId: any = await apiInsertDB(session.user, "", "/api/insert-parent");
+                    const parentId: any = await apiInsertDB(session?.user, "", "/api/insert-parent");
 
                     console.log("parentId", parentId)
 

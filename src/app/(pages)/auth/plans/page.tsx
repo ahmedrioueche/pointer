@@ -15,12 +15,14 @@ const Plans: React.FC = () => {
   const [parentId, setParentId] = useState<number | null>(null);
   const router = useRouter();
   const { data: session, status } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
-  if (status === 'loading') return <Loading />;
-  if (!session) {
-    router.push('/auth/login');
-    return null;
-  }
+  if (status === 'loading') {
+    setIsLoading(true)
+} 
+if (!session) {
+  router.push('/auth/login');
+}
 
   useEffect(()=> {
     const parentIdString = sessionStorage.getItem("parentId");
@@ -70,6 +72,10 @@ const Plans: React.FC = () => {
   };
 
   return (
+    <>
+    {isLoading ? (
+        <Loading />
+    ) : (
     <section className={`bg-light-background dark:bg-dark-background min-h-screen flex flex-col items-center`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-1 w-full">
@@ -98,6 +104,8 @@ const Plans: React.FC = () => {
         </div>
       </div>
     </section>
+    )}
+    </>
   );
 };
 

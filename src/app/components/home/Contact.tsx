@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
-import { sendContactForm } from '../../../lib/api'; // Adjust the import path as necessary
+import { sendContactForm } from '../../../lib/apiHelper'; // Adjust the import path as necessary
 
 interface FormDetails {
     firstName: string;

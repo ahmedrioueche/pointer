@@ -1,9 +1,8 @@
-// app/(pages)/main/dashboard/page.tsx
 'use client';
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Loading from '../../../components/Loading'; // Import the Loading component
+import Loading from '../../../components/Loading'; 
 import Navbar from '@/app/components/main/Navbar';
 import MainMenu from '@/app/components/main/MainMenu';
 import SideMenu from '@/app/components/main/SideMenu';

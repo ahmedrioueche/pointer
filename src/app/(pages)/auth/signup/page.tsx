@@ -4,7 +4,6 @@ import { FaSun, FaMoon, FaGoogle } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { signIn } from 'next-auth/react';
-import bcrypt from 'bcryptjs';
 
 interface SignupDetails {
     firstName: string;
@@ -25,9 +24,9 @@ const Signup: React.FC = () => {
     const [buttonText, setButtonText] = useState('Sign Up');
     const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false); // New loading state
-    const router = useRouter(); // Initialize useRouter for navigation
-
+    const [isLoading, setIsLoading] = useState<boolean>(false); 
+    const router = useRouter(); 
+    
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
@@ -60,28 +59,43 @@ const Signup: React.FC = () => {
             setStatus({ success: false, message: 'Password must be at least 6 characters long.' });
             return;
         }
-    
+
         try {
-            // Hash the password
-            const hashedPassword = await bcrypt.hash(signupDetails.password, 10);
-    
-            sessionStorage.setItem('signupCredentials', JSON.stringify({
-                firstName: signupDetails.firstName,
-                lastName: signupDetails.lastName,
-                email: signupDetails.email,
-                password: hashedPassword
-            }));
-    
-            // Navigate to the confirmation page
-            router.push('/auth/confirm');
-    
-            // Update button text and status
-            setButtonText("Sign Up");
-            setStatus({ success: true, message: 'Signed up successfully! Please provide additional details.' });
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...signupDetails,
+                }),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                const parentId =  result.parentId;
+                sessionStorage.setItem("parentId", parentId);
+                
+                const signInResult = await signIn('credentials', {
+                    redirect: false,
+                    email: signupDetails.email,
+                    password: signupDetails.password,
+                });
+
+                if (signInResult?.error) {
+                    console.log("error", signInResult?.error);
+                } else {
+                    router.push('/auth/confirm');
+                }
+                setButtonText("Sign Up");
+                setStatus({ success: true, message: 'Signed up successfully! Please provide additional details.' });
+            } else {
+                setButtonText("Sign Up");
+                setStatus({ success: false, message: result.message || 'Signup failed. Please try again.' });
+            }
         } catch (error) {
             setButtonText("Sign Up");
             setStatus({ success: false, message: 'Signup failed. Please try again.' });
         }
+    
     
         // Reset signup details
         setSignupDetails(initialDetails);
@@ -142,6 +156,7 @@ const Signup: React.FC = () => {
                                 className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
                             />
                         </div>
+                        
                         <input
                             type="email"
                             value={signupDetails.email}
@@ -156,6 +171,7 @@ const Signup: React.FC = () => {
                             onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('password', e.target.value)}
                             className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
                         />
+                           
                         <button
                             type="submit"
                             className={`w-full px-6 py-3 rounded-md font-medium transition-colors duration-100 bg-light-primary

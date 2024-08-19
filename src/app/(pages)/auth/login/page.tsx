@@ -3,6 +3,8 @@ import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { FaSun, FaMoon, FaGoogle } from 'react-icons/fa';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
+import getUserDB from '@/db/userService';
+import { useRouter } from 'next/navigation';
 
 interface LoginDetails {
     email: string;
@@ -20,6 +22,7 @@ const Login: React.FC = () => {
     const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const router = useRouter(); 
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -41,15 +44,34 @@ const Login: React.FC = () => {
         e.preventDefault();
         setButtonText("Logging In...");
         try {
-            // Simulate an API call
-            await new Promise((resolve) => setTimeout(resolve, 2000)); // Fake delay
-            setButtonText("Log In");
-            setStatus({ success: true, message: 'Logged in successfully!' });
+
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loginDetails),
+            });
+
+            const data = await response.json();
+
+              if (response.ok) {                
+                const signInResult = await signIn('credentials', {
+                    redirect: false,
+                    email: loginDetails.email,
+                    password: loginDetails.password,
+                });
+
+                if (signInResult?.error) {
+                    console.log("error", signInResult?.error);
+                } else {
+                    router.push('/main/dashboard');
+                }
+            }
+
         } catch (error) {
             setButtonText("Log In");
             setStatus({ success: false, message: 'Login failed. Please try again.' });
+            setLoginDetails(initialDetails);
         }
-        setLoginDetails(initialDetails);
     };
 
     const handleGoogleSignup = async () => {

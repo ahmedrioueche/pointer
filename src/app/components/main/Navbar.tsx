@@ -22,8 +22,8 @@ const DashboardNavbar = ({ firstName }: any) => {
     setIsMenuOpen((prevOpen) => !prevOpen);
   };
 
-  const handleLogout = () => {
-    signOut({ callbackUrl: "/auth/login" }); // Redirect to the login page after logout
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/auth/login" }); // Redirect to the login page after logout
   };
 
   // Extract the first letter of the first name

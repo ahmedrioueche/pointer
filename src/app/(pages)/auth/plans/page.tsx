@@ -1,25 +1,64 @@
 "use client";
-
-import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
-import { PricingCard } from '../PricingCard';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // Import useRouter
+import { PricingCard } from '../../../components/PricingCard'; // Adjust the import path if necessary
+import { apiInsertDB } from "@/lib/dbHelper"
+import { useSession } from 'next-auth/react';
+import Loading from '@/app/components/Loading';
 
-
-
-const Pricing: React.FC = () => {
+const Plans: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
+  const { data: session, status } = useSession(); 
 
+  if (status === 'loading') return <Loading />; 
+  if (!session) {
+    router.push('/auth/login');
+    return null;
+  }
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     setIsDarkMode(savedTheme === 'dark');
   }, []);
 
-  const handleClick = () => {
-    router.push("/auth/signup"); 
-  }
+  const handleClick = (price: string) => {
+
+    updateParentPlan(price);
+
+    if (price === "$0") {
+      router.push('/main/dashboard');
+    } else {
+      router.push('/main/payment');
+    }
+  };
+
+  const updateParentPlan = async (price: string) => {
+    // Determine subscription_type based on price
+    let subscription_type: string;
+    switch (price) {
+      case "$0":
+        subscription_type = "free";
+        break;
+      case "$19":
+        subscription_type = "standard";
+        break;
+      case "$199":
+        subscription_type = "premium";
+        break;
+      default:
+        subscription_type = "unknown"; // Handle unexpected cases
+        break;
+    }
+  
+    try {
+      const result = await apiInsertDB(subscription_type, null, 'api/auth/confirm');
+      // Handle result if necessary
+      console.log('Subscription updated successfully:', result);
+    } catch (error) {
+      console.error('Error updating subscription:', error);
+      // Handle error if necessary
+    }
+  };
 
   const pricingOptions = [
     {
@@ -65,7 +104,11 @@ const Pricing: React.FC = () => {
         </p>
         <div className="flex flex-col md:flex-row justify-center gap-8">
           {pricingOptions.map((option, index) => (
-            <PricingCard key={index} {...option} onClick={handleClick}/>
+            <PricingCard 
+              key={index} 
+              {...option} 
+              onClick={() => handleClick(option.price)} // Pass price to handleClick
+            />
           ))}
         </div>
       </div>
@@ -73,4 +116,4 @@ const Pricing: React.FC = () => {
   );
 };
 
-export default Pricing;
+export default Plans;

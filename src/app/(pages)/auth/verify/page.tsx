@@ -19,12 +19,11 @@ const EmailVerification: React.FC = () => {
     const router = useRouter();
     const { data: session, status } = useSession(); 
 
-    if (status === 'loading') {
-        setIsLoading(true);
-    } 
-    if (!session) {
-      router.push('/auth/login');
-    }
+   // if (status === 'loading') return <Loading />; 
+   // if (!session) {
+   //   router.push('/auth/login');
+   //   return;
+   // }
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -42,8 +41,6 @@ const EmailVerification: React.FC = () => {
             setUserEmail(email);
             codeSent = true;
         }
-        setIsLoading(false)
-
     }, [])
 
     const sendVerificationCode = async (email : string | null) => {
@@ -103,10 +100,6 @@ const EmailVerification: React.FC = () => {
     };
 
     return (
-        <>
-        {isLoading ? (
-            <Loading />
-        ) : (
         <section className={`py-16 flex items-center justify-center min-h-screen dark:bg-dark-background bg-light-background`}>
             <div className="container mx-auto flex flex-col items-center">
                 
@@ -166,9 +159,6 @@ const EmailVerification: React.FC = () => {
                 </div>
             </div>
         </section>
-        
-        )}
-        </>
     );
 };
 

@@ -16,11 +16,6 @@ const Plans: React.FC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  //if (status === 'loading') return <Loading />;
-  //if (!session) {
-  //  router.push('/auth/login');
-  //}
-
   useEffect(()=> {
     const parentIdString = sessionStorage.getItem("parentId");
     console.log("parentIdString", parentIdString);
@@ -69,34 +64,40 @@ const Plans: React.FC = () => {
   };
 
   return (
-    <section className={`bg-light-background dark:bg-dark-background min-h-screen flex flex-col items-center`}>
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-1 w-full">
-          <h2 className={`text-3xl sm:text-3xl md:text-4xl font-bold font-satisfy text-center text-light-primary dark:text-dark-text-primary mx-auto my-4`}>
-            Choose Your Plan
-          </h2>
-          <button
-            onClick={toggleTheme}
-            className="text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-          >
-            {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}
-          </button>
-        </div>
-        <p className={`text-lg text-center mb-6 font-stix text-light-text dark:text-dark-text`}>
-          Select the plan that best fits your needs. All plans come with a 14-day free trial!
-        </p>
-        <div className="flex flex-col md:flex-row justify-center gap-8">
-          {pricingOptions.map((option, index) => (
-            <PricingCard
-              key={index}
-              {...option}
-              onClick={() => handleClick(option.price, index)}
-              isLoading={loadingCardIndex === index}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
+    <>
+      {session? (
+        <section className={`bg-light-background dark:bg-dark-background min-h-screen flex flex-col items-center`}>
+          <div className="container mx-auto px-4">
+            <div className="flex justify-between items-center mb-1 w-full">
+              <h2 className={`text-3xl sm:text-3xl md:text-4xl font-bold font-satisfy text-center text-light-primary dark:text-dark-text-primary mx-auto my-4`}>
+                Choose Your Plan
+              </h2>
+              <button
+                onClick={toggleTheme}
+                className="text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+              >
+                {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}
+              </button>
+            </div>
+            <p className={`text-lg text-center mb-6 font-stix text-light-text dark:text-dark-text`}>
+              Select the plan that best fits your needs. All plans come with a 14-day free trial!
+            </p>
+            <div className="flex flex-col md:flex-row justify-center gap-8">
+              {pricingOptions.map((option, index) => (
+                <PricingCard
+                  key={index}
+                  {...option}
+                  onClick={() => handleClick(option.price, index)}
+                  isLoading={loadingCardIndex === index}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : 
+        <Loading/>
+      }
+    </>
   );
 };
 

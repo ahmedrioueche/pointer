@@ -11,25 +11,26 @@ const Dashboard = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  if (status === 'loading') return <Loading />; 
-  if (!session) {
-    router.push('/auth/login');
-    return null;
-  }
-
   // Extract the first name from the session data
-  const firstName = session.user?.name?.split(' ')[0];
+  const firstName = session?.user?.name?.split(' ')[0];
 
   return (
-    <div className="flex flex-col min-h-screen bg-light-background dark:bg-dark-background">
-      <Navbar firstName={firstName} />
-      <div className="flex flex-1">
-        <SideMenu />
-        <main className="flex-1 p-6">
-          <MainMenu />
-        </main>
+
+    <>
+      {session? (
+      <div className="flex flex-col min-h-screen bg-light-background dark:bg-dark-background">
+        <Navbar firstName={firstName} />
+        <div className="flex flex-1">
+          <SideMenu />
+          <main className="flex-1 p-6">
+            <MainMenu />
+          </main>
+        </div>
       </div>
-    </div>
+      ) : (
+        <Loading/>
+      )}
+    </>
   );
 };
 

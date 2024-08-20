@@ -57,7 +57,7 @@ const ContactForm: React.FC = () => {
         try {
             const result = await sendContactForm(formDetails);
             setButtonText("Send");
-            if (result.success) {
+            if (result.status === "success") {
                 setStatus({ success: true, message: 'Message sent successfully' });
             } else {
                 setStatus({ success: false, message: 'Oops.. Something went wrong!' });

@@ -4,6 +4,7 @@ import { FaSun, FaMoon, FaGoogle, FaSpinner } from 'react-icons/fa';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { signIn } from 'next-auth/react';
+import LoadingButton from '@/app/components/LoadingButton';
 
 interface SignupDetails {
     first_name: string;
@@ -24,7 +25,8 @@ const Signup: React.FC = () => {
     const [buttonText, setButtonText] = useState('Sign Up');
     const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false); 
+    const [isPrimaryLoading, setIsPrimaryLoading] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const router = useRouter(); 
     
     useEffect(() => {
@@ -45,17 +47,16 @@ const Signup: React.FC = () => {
 
     const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setButtonText("Signing Up...");
-    
+        setIsPrimaryLoading(true);
         // Validate input
         if (!signupDetails.first_name || !signupDetails.last_name || !signupDetails.email || !signupDetails.password) {
-            setButtonText("Sign Up");
+            setIsPrimaryLoading(false);
             setStatus({ success: false, message: 'Please fill in all required fields.' });
             return;
         }
     
         if (signupDetails.password.length < 6) {
-            setButtonText("Sign Up");
+            setIsPrimaryLoading(false);
             setStatus({ success: false, message: 'Password must be at least 6 characters long.' });
             return;
         }
@@ -89,22 +90,24 @@ const Signup: React.FC = () => {
                 }
                
             } else {
-                setButtonText("Sign Up");
+                setIsPrimaryLoading(false);
                 setStatus({ success: false, message: result.message || 'Signup failed. Please try again.' });
             }
         } catch (error) {
-            setButtonText("Sign Up");
+            setIsPrimaryLoading(false);
             setStatus({ success: false, message: 'Signup failed. Please try again.' });
         }
     };
     
     const handleGoogleSignup = async () => {
-        setIsLoading(true);
+        setIsGoogleLoading(true);
         try {
-            await signIn('google');
+            await signIn('google', { callbackUrl: '/auth/loading' });
         } catch (error) {
-            setIsLoading(false); 
+            setIsGoogleLoading(false);
+            setStatus({ success: false, message: 'Login failed. Please try again.' });
         }
+        setIsGoogleLoading(false);
     };
 
     const toggleTheme = () => {
@@ -165,37 +168,28 @@ const Signup: React.FC = () => {
                             placeholder="Password"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('password', e.target.value)}
                             className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
-                        />
-                           
-                        <button
+                        />  
+                        <LoadingButton
+                            isLoading={isPrimaryLoading}
                             type="submit"
-                            className={`w-full px-6 py-3 rounded-md font-medium transition-colors duration-100 bg-light-primary
-                                     dark:bg-dark-primary text-dark-text hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent`}> 
-                            {buttonText}
-                        </button>
-
+                            buttonText="Sign Up"
+                            className="" 
+                        />
                         {status && (
                             <div className="flex justify-center w-full mt-4">
-                                <p className={`text-center ${status.success ? 'text-green-400' : 'text-red-400'}`}>{status.message}</p>
+                                <p className={`text-center ${status.success ? 'text-light-primary' : 'text-light-accent dark:text-dark-accent'}`}>{status.message}</p>
                             </div>
                         )}
                     </form>
                     <div className="w-full max-w-lg flex flex-col items-center text-center mt-4 space-y-4">
-                        <button 
-                            onClick={handleGoogleSignup} 
-                            disabled={isLoading}
-                            className="w-full px-6 py-3 rounded-md bg-light-primary dark:bg-dark-primary text-white font-medium flex items-center justify-center gap-2 transition-colors duration-100 hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent"
-                            >
-                            {isLoading ? (
-                                <FaSpinner className="animate-spin text-white" />
-                            ) : (
-                            <>
-                                <FaGoogle />
-                                <span>Continue with Google</span>
-                            </>
-                            )}
-                        </button>
-                    
+                         <LoadingButton
+                            isLoading={isGoogleLoading}
+                            type="button"
+                            onClick={handleGoogleSignup}
+                            buttonText="Continue With Google"
+                            icon={FaGoogle}
+                            className="" 
+                        />
                         <p className={`text-lg ${isDarkMode ? 'text-dark-text' : 'text-light-text'}`}>
                             Already signed up?{' '}
                             <Link href="/auth/login">

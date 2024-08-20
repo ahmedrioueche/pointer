@@ -4,6 +4,7 @@ import { FaSun, FaMoon, FaGoogle, FaSpinner } from 'react-icons/fa';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import LoadingButton from '@/app/components/LoadingButton';
 
 interface LoginDetails {
     email: string;
@@ -20,7 +21,8 @@ const Login: React.FC = () => {
     const [buttonText, setButtonText] = useState('Log In');
     const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isPrimaryLoading, setIsPrimaryLoading] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const router = useRouter(); 
 
     useEffect(() => {
@@ -41,9 +43,15 @@ const Login: React.FC = () => {
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setButtonText("Logging In...");
-        try {
+        setIsPrimaryLoading(true);
 
+        if (!loginDetails.email || !loginDetails.password) {
+            setIsPrimaryLoading(false);
+            setStatus({ success: false, message: 'Please fill in all required fields.' });
+            return;
+        }
+
+        try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -51,8 +59,9 @@ const Login: React.FC = () => {
             });
 
             const data = await response.json();
-
-              if (response.ok) {                
+            console.log("data:", data);
+            
+            if (response.ok) {                
                 const signInResult = await signIn('credentials', {
                     redirect: false,
                     email: loginDetails.email,
@@ -61,10 +70,15 @@ const Login: React.FC = () => {
 
                 if (signInResult?.error) {
                     console.log("error", signInResult?.error);
+                    setStatus({ success: false, message: 'Login failed.' });
                 } else {
                     router.push('/main/dashboard');
                 }
             }
+            else 
+               setStatus({ success: false, message: data.message });
+
+            setIsPrimaryLoading(false);
 
         } catch (error) {
             setButtonText("Log In");
@@ -74,12 +88,14 @@ const Login: React.FC = () => {
     };
 
     const handleGoogleSignup = async () => {
-        setIsLoading(true);
+        setIsGoogleLoading(true);
         try {
             await signIn('google', { callbackUrl: '/auth/loading' });
         } catch (error) {
-            setIsLoading(false); 
+            setIsGoogleLoading(false);
+            setStatus({ success: false, message: 'Login failed. Please try again.' });
         }
+        setIsGoogleLoading(false);
     };
 
     const toggleTheme = () => {
@@ -124,33 +140,27 @@ const Login: React.FC = () => {
                             onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('password', e.target.value)}
                             className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
                         />
-                        <button
+                        <LoadingButton
+                            isLoading={isPrimaryLoading}
                             type="submit"
-                            className={`w-full px-6 py-3 rounded-md font-medium transition-colors duration-100 bg-light-primary
-                            dark:bg-dark-primary text-dark-text hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent`}>     
-                            {buttonText}
-                        </button>
-
+                            buttonText="Sign Up"
+                            className="" 
+                        />
                         {status && (
                             <div className="flex justify-center w-full mt-4">
-                                <p className={`text-center ${status.success ? 'text-green-400' : 'text-red-400'}`}>{status.message}</p>
+                                <p className={`text-center ${status.success ? 'text-light-primary' : 'text-light-accent dark:text-dark-accent'}`}>{status.message}</p>
                             </div>
                         )}
                     </form>
                     <div className="w-full max-w-lg flex flex-col items-center text-center mt-4 space-y-4">
-                        <button 
-                            onClick={handleGoogleSignup} 
-                            disabled={isLoading} 
-                            className="w-full px-6 py-3 rounded-md font-medium bg-light-primary dark:bg-dark-primary text-white flex items-center justify-center gap-2 transition-colors duration-100 hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent">
-                            {isLoading ? (
-                                <FaSpinner className="animate-spin text-white" />
-                            ) : (
-                                <>
-                                    <FaGoogle />
-                                    <span>Continue with Google</span>
-                                </>
-                            )}
-                        </button>
+                       <LoadingButton
+                            isLoading={isGoogleLoading}
+                            type="button"
+                            onClick={handleGoogleSignup}
+                            buttonText="Continue With Google"
+                            icon={FaGoogle}
+                            className="" 
+                        />
                         <p className={`text-lg ${isDarkMode ? 'text-dark-text' : 'text-light-text'}`}>
                             Not signed up yet?{' '}
                             <Link href="/auth/signup">

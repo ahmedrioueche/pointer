@@ -7,6 +7,7 @@ import { apiInsertDB } from '@/lib/dbHelper';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/components/Loading';
 import { apiUpdateParent } from '@/lib/apiHelper';
+import LoadingButton from '@/app/components/LoadingButton';
 
 interface Child {
     name: string;
@@ -302,17 +303,13 @@ const Confirm: React.FC = () => {
                                         <p className={`text-center ${resStatus.success ? 'text-light-primary dark:text-dark-primary' : 'text-red-400'}`}>{resStatus.message}</p>
                                     </div>
                                     )}
-                                <button
+                               
+                               <LoadingButton
+                                    isLoading={isLoading}
                                     type="submit"
-                                    className={`w-full px-6 py-3 rounded-md font-medium transition-colors duration-100 bg-light-primary
-                                            dark:bg-dark-primary text-dark-text hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent`}
-                                >
-                                {isLoading ? (
-                                    <FaSpinner className="animate-spin text-white" />
-                                    ) : (
-                                    "Confirm Details"
-                                    )}                   
-                                </button>
+                                    buttonText="Confirm Details"
+                                    className="" 
+                                />
                             </form>
                         </div>
                     </div>

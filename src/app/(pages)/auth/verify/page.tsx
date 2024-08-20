@@ -1,11 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { FaSun, FaMoon, FaSpinner } from 'react-icons/fa';
-import Link from 'next/link';
+import { FaSun, FaMoon } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/components/Loading';
+import LoadingButton from '@/app/components/LoadingButton';
 
 
 const EmailVerification: React.FC = () => {
@@ -139,17 +139,15 @@ const EmailVerification: React.FC = () => {
                                 className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
                             />
 
-                                <button
+                                <LoadingButton
+                                    isLoading={isLoading}
                                     type="submit"
-                                    disabled={isLoading}
-                                    className={`w-full px-6 py-3 rounded-md font-medium transition-colors duration-100 
-                                        ${isLoading ? 'bg-light-accent dark:bg-dark-accent cursor-not-allowed' : 'bg-light-primary dark:bg-dark-primary text-dark-text hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent'}`}
-                                >
-                                    {isLoading ?  <FaSpinner className="animate-spin text-white" /> : 'Verify Code'}
-                                </button>
+                                    buttonText="Vefify Code"
+                                    className="" 
+                                />
                                 {resultStatus && (
                                     <div className="flex justify-center w-full mt-4">
-                                        <p className={`text-center ${resultStatus.success ? 'text-light-primary dark:text-dark-primary' : 'text-red-400'}`}>{resultStatus.message}</p>
+                                        <p className={`text-center ${resultStatus.success ? 'text-light-primary dark:text-dark-primary' : 'text-light-accent dark:text-dark-accent'}`}>{resultStatus.message}</p>
                                     </div>
                                 )}
                             </form>

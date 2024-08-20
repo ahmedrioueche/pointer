@@ -6,12 +6,18 @@ import Loading from '../../../components/Loading';
 import Navbar from '@/app/components/main/Navbar';
 import MainMenu from '@/app/components/main/MainMenu';
 import SideMenu from '@/app/components/main/SideMenu';
+import { useEffect } from 'react';
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Extract the first name from the session data
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/login'); 
+    }
+  }, [status, router]);
+
   const firstName = session?.user?.name?.split(' ')[0];
 
   return (

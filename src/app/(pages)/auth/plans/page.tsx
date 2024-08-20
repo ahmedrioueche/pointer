@@ -16,6 +16,12 @@ const Plans: React.FC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/login'); 
+    }
+  }, [status, router]);
+  
   useEffect(()=> {
     const parentIdString = sessionStorage.getItem("parentId");
     console.log("parentIdString", parentIdString);

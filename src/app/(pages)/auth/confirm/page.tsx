@@ -30,6 +30,11 @@ const Confirm: React.FC = () => {
     const [gender, setGender] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+          router.push('/auth/login'); 
+        }
+      }, [status, router]);
     
     const toggleTheme = () => {
         const newTheme = !isDarkMode ? 'dark' : 'light';

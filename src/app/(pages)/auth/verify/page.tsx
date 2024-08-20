@@ -20,6 +20,12 @@ const EmailVerification: React.FC = () => {
     const { data: session, status } = useSession(); 
 
     useEffect(() => {
+        if (status === 'unauthenticated') {
+          router.push('/auth/login'); 
+        }
+      }, [status, router]);
+      
+    useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             const isDark = savedTheme === 'dark';

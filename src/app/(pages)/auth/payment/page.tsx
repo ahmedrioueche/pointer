@@ -109,7 +109,6 @@ const Payment: React.FC = () => {
                         </div>
                         <LoadingButton
                             isLoading={isLoading}
-                            setIsLoading={setIsLoading}
                             type="submit"
                             buttonText="Pay"
                             className="" 

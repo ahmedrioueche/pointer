@@ -36,7 +36,16 @@ const Confirm: React.FC = () => {
           router.push('/auth/login'); 
         }
       }, [status, router]);
-    
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            const isDark = savedTheme === 'dark';
+            setIsDarkMode(isDark);
+            document.documentElement.classList.toggle('dark', isDark);
+        }
+    }, []);
+
     const toggleTheme = () => {
         const newTheme = !isDarkMode ? 'dark' : 'light';
         setIsDarkMode(!isDarkMode);
@@ -89,6 +98,7 @@ const Confirm: React.FC = () => {
 
         if (Object.keys(currentErrors).length > 0) {
             setErrors(currentErrors);
+            setIsLoading(false);
         } else {
             for (const child of children) {
 
@@ -115,10 +125,11 @@ const Confirm: React.FC = () => {
            try{
                 const result = await apiUpdateParent(parentId, parentData);
                 
-                if (result?.status === 200) {
+                if (result.status === "success") {
 
                     router.push('/auth/plans');
                 }
+                
                 else {  
                     setStatus({ success: false, message: 'Ops! An error occured!' });
                 }

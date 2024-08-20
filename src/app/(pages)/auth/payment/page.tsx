@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import LoadingButton from '@/app/components/LoadingButton';
 
 // Make sure to replace this with your actual Stripe publishable key
 const stripePromise = loadStripe('your-publishable-key-here');
@@ -106,14 +107,14 @@ const Payment: React.FC = () => {
                                 }}
                             />
                         </div>
-                        <button
+                        <LoadingButton
+                            isLoading={isLoading}
+                            setIsLoading={setIsLoading}
                             type="submit"
-                            disabled={isLoading}
-                            className={`w-full px-6 py-3 rounded-md font-medium transition-colors duration-100 bg-light-primary
-                                dark:bg-dark-primary text-dark-text hover:bg-gradient-to-r hover:from-dark-primary hover:to-dark-accent`}
-                        >
-                            {isLoading ? 'Processing...' : 'Pay Now'}
-                        </button>
+                            buttonText="Pay"
+                            className="" 
+                        />                     
+
                         {status && (
                             <div className="mt-4">
                                 <p className={`text-center ${status.success ? 'text-green-400' : 'text-red-400'}`}>{status.message}</p>

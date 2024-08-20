@@ -17,7 +17,7 @@ function LoadingPage() {
         }
 
         const fetchParentData = async () => {
-            setFetching(true); // Set the fetching flag to true to prevent multiple calls
+            setFetching(true); 
 
             try {
                 const response = await fetch('/api/auth/loading', {
@@ -33,7 +33,12 @@ function LoadingPage() {
                 console.log("parent", parent);
                 
                 if (parent) {
-                    if (parent.children_count === null) {
+                    if(parent.is_verified === null){
+                        router.push('/auth/verify');
+                        return;
+                    }
+
+                    if (parent.children_count === 0) {
                         router.push('/auth/confirm');
                         return;
                     }

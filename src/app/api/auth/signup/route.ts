@@ -19,9 +19,9 @@ async function handlePost(req: Request) {
             password: hashedPassword,
         };
 
-        const parentId = await insertParent(parent); 
+        const response = await insertParent(parent); 
 
-        return NextResponse.json({ message: 'User created successfully!', parentId }, { status: 200 });
+        return NextResponse.json(response);
     } catch (error) {
         console.error('Error creating user:', error); // Log the error to server logs
         return NextResponse.json({ message: 'Error creating user.' }, { status: 500 });

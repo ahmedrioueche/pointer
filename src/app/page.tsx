@@ -9,6 +9,7 @@ import FAQ from './components/home/FAQ';
 import Contact from './components/home/Contact';
 import Footer from './components/Footer';
 const Home = () => {
+
   return (
     <div>
       <Navbar />

@@ -8,9 +8,10 @@ interface ContactFormData {
   }
   
   interface ApiResponse {
-    success?: boolean;
-    message?: string;
+    status: string; // 'success', 'failed', or 'error'
+    message?: string; // Optional message
   }
+  
   
   // Convert the function to TypeScript
   export const sendContactForm = async (data: ContactFormData): Promise<ApiResponse> => {
@@ -27,21 +28,28 @@ interface ContactFormData {
     return response.json();
   };
   
-  export const apiUpdateParent = async (parentId : Number | null, updateData : any ) => {    
+  export const apiUpdateParent = async (parentId: Number | null, updateData: any): Promise<ApiResponse> => {
     try {
       const response = await fetch('/api/update-parent', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-              parentId,
-              updateData
-           }),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ parentId, updateData }),
       });
-
-      return response;
-
+  
+      if (!response.ok) {
+        throw new Error('Failed to update parent');
+      }
+  
+      // Parse the response JSON
+      const responseData: ApiResponse = await response.json();
+      
+      return responseData;
+  
     } catch (error) {
-      console.error('update failed:', error);
+      console.error('Update failed:', error);
+      
+      // Return a default error response
+      return { status: 'error', message: 'An error occurred' };
     }
-  } 
+  };
   

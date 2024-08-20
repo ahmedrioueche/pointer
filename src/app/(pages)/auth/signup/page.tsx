@@ -71,9 +71,10 @@ const Signup: React.FC = () => {
             });
 
             const result = await response.json();
-            if (response.ok) {
-                const parentId =  result.parentId;
-
+            console.log("result", result)
+            if (result.status === "success") {
+                const parentId = result.parentId;
+               
                 sessionStorage.setItem("parentId", parentId);
                 sessionStorage.setItem("userEmail", signupDetails.email);
 
@@ -91,7 +92,9 @@ const Signup: React.FC = () => {
                
             } else {
                 setIsPrimaryLoading(false);
-                setStatus({ success: false, message: result.message || 'Signup failed. Please try again.' });
+                console.log("result.message", result.message)
+                setStatus({ success: false, message: result.message});
+              
             }
         } catch (error) {
             setIsPrimaryLoading(false);

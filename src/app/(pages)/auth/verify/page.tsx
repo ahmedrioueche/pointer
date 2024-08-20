@@ -1,12 +1,12 @@
 "use client"
-
 import React, { useState, useEffect } from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/components/Loading';
 import LoadingButton from '@/app/components/LoadingButton';
-
+import { updateParent } from '@/db/parentService';
+import { apiUpdateParent } from '@/lib/apiHelper';
 
 const EmailVerification: React.FC = () => {
     const [userEmail, setUserEmail] = useState<string | null>('');
@@ -66,16 +66,28 @@ const EmailVerification: React.FC = () => {
         }
     };
 
-    const verifyCode = (userVerificationCode : string) => {
+    const verifyCode = async (userVerificationCode : string) => {
         setIsLoading(true);
+        const parentIdString = sessionStorage.getItem("parentId");
+        const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
 
         if(sentVerificationCode === userVerificationCode) {
-            router.push("/auth/confirm");
+            const response = await apiUpdateParent(parentId, { is_verified: true });
+
+            if (response.status === 'success') {
+                console.log("verifyCode success")
+                router.push("/auth/confirm");
+            }
+            else {
+                console.log("verifyCode failed")
+                setStatus({ success: false, message: 'Email verification failed. Please try again' });
+                setIsLoading(false);
+            }
 
         }
         else {
             setStatus({ success: false, message: 'Email verification failed' });
-
+            setIsLoading(false);
         }
     }
 
@@ -114,7 +126,7 @@ const EmailVerification: React.FC = () => {
                                 {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}
                             </button>
                             
-                            <h2 className={`text-4xl font-bold font-satisfy mb-8
+                            <h2 className={`text-3xl font-bold font-satisfy mb-8
                                 ${isDarkMode ? 
                                     'bg-gradient-to-r from-dark-primary to-dark-accent text-transparent bg-clip-text' 
                                     : 
@@ -125,24 +137,23 @@ const EmailVerification: React.FC = () => {
                                 Verify Your Email
                             </h2>
                             <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-lg">
-                            <input
-                                type="text"
-                                value={userVerificationCode}
-                                placeholder="Enter the verification code"
-                                onChange={(e) => {
-                                    const newCode = e.target.value;
-                                    setUserVerificationCode(newCode);
-                                    if (newCode.length === 6) {
-                                        verifyCode(newCode);
-                                    }
-                                }}
-                                className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
-                            />
-
+                                <input
+                                    type="text"
+                                    value={userVerificationCode}
+                                    placeholder="Enter the verification code"
+                                    onChange={(e) => {
+                                        const newCode = e.target.value;
+                                        setUserVerificationCode(newCode);
+                                        if (newCode.length === 6) {
+                                            verifyCode(newCode);
+                                        }
+                                    }}
+                                    className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
+                                />
                                 <LoadingButton
                                     isLoading={isLoading}
                                     type="submit"
-                                    buttonText="Vefify Code"
+                                    buttonText="Verify Code"
                                     className="" 
                                 />
                                 {resultStatus && (
@@ -153,7 +164,7 @@ const EmailVerification: React.FC = () => {
                             </form>
                             <div className="w-full max-w-lg flex flex-col items-center text-center mt-4 space-y-4">
                                 <p className={`text-lg ${isDarkMode ? 'text-dark-text' : 'text-light-text'}`}>
-                                    <span onClick={resendCode} className="font-stix text-base text-light-primary dark:text-dark-primary hover:underline cursor-pointer">Did not receive the code? check spam, or click here to resend</span>
+                                    <span onClick={resendCode} className="font-stix text-base text-light-primary dark:text-dark-primary hover:text-light-accent dark:hover:text-dark-accent cursor-pointer">Did not receive the code? check spam, or click here to resend</span>
                                 </p>
                             </div>
                         </div>

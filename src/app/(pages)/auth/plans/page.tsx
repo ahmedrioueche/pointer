@@ -22,6 +22,15 @@ const Plans: React.FC = () => {
     }
   }, [status, router]);
   
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        const isDark = savedTheme === 'dark';
+        setIsDarkMode(isDark);
+        document.documentElement.classList.toggle('dark', isDark);
+    }
+  }, []);
+
   useEffect(()=> {
     const parentIdString = sessionStorage.getItem("parentId");
     console.log("parentIdString", parentIdString);

@@ -72,7 +72,7 @@ const Login: React.FC = () => {
                     console.log("error", signInResult?.error);
                     setStatus({ success: false, message: 'Login failed.' });
                 } else {
-                    router.push('/main/dashboard');
+                    router.push('/auth/loading');
                 }
             }
             else 

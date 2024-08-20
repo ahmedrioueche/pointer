@@ -6,6 +6,7 @@ export interface Parent {
     last_name: string;
     email: string;
     password: string;
+    is_verified?: boolean;
     age?: number;
     gender?: string;
     children_count?: number;
@@ -18,8 +19,12 @@ export interface Parent {
     subscription_price?: number;
 }
 
-// Function to insert a parent into the database
-export const insertParent = async (parent: Parent): Promise<number> => {
+interface Response {
+    status: string;
+    message?: string;
+    parentId? : Number;
+}
+export const insertParent = async (parent: Parent): Promise<Response> => {
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
@@ -33,45 +38,61 @@ export const insertParent = async (parent: Parent): Promise<number> => {
                 parent.last_name,
                 parent.email,
                 parent.password,
-             
             ]
         );
 
-        const parentId = (result as any).insertId; 
+        const parentId = (result as any).insertId;
 
         await connection.commit();
-        
-        return parentId; // Return the ID of the newly inserted parent
+
+        return {
+            status: 'success',
+            parentId,
+        };
     } catch (error) {
         await connection.rollback();
-        throw error; // Re-throw the error to be handled by the caller
+
+        // Type assertion to narrow the error type
+        if (error instanceof Error && (error as any).code === 'ER_DUP_ENTRY') {
+            return {
+                status: 'failed',
+                message: 'Email already exists',
+            };
+        }
+
+        // If the error is not the expected type, rethrow it
+        throw error;
     } finally {
         connection.release();
     }
 };
 
-export const updateParent = async (parentId: number, updateData: Partial<Parent>): Promise<void> => {
+
+export const updateParent = async (parentId: number, updateData: Partial<Parent>): Promise<Response> => {
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
 
-        if(updateData) {
+        if (updateData && Object.keys(updateData).length > 0) {
             const setClause = Object.keys(updateData)
-            .map((key) => `${key} = ?`)
-            .join(', ');
+                .map((key) => `${key} = ?`)
+                .join(', ');
             const query = `UPDATE parent SET ${setClause} WHERE parent_id = ?`;
             const values = [...Object.values(updateData), parentId];
-            console.log("updating parent table values:", values);
-            await connection.query(query, values);
+            console.log("Updating parent table values:", values);
 
+            await connection.query(query, values);
             await connection.commit();
+
+            return { status: 'success' }; 
+        } else {
+            console.log("updateData is undefined or empty");
+            return { status: 'failed', message: 'No data to update' }; 
         }
-        else
-            console.log("updateData is undefined")
-       
     } catch (error) {
         await connection.rollback();
-        throw error; // Re-throw the error to be handled by the caller
+        console.error('Error updating parent:', error);
+        return { status: 'error', message: 'An error occurred' }; 
     } finally {
         connection.release();
     }

@@ -64,7 +64,7 @@ const Page = ({ params }: PageProps) => {
               {MainContainer ? (
                 <MainContainer />
               ) : (
-                <MainLoading numCards={6} />
+                <></>
               )}
             </main>
           </div>

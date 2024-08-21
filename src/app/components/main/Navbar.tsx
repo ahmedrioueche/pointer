@@ -46,7 +46,7 @@ const DashboardNavbar = ({ firstName } : any) => {
       <div className="container mx-auto flex items-center justify-between">
         <div className="text-3xl font-bold">
           <Link
-            href="/dashboard"
+            href="/main/home"
             className="relative font-satisfy cursor-pointer text-dark-primary transition-colors duration-300 hover:text-light-accent dark:hover:text-dark-accent"
           >
             Pointer

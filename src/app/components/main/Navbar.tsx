@@ -204,12 +204,6 @@ const DashboardNavbar = ({ firstName } : any) => {
                 <span className="ml-2">{`${remainingDays} Days`}</span>
               </span>
             </button>
-            <button
-              className="relative flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-            >
-              <FaClock className="text-xl transition-transform duration-500 ease-in-out transform group-hover:rotate-360" />
-              <span className="ml-2">{`${remainingDays} Days`}</span>
-            </button>
 
             <button
               onClick={handleLogout}

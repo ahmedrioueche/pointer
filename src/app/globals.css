@@ -20,17 +20,17 @@ html {
 body {
   font-family: 'Satisfy', serif;
 }
-
+.task-menu::-webkit-scrollbar,
 .modal-content::-webkit-scrollbar {
   display: none;
 }
 
-.modal-content {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+.modal-content, .task-menu {
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
 }
 
-/* Hide the number input spinners */
+
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -41,19 +41,16 @@ body {
     -moz-appearance: textfield;
 }
 
-/* styles/globals.css or styles.module.css */
 
-/* Hide default radio buttons */
 .radio-hidden {
   display: none;
 }
 
-/* Custom radio button styling */
 .radio-custom {
-  width: 1.25rem; /* 20px */
-  height: 1.25rem; /* 20px */
-  border: 2px solid #d1d5db; /* Gray border */
-  border-radius: 9999px; /* Fully rounded */
+  width: 1.25rem; 
+  height: 1.25rem; 
+  border: 2px solid #d1d5db; 
+  border-radius: 9999px; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,10 +59,10 @@ body {
 
 .radio-custom::after {
   content: '';
-  width: 0.75rem; /* 12px */
-  height: 0.75rem; /* 12px */
-  background-color: #3b82f6; /* Primary color */
-  border-radius: 9999px; /* Fully rounded */
+  width: 0.75rem; 
+  height: 0.75rem; 
+  background-color: #3b82f6; 
+  border-radius: 9999px; 
   position: absolute;
   opacity: 0;
   transition: opacity 0.2s ease;

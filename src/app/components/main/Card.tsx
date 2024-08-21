@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FaTasks, FaUser, FaChevronDown } from 'react-icons/fa';
 import { Task } from "../../../lib/interface";
+import Link from 'next/link';
 
 interface CardProps {
   id: number;
@@ -12,14 +13,13 @@ interface CardProps {
   achievedTasks: Task[];
   pendingTasks: Task[];
   icon: string;
+  callback: any;
 }
 
-const Card: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, pendingTasks, icon }) => {
+const Card: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, pendingTasks, icon, callback }) => {
   const router = useRouter();
   const [isAchievedCollapsed, setIsAchievedCollapsed] = useState(true);
   const [isPendingCollapsed, setIsPendingCollapsed] = useState(true);
-  const achievedTasksRef = useRef<HTMLDivElement>(null);
-  const pendingTasksRef = useRef<HTMLDivElement>(null);
 
   const handleProfileClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -28,7 +28,7 @@ const Card: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, pendi
 
   const handleTasksClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    router.push(`/main/assign-tasks/${id}`);
+    callback()
   };
 
   const maleGradient = 'bg-gradient-to-br from-blue-300 to-blue-500';
@@ -44,24 +44,24 @@ const Card: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, pendi
     <div
       className={`relative p-6 ${gradientBg} ${hoverBg} z-[0] text-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl cursor-pointer mb-4`}
     >
-      {/* Profile Image */}
-      <div className="flex items-center justify-center w-30 h-30 mx-auto rounded-full overflow-hidden">
-        <Image
-          src={icon}
-          alt={gender === 'male' ? 'Boy' : 'Girl'}
-          width={90}
-          height={90}
-          className="object-cover h-32 w-32"
-        />
-      </div>
+      <Link href={`/main/child/${id}`}>
+        <div className="flex items-center justify-center w-30 h-30 mx-auto rounded-full overflow-hidden">
+          <Image
+            src={icon}
+            alt={gender === 'male' ? 'Boy' : 'Girl'}
+            width={90}
+            height={90}
+            className="object-cover h-32 w-32"
+          />
+        </div>
 
-      {/* Name and Age */}
-      <div className="mt-4 text-center">
-        <h3 className="text-2xl font-stix mb-1">{name}, {age}</h3>
-      </div>
-
+        {/* Name and Age */}
+        <div className="mt-4 text-center">
+          <h3 className="text-2xl font-stix mb-1">{name}, {age}</h3>
+        </div>
+      </Link>
       {/* Achieved Tasks Section */}
-      <div className="mt-4 font-stix">
+      <div className={`mt-4 font-stix ${isAchievedCollapsed ? 'max-h-12' : 'max-h-[500px]'} overflow-hidden transition-[max-height] duration-300 ease-in-out`}>
         <div
           className="flex items-center justify-between hover:underline cursor-pointer"
           onClick={() => setIsAchievedCollapsed(!isAchievedCollapsed)}
@@ -72,25 +72,23 @@ const Card: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, pendi
           />
         </div>
 
-        <div ref={achievedTasksRef} className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${isAchievedCollapsed ? 'max-h-0' : `max-h-[${achievedTasksRef.current?.scrollHeight ?? 'none'}px]`}`}>
-          {!isAchievedCollapsed && (
-            <div className="flex flex-col items-center justify-between w-full font-satisfy text-base mt-4">
-              {achievedTasks.map(task => (
-                <div
-                  key={task.id}
-                  className={`bg-transparent py-3 px-2 flex items-center rounded-md mb-2 shadow-sm w-full text-left hover:${gender === "male" ? `${maleGradient}` : `${femaleGradient}`}`}
-                >
-                  <FaTasks className="text-dark-text mr-3" />
-                  <span className="text-left">{task.title}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {!isAchievedCollapsed && (
+          <div className="flex flex-col items-center justify-between w-full font-satisfy text-base mt-4">
+            {achievedTasks.map(task => (
+              <div
+                key={task.id}
+                className={`bg-transparent py-3 px-2 flex items-center rounded-md mb-2 shadow-sm w-full text-left hover:${gender === "male" ? `${maleGradient}` : `${femaleGradient}`}`}
+              >
+                <FaTasks className="text-dark-text mr-3" />
+                <span className="text-left">{task.title}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Pending Tasks Section */}
-      <div className="mt-4 font-stix">
+      <div className={`mt-4 font-stix ${isPendingCollapsed ? 'max-h-12' : 'max-h-[500px]'} overflow-hidden transition-[max-height] duration-300 ease-in-out`}>
         <div
           className="flex items-center justify-between hover:underline cursor-pointer"
           onClick={() => setIsPendingCollapsed(!isPendingCollapsed)}
@@ -101,21 +99,19 @@ const Card: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, pendi
           />
         </div>
 
-        <div ref={pendingTasksRef} className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${isPendingCollapsed ? 'max-h-0' : `max-h-[${pendingTasksRef.current?.scrollHeight ?? 'none'}px]`}`}>
-          {!isPendingCollapsed && (
-            <div className="flex flex-col items-center justify-between w-full mt-2 font-satisfy text-base">
-              {pendingTasks.map(task => (
-                <div
-                  key={task.id}
-                  className={`bg-transparent py-3 px-2 flex items-center rounded-md mb-2 shadow-sm w-full text-left hover:${gender === "male" ? `${maleGradient}` : `${femaleGradient}`}`}
-                >
-                  <FaTasks className="text-dark-text mr-3" />
-                  <span className="text-left">{task.title}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {!isPendingCollapsed && (
+          <div className="flex flex-col items-center justify-between w-full mt-2 font-satisfy text-base">
+            {pendingTasks.map(task => (
+              <div
+                key={task.id}
+                className={`bg-transparent py-3 px-2 flex items-center rounded-md mb-2 shadow-sm w-full text-left hover:${gender === "male" ? `${maleGradient}` : `${femaleGradient}`}`}
+              >
+                <FaTasks className="text-dark-text mr-3" />
+                <span className="text-left">{task.title}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Profile and Tasks Buttons */}

@@ -40,7 +40,7 @@ const Page = ({ params }: PageProps) => {
         Component = dynamic(() => import('@/app/components/main/Dashboard'));
         break;
       case 'tasks':
-        Component = dynamic(() => import('@/app/components/main/Tasks'));
+        Component = dynamic(() => import('@/app/components/main/tasks/Tasks'));
         break;
       case 'rewards':
         Component = dynamic(() => import('@/app/components/main/Rewards'));

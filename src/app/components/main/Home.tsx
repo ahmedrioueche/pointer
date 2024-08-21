@@ -1,14 +1,18 @@
-import React from 'react';
-import Card from './Card'; // Adjust the import path as needed
-import AddChildCard from './AddCard'; // Adjust the import path as needed
-import { Task, Child } from "../../../lib/interface"
+'use client';
 
+import React, { useState } from 'react';
+import { FaClipboardList } from 'react-icons/fa';
+import Card from './Card'; // Adjust the import path if necessary
+import { Task, Child, TaskCardIf } from "../../../lib/interface";
+import Menu from './tasks/TaskMenu'; // Make sure to use the correct import path
+import { bgColors } from '@/data/style';
+import AddCard from './AddCard';
 
 interface HomeProps {
-    userType: string;
+  userType: string;
 }
 
-const Home: React.FC<HomeProps> = ({ userType}) => {    
+const Home: React.FC<HomeProps> = ({ userType }) => {
   const children: Child[] = [
     {
       id: 1,
@@ -21,7 +25,7 @@ const Home: React.FC<HomeProps> = ({ userType}) => {
       ],
       pendingTasks: [
         { id: 1, title: 'Finish reading chapter 3', points: '3' },
-          { id: 2, title: 'Prepare for spelling test', points: '7' },
+        { id: 2, title: 'Prepare for spelling test', points: '7' },
       ],
       icon: "",
     },
@@ -39,7 +43,6 @@ const Home: React.FC<HomeProps> = ({ userType}) => {
         { id: 2, title: 'Practice guitar', points: '4' },
       ],
       icon: "",
-
     },
     {
       id: 3,
@@ -55,7 +58,6 @@ const Home: React.FC<HomeProps> = ({ userType}) => {
         { id: 2, title: 'Finish book report', points: '7' },
       ],
       icon: "",
-
     },
     {
       id: 4,
@@ -72,7 +74,7 @@ const Home: React.FC<HomeProps> = ({ userType}) => {
       ],
       icon: "",
     },
-  ];
+  ];  
 
   children.forEach((child, index) => {
     const iconIndex = (index % 7) + 1; 
@@ -82,23 +84,36 @@ const Home: React.FC<HomeProps> = ({ userType}) => {
     console.log(" child.icon",  child.icon)
   });
 
+  const [isTasksMenuOpen, setIsTasksMenuOpen] = useState(false);
+
+  const toggleTasksMenu = () => {
+    setIsTasksMenuOpen(!isTasksMenuOpen);
+  };
+
   return (
     <div className="p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {children.map((child, index) => (
-           <Card
-            id={child.id}
-            key={index}
-            name={child.name}
-            age={child.age}
-            gender={child.gender}
-            achievedTasks={child.achievedTasks}
-            pendingTasks={child.pendingTasks}
-            icon={child.icon}
-         />
+          <div key={index} className="h-full">
+            <Card
+              id={child.id}
+              name={child.name}
+              age={child.age}
+              gender={child.gender}
+              achievedTasks={child.achievedTasks}
+              pendingTasks={child.pendingTasks}
+              icon={child.icon}
+              callback={toggleTasksMenu}
+            />
+          </div>
         ))}
-        <AddChildCard />
+        <AddCard/>
       </div>
+
+      <Menu
+        isOpen={isTasksMenuOpen}
+        onClose={toggleTasksMenu}
+      />
     </div>
   );
 };

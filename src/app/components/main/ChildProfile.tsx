@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaTasks, FaCheckCircle, FaUserShield, FaStar, FaGift, FaCalendarAlt, FaEye, FaEyeSlash, FaCopy, FaCheck } from 'react-icons/fa';
+import { FaTasks, FaCheckCircle, FaUserShield, FaStar, FaGift, FaCalendarAlt, FaEye, FaEyeSlash, FaCopy, FaCheck, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { format, isValid } from 'date-fns';
 import ProfileCard from './ProfileCard';
+import { useSwipeable } from 'react-swipeable';
 
 interface ChildProfileProps {
   name: string;
@@ -37,10 +38,32 @@ const ChildProfile: React.FC = () => {
   const [childData, setChildData] = useState<ChildProfileProps | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [copyIcon, setCopyIcon] = useState<{ field: string | null; icon: React.ReactNode }>({ field: null, icon: <FaCopy /> });
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pages, setPages] = useState<ChildProfileProps[]>([
+    placeholderChildData,
+    {
+      ...placeholderChildData,
+      addedOn: new Date("2023-06-01"),
+      tasksAssigned: 20,
+      tasksCompleted: 18,
+      competence: "Advanced",
+      totalPoints: 300,
+      rewardsEarned: 7,
+    },
+    {
+      ...placeholderChildData,
+      addedOn: new Date("2023-03-15"),
+      tasksAssigned: 10,
+      tasksCompleted: 8,
+      competence: "Beginner",
+      totalPoints: 150,
+      rewardsEarned: 3,
+    },
+  ]);
 
   useEffect(() => {
-    setChildData(placeholderChildData);
-  }, []);
+    setChildData(pages[currentPage]);
+  }, [currentPage, pages]);
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -49,7 +72,21 @@ const ChildProfile: React.FC = () => {
   const handleCopyToClipboard = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
     setCopyIcon({ field, icon: <FaCheck className="text-light-accent dark:text-dark-accent" /> });
-    setTimeout(() => setCopyIcon({ field: null, icon: <FaCopy /> }), 1000); // Revert to copy icon after 1 second
+    setTimeout(() => setCopyIcon({ field: null, icon: <FaCopy /> }), 1000);
+  };
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => setCurrentPage((prevPage) => (prevPage < pages.length - 1 ? prevPage + 1 : prevPage)),
+    onSwipedRight: () => setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : prevPage)),
+    trackMouse: true,
+  });
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => (prevPage < pages.length - 1 ? prevPage + 1 : prevPage));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : prevPage));
   };
 
   if (!childData) {
@@ -57,19 +94,14 @@ const ChildProfile: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row p-6 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text rounded-lg shadow-lg">
+    <div className="flex flex-col md:flex-row p-6 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text rounded-lg shadow-lg" {...swipeHandlers}>
+      {/* Profile Card */}
       <div className="flex flex-col items-center md:items-start md:w-1/3 space-y-6 md:space-y-4 mb-6 md:mb-0">
         <div className="w-full max-w-md md:max-w-lg lg:max-w-lg mb-2">
-          <ProfileCard 
-            name={childData.name} 
-            age={childData.age} 
-            gender={childData.gender} 
-            level={childData.level} 
-          />
+          <ProfileCard name={childData.name} age={childData.age} gender={childData.gender} level={childData.level} />
         </div>
-        
-        {/* Username and Password */}
-        <div className="flex flex-col space-y-4 w-full">
+       {/* Username and Password */}
+      <div className="flex flex-col space-y-4 w-full">
           <div className="relative">
             <input
               type="text"
@@ -112,9 +144,10 @@ const ChildProfile: React.FC = () => {
         </div>
       </div>
 
+
       {/* Detail Cards */}
-      <div className="flex flex-col w-full md:w-2/3 space-y-6 md:ml-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-6">
+      <div className="flex flex-col w-full md:w-2/3 space-y-6 md:ml-5 relative" {...swipeHandlers}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-1">
           <DetailCard
             title="Added On"
             value={isValid(new Date(childData.addedOn)) ? format(new Date(childData.addedOn), 'PPP') : 'Invalid Date'}
@@ -152,7 +185,36 @@ const ChildProfile: React.FC = () => {
             bgColor="bg-gradient-to-r from-blue-500 to-purple-500"
           />
         </div>
+
+      <div className="flex flex-col w-full relative">
+      {/* Pagination Arrows */}
+      <div className="flex justify-between items-center absolute top-0 left-0 right-0 transform -translate-y-1/2 z-10">
+        <button
+          className="text-light-primary dark:text-dark-primary hover:text-l ight-accent dark:hover:text-dark-accent focus:outline-none"
+          onClick={handlePrevPage}
+          disabled={currentPage === 0}
+        >
+          <FaArrowLeft className="text-2xl" />
+        </button>
+        <div className="flex justify-center">
+          {pages.map((_, index) => (
+            <div
+              key={index}
+              className={`w-3 h-3 rounded-full mx-1 ${index === currentPage ? 'bg-light-accent dark:bg-dark-accent' : 'bg-light-primary dark:bg-dark-primary'}`}
+            />
+          ))}
+        </div>
+        <button
+          className="text-light-primary dark:text-dark-primary hover:text-light-accent dark:hover:text-dark-accent focus:outline-none"
+          onClick={handleNextPage}
+          disabled={currentPage === pages.length - 1}
+        >
+          <FaArrowRight className="text-2xl" />
+        </button>
       </div>
+      </div>
+      </div>
+
     </div>
   );
 };

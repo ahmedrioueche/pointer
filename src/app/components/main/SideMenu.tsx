@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { FaTasks, FaCoins, FaGift, FaChartBar, FaUser, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaTasks, FaCoins, FaGift, FaChartBar, FaUser, FaArrowLeft, FaArrowRight, FaHome, FaLightbulb, FaDice } from 'react-icons/fa';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const SideMenu: React.FC = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState<boolean>(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleResize = () => {
@@ -31,7 +33,7 @@ const SideMenu: React.FC = () => {
         >
             <button 
                 onClick={toggleCollapse} 
-                className="absolute top-1/2 right-[-1.5rem] transform translate-x-1/2 -translate-y-1/2 p-1 rounded-full bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+                className="absolute top-1/2 right-[0.7rem] transform translate-x-1/2 -translate-y-1/2 p-1 rounded-full bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
                 style={{ zIndex: 20 }}
             >
                 {isCollapsed ? <FaArrowRight size={20} /> : <FaArrowLeft size={20} />}
@@ -40,8 +42,25 @@ const SideMenu: React.FC = () => {
             <ul className="space-y-4">
                 <li>
                     <Link
-                        href="/dashboard"
-                        className="flex items-center px-3 py-2 rounded-lg text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background transition-colors"
+                        href="/main/home"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/home' 
+                                ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                                : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
+                    >
+                        <FaHome className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                        {!isCollapsed && <span>Home</span>}
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href="/main/dashboard"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/dashboard' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
                     >
                         <FaChartBar className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
                         {!isCollapsed && <span>Dashboard</span>}
@@ -49,26 +68,12 @@ const SideMenu: React.FC = () => {
                 </li>
                 <li>
                     <Link
-                        href="/tasks"
-                        className="flex items-center px-3 py-2 rounded-lg text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background transition-colors"
-                    >
-                        <FaTasks className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                        {!isCollapsed && <span>Tasks</span>}
-                    </Link>
-                </li>
-                <li>
-                    <Link
-                        href="/points"
-                        className="flex items-center px-3 py-2 rounded-lg text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background transition-colors"
-                    >
-                        <FaCoins className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                        {!isCollapsed && <span>Points</span>}
-                    </Link>
-                </li>
-                <li>
-                    <Link
-                        href="/rewards"
-                        className="flex items-center px-3 py-2 rounded-lg text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background transition-colors"
+                        href="/main/rewards"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/rewards' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
                     >
                         <FaGift className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
                         {!isCollapsed && <span>Rewards</span>}
@@ -76,13 +81,46 @@ const SideMenu: React.FC = () => {
                 </li>
                 <li>
                     <Link
-                        href="/profile"
-                        className="flex items-center px-3 py-2 rounded-lg text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background transition-colors"
+                        href="/main/tasks"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/tasks' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
                     >
-                        <FaUser className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                        {!isCollapsed && <span>Profile</span>}
+                        <FaTasks className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                        {!isCollapsed && <span>Tasks</span>}
                     </Link>
                 </li>
+             
+                
+                <li>
+                    <Link
+                        href="/main/quizzes"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/quizzes' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
+                    >
+                        <FaLightbulb className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                        {!isCollapsed && <span>Quizzes</span>}
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href="/main/games"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/games' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
+                    >
+                        <FaDice className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                        {!isCollapsed && <span>Games</span>}
+                    </Link>
+                </li>
+
             </ul>
         </aside>
     );

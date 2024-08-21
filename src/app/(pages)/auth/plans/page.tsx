@@ -44,7 +44,7 @@ const Plans: React.FC = () => {
     await updateParentPlan(price);
 
      if (price === "$0") {
-       router.push('/main/dashboard');
+       router.push('/main/home');
      } else {
        router.push('/auth/payment');
      }

@@ -48,7 +48,7 @@ function LoadingPage() {
                         return;
                     }
 
-                    router.push('/main/dashboard');
+                    router.push('/main/home');
                     
                 } else {
                     const parentId: any = await apiInsertDB(session?.user, "", "/api/insert-parent");

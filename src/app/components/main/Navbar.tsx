@@ -1,13 +1,12 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
-import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser } from "react-icons/fa";
-import { signOut } from "next-auth/react"; // Import signOut
+import { useEffect, useState } from "react";
+import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser, FaHome, FaClock, FaArrowDown, FaArrowUp } from "react-icons/fa";
+import { signOut } from "next-auth/react";
 
-const DashboardNavbar = ({ firstName }: any) => {
+const DashboardNavbar = ({ firstName } : any) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [remainingDays, setRemainingDays] = useState(30);
 
   const toggleDarkMode = () => {
     setIsDarkMode((prevMode) => {
@@ -18,16 +17,29 @@ const DashboardNavbar = ({ firstName }: any) => {
     });
   };
 
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        const isDark = savedTheme === 'dark';
+        setIsDarkMode(isDark);
+        document.documentElement.classList.toggle('dark', isDark);
+    }
+  }, []);
+
+  useEffect(() => {
+      setRemainingDays(30);
+    
+  }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen((prevOpen) => !prevOpen);
   };
 
   const handleLogout = async () => {
-    await signOut({ callbackUrl: "/api/auth/signout" }); // Redirect to the login page after logout
+    await signOut({ callbackUrl: "/api/auth/signout" });
   };
 
-  // Extract the first letter of the first name
-  const firstLetter = firstName?.charAt(0).toUpperCase();
+  const firstLetter = firstName?.charAt(0).toUpperCase() || "P";
 
   return (
     <nav className="relative z-1000 top-0 left-0 w-full py-4 px-6 shadow-md bg-light-background dark:bg-dark-background">
@@ -42,6 +54,17 @@ const DashboardNavbar = ({ firstName }: any) => {
         </div>
 
         <div className="flex items-center space-x-4">
+          {/* Countdown Button */}
+          <button
+            className="px-5 py-2 rounded-md text-xl font-stix bg-light-primary dark:bg-dark-primary text-dark-text dark:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 flex items-center group"
+          >
+            {`${remainingDays} Days`}
+            <span className="ml-2 transition-transform duration-300 group-hover:rotate-180">
+              <FaClock className="text-xl group-hover:hidden" />
+              <FaArrowUp className="text-xl hidden group-hover:block" />
+            </span>
+          </button>
+
           {/* Dark Mode Toggle */}
           <button
             onClick={toggleDarkMode}
@@ -97,7 +120,7 @@ const DashboardNavbar = ({ firstName }: any) => {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="md:hidden items-center fixed top-0 left-0 w-full h-screen bg-light-background dark:bg-dark-background flex flex-col p-4 space-y-4">
+        <div className="md:hidden z-[100] items-center fixed top-0 right-0 w-[20rem] h-screen bg-light-background dark:bg-dark-background flex flex-col p-4 space-y-4">
           <button
             onClick={toggleMenu}
             className="absolute top-4 right-4 p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
@@ -106,44 +129,44 @@ const DashboardNavbar = ({ firstName }: any) => {
           </button>
           <div className="flex flex-col items-start w-full">
             <Link
-              href="/dashboard"
+              href="/main/home"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={toggleMenu}
+            >
+              <FaHome className="mr-2 text-lg" /> Home
+            </Link>
+            <Link
+              href="/main/dashboard"
               className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               onClick={toggleMenu}
             >
               <FaChartBar className="mr-2 text-lg" /> Dashboard
             </Link>
             <Link
-              href="/tasks"
+              href="/main/tasks"
               className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               onClick={toggleMenu}
             >
               <FaTasks className="mr-2 text-lg" /> Tasks
             </Link>
             <Link
-              href="/points"
+              href="/main/points"
               className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               onClick={toggleMenu}
             >
               <FaCoins className="mr-2 text-lg" /> Points
             </Link>
             <Link
-              href="/rewards"
+              href="/main/rewards"
               className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               onClick={toggleMenu}
             >
               <FaGift className="mr-2 text-lg" /> Rewards
             </Link>
-            <Link
-              href="/profile"
-              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
-              onClick={toggleMenu}
-            >
-              <FaUser className="mr-2 text-lg" /> Profile
-            </Link>
 
             <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
             <Link
-              href="/notifications"
+              href="/main/notifications"
               className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -151,7 +174,7 @@ const DashboardNavbar = ({ firstName }: any) => {
               Notifications
             </Link>
             <Link
-              href="/settings"
+              href="/main/settings"
               className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -159,7 +182,7 @@ const DashboardNavbar = ({ firstName }: any) => {
               Settings
             </Link>
             <Link
-              href="/profile"
+              href="/main/profile"
               className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -168,13 +191,11 @@ const DashboardNavbar = ({ firstName }: any) => {
               </div>
               <span className="ml-2">Profile</span>
             </Link>
-            <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
             <button
               onClick={handleLogout}
-              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              className="flex items-center w-full p-4 text-lg font-medium text-light-text dark:text-dark-text bg-light-primary dark:bg-dark-primary hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 rounded-md"
             >
-              <FaSignOutAlt className="mr-2 text-lg" />
-              Logout
+              <FaSignOutAlt className="mr-2" /> Logout
             </button>
           </div>
         </div>

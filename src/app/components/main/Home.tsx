@@ -1,26 +1,86 @@
 import React from 'react';
 import Card from './Card'; // Adjust the import path as needed
 import AddChildCard from './AddCard'; // Adjust the import path as needed
+import { Task, Child } from "../../../lib/interface"
+
 
 interface HomeProps {
     userType: string;
 }
 
-interface Child  {
-    id: number;
-    name: string;
-    age: number;
-    gender: 'male' | 'female';
-    profileUrl: string;
-}
+const Home: React.FC<HomeProps> = ({ userType}) => {    
+  const children: Child[] = [
+    {
+      id: 1,
+      name: 'Alice',
+      age: 8,
+      gender: 'female',
+      achievedTasks: [
+        { id: 1, title: 'Completed math homework', points: '10' },
+        { id: 2, title: 'Helped with the chores', points: '5' },
+      ],
+      pendingTasks: [
+        { id: 1, title: 'Finish reading chapter 3', points: '3' },
+          { id: 2, title: 'Prepare for spelling test', points: '7' },
+      ],
+      icon: "",
+    },
+    {
+      id: 2,
+      name: 'Bob',
+      age: 10,
+      gender: 'male',
+      achievedTasks: [
+        { id: 1, title: 'Won the soccer match', points: '15' },
+        { id: 2, title: 'Cleaned his room', points: '5' },
+      ],
+      pendingTasks: [
+        { id: 1, title: 'Start science project', points: '8' },
+        { id: 2, title: 'Practice guitar', points: '4' },
+      ],
+      icon: "",
 
-const Home: React.FC<HomeProps> = ({ userType}) => {
-    // Sample data for the child cards
-    const children : Child[] = [
-        { id: 1, name: 'Alice', age: 8, gender: 'female', profileUrl: '/profile/alice' },
-        { id: 2, name: 'Bob', age: 10, gender: 'male', profileUrl: '/profile/bob' },
-        // Add more children as needed
-    ];
+    },
+    {
+      id: 3,
+      name: 'Charlie',
+      age: 9,
+      gender: 'male',
+      achievedTasks: [
+        { id: 1, title: 'Completed art project', points: '12' },
+        { id: 2, title: 'Helped a friend with homework', points: '6' },
+      ],
+      pendingTasks: [
+        { id: 1, title: 'Prepare for math quiz', points: '9' },
+        { id: 2, title: 'Finish book report', points: '7' },
+      ],
+      icon: "",
+
+    },
+    {
+      id: 4,
+      name: 'Daisy',
+      age: 7,
+      gender: 'female',
+      achievedTasks: [
+        { id: 1, title: 'Finished drawing competition', points: '10' },
+        { id: 2, title: 'Made a craft', points: '5' },
+      ],
+      pendingTasks: [
+        { id: 1, title: 'Learn a new song on piano', points: '8' },
+        { id: 2, title: 'Practice spelling', points: '6' },
+      ],
+      icon: "",
+    },
+  ];
+
+  children.forEach((child, index) => {
+    const iconIndex = (index % 7) + 1; 
+    let type;
+    type = child.gender === "male"? "boy" : "girl";
+    child.icon = `/icons/${type}_${iconIndex}.png`;
+    console.log(" child.icon",  child.icon)
+  });
 
   return (
     <div className="p-6">
@@ -32,7 +92,9 @@ const Home: React.FC<HomeProps> = ({ userType}) => {
             name={child.name}
             age={child.age}
             gender={child.gender}
-            profileUrl={child.profileUrl}
+            achievedTasks={child.achievedTasks}
+            pendingTasks={child.pendingTasks}
+            icon={child.icon}
          />
         ))}
         <AddChildCard />

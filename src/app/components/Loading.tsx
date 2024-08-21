@@ -38,7 +38,7 @@ const Loading: React.FC = () => {
                         Loading...
                     </h2>
                     <p className="text-lg text-center">
-                        We’re getting everything ready for you. <br></br >It won’t take long!
+                        We’re getting everything ready for you. It won’t take long!
                     </p>
                 </div>
                 <div

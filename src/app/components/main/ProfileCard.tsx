@@ -9,7 +9,7 @@ interface ProfileCardProps {
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ name, age, gender, level }) => {
-  const genderImage = gender.toLowerCase() === 'male' ? '/boy.png' : '/girl.png';
+  const genderImage = gender.toLowerCase() === 'male' ? '/icons/boy_1.png' : '/icons/girl_1.png';
 
   return (
     <div className="flex flex-col items-center md:items-start bg-gradient-to-r transform transition-transform hover:scale-105 from-teal-500 to-cyan-500 p-6 rounded-lg shadow-lg text-light-text dark:text-dark-text max-h-[400px] overflow-hidden">

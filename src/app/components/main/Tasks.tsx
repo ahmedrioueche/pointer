@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FaPlus, FaCalendarAlt, FaClipboardList, FaEdit, FaTrashAlt, FaCheck } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
-interface Task {
+interface TaskCard {
   title: string;
   points: string | number;
   icon: React.ElementType;
@@ -22,7 +22,7 @@ const bgColors = [
   "bg-gradient-to-r from-cyan-400 to-red-300",
 ];
 
-const initialTasks: Task[] = [
+const initialTasks: TaskCard[] = [
   { title: "Make the bed", points: 10, icon: FaCalendarAlt, bgColor: bgColors[0] },
   { title: "Do homework", points: 10, icon: FaCalendarAlt, bgColor: bgColors[1] },
   { title: "Buy groceries", points: 10, icon: FaCalendarAlt, bgColor: bgColors[2] },
@@ -39,9 +39,9 @@ const getRandomBgColor = () => {
 };
 
 const Tasks: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<TaskCard[]>(initialTasks);
 
-  const addTask = (newTask: Task) => {
+  const addTask = (newTask: TaskCard) => {
     setTasks([newTask, ...tasks]); // Prepend new task
   };
 
@@ -89,7 +89,7 @@ const Tasks: React.FC = () => {
   );
 };
 
-interface TaskCardProps extends Task {
+interface TaskCardProps extends TaskCard {
   onModify: () => void;
   onRemove: () => void;
   onAction: () => void;
@@ -135,7 +135,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ title, points, icon: Icon, bgColor,
 );
 
 interface CreateTaskProps {
-  onCreate: (task: Task) => void;
+  onCreate: (task: TaskCard) => void;
 }
 
 const CreateTask: React.FC<CreateTaskProps> = ({ onCreate }) => {
@@ -144,7 +144,7 @@ const CreateTask: React.FC<CreateTaskProps> = ({ onCreate }) => {
 
   const handleCreate = () => {
     if (newTaskTitle.trim()) {
-      const newTask: Task = {
+      const newTask: TaskCard = {
         title: newTaskTitle,
         points: newTaskPoints,
         icon: FaCalendarAlt,

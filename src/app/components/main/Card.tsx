@@ -1,60 +1,141 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image'; // Import Image component from Next.js for optimized image handling
-import Link from 'next/link';
+import Image from 'next/image';
+import { FaTasks, FaUser, FaChevronDown } from 'react-icons/fa';
+import { Task } from "../../../lib/interface";
 
 interface CardProps {
   id: number;
   name: string;
   age: number;
   gender: 'male' | 'female';
-  profileUrl: string;
+  achievedTasks: Task[];
+  pendingTasks: Task[];
+  icon: string;
 }
 
-const Card: React.FC<CardProps> = ({ id, name, age, gender, profileUrl }) => {
+const Card: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, pendingTasks, icon }) => {
   const router = useRouter();
+  const [isAchievedCollapsed, setIsAchievedCollapsed] = useState(true);
+  const [isPendingCollapsed, setIsPendingCollapsed] = useState(true);
+  const achievedTasksRef = useRef<HTMLDivElement>(null);
+  const pendingTasksRef = useRef<HTMLDivElement>(null);
 
-  const handleClick = () => {
-    router.push(profileUrl);
+  const handleProfileClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/main/child/${id}`);
   };
 
-  const imageSrc = gender === 'male' ? '/boy.png' : '/girl.png'; // Path to your images
-  const gradientBg = gender === 'male' ? 'bg-gradient-to-br from-blue-300 to-blue-500' : 'bg-gradient-to-br from-pink-300 to-pink-500';
+  const handleTasksClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/main/assign-tasks/${id}`);
+  };
+
+  const maleGradient = 'bg-gradient-to-br from-blue-300 to-blue-500';
+  const femaleGradient = 'bg-gradient-to-br from-pink-300 to-pink-500';
+
+  const maleHoverGradient = 'hover:bg-gradient-to-br hover:from-blue-400 hover:to-blue-600';
+  const femaleHoverGradient = 'hover:bg-gradient-to-br hover:from-pink-400 hover:to-pink-600';
+
+  const gradientBg = gender === 'male' ? maleGradient : femaleGradient;
+  const hoverBg = gender === 'male' ? maleHoverGradient : femaleHoverGradient;
 
   return (
-    <Link href={`/main/child/${id}`}>
-      <div
-        className={`relative p-6 ${gradientBg} z-[0] text-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl cursor-pointer`}
-        onClick={handleClick}
-      >
-        {/* Profile Image */}
-        <div className="flex items-center justify-center w-30 h-30 mx-auto rounded-full overflow-hidden">
-          <Image
-            src={imageSrc}
-            alt={gender === 'male' ? 'Boy' : 'Girl'}
-            width={90} // Set appropriate width
-            height={90} // Set appropriate height
-            className="object-cover h-32 w-32"
+    <div
+      className={`relative p-6 ${gradientBg} ${hoverBg} z-[0] text-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl cursor-pointer mb-4`}
+    >
+      {/* Profile Image */}
+      <div className="flex items-center justify-center w-30 h-30 mx-auto rounded-full overflow-hidden">
+        <Image
+          src={icon}
+          alt={gender === 'male' ? 'Boy' : 'Girl'}
+          width={90}
+          height={90}
+          className="object-cover h-32 w-32"
+        />
+      </div>
+
+      {/* Name and Age */}
+      <div className="mt-4 text-center">
+        <h3 className="text-2xl font-stix mb-1">{name}, {age}</h3>
+      </div>
+
+      {/* Achieved Tasks Section */}
+      <div className="mt-4 font-stix">
+        <div
+          className="flex items-center justify-between hover:underline cursor-pointer"
+          onClick={() => setIsAchievedCollapsed(!isAchievedCollapsed)}
+        >
+          <p className="text-md font-satisfy hover:underline">Achieved tasks today</p>
+          <FaChevronDown
+            className={`transition-transform ${isAchievedCollapsed ? 'rotate-0' : 'rotate-180'}`}
           />
         </div>
 
-        {/* Details */}
-        <div className="mt-4 text-center">  
-          <h3 className="text-2xl font-stix mb-1">{name}</h3>
-          <p className="text-lg font-satisfy">Age: {age}</p>
-          <button
-            className={`mt-4 px-4 py-2 bg-white text-light-primary font-medium font-stix rounded-lg shadow-md hover:text-white transition-colors duration-300
-            hover:bg-gradient-to-br ${gender === 'male' ? 'hover:from-blue-300 hover:to-blue-500' : 'hover:bg-gradient-to-br hover:from-pink-300 hover:to-pink-500'}`}
-            onClick={(e) => {
-              e.stopPropagation(); 
-              router.push(`/main/child/${id}`);
-            }}
-          >
-            Profile
-          </button>
+        <div ref={achievedTasksRef} className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${isAchievedCollapsed ? 'max-h-0' : `max-h-[${achievedTasksRef.current?.scrollHeight ?? 'none'}px]`}`}>
+          {!isAchievedCollapsed && (
+            <div className="flex flex-col items-center justify-between w-full font-satisfy text-base mt-4">
+              {achievedTasks.map(task => (
+                <div
+                  key={task.id}
+                  className={`bg-transparent py-3 px-2 flex items-center rounded-md mb-2 shadow-sm w-full text-left hover:${gender === "male" ? `${maleGradient}` : `${femaleGradient}`}`}
+                >
+                  <FaTasks className="text-dark-text mr-3" />
+                  <span className="text-left">{task.title}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-    </Link>
+
+      {/* Pending Tasks Section */}
+      <div className="mt-4 font-stix">
+        <div
+          className="flex items-center justify-between hover:underline cursor-pointer"
+          onClick={() => setIsPendingCollapsed(!isPendingCollapsed)}
+        >
+          <p className="text-md font-satisfy">Pending tasks today</p>
+          <FaChevronDown
+            className={`transition-transform ${isPendingCollapsed ? 'rotate-0' : 'rotate-180'}`}
+          />
+        </div>
+
+        <div ref={pendingTasksRef} className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${isPendingCollapsed ? 'max-h-0' : `max-h-[${pendingTasksRef.current?.scrollHeight ?? 'none'}px]`}`}>
+          {!isPendingCollapsed && (
+            <div className="flex flex-col items-center justify-between w-full mt-2 font-satisfy text-base">
+              {pendingTasks.map(task => (
+                <div
+                  key={task.id}
+                  className={`bg-transparent py-3 px-2 flex items-center rounded-md mb-2 shadow-sm w-full text-left hover:${gender === "male" ? `${maleGradient}` : `${femaleGradient}`}`}
+                >
+                  <FaTasks className="text-dark-text mr-3" />
+                  <span className="text-left">{task.title}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Profile and Tasks Buttons */}
+      <div className="mt-4 flex justify-between">
+        <button
+          className={`flex items-center mt-4 px-4 py-2 bg-white text-light-primary font-medium font-stix rounded-lg shadow-md hover:text-white transition-colors duration-300
+          hover:bg-gradient-to-br ${gender === 'male' ? 'hover:from-blue-300 hover:to-blue-500' : 'hover:bg-gradient-to-br hover:from-pink-300 hover:to-pink-500'}`}
+          onClick={handleProfileClick}
+        >
+          <FaUser className="mr-2" /> Profile
+        </button>
+        <button
+          className={`flex items-center mt-4 px-4 py-2 bg-white text-light-primary font-medium font-stix rounded-lg shadow-md hover:text-white transition-colors duration-300
+          hover:bg-gradient-to-br ${gender === 'male' ? 'hover:from-blue-300 hover:to-blue-500' : 'hover:bg-gradient-to-br hover:from-pink-300 hover:to-pink-500'}`}
+          onClick={handleTasksClick}
+        >
+          <FaTasks className="mr-2" /> Tasks
+        </button>
+      </div>
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser, FaHome, FaClock, FaArrowDown, FaArrowUp, FaLightbulb, FaDice } from "react-icons/fa";
+import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser, FaHome, FaClock, FaArrowDown, FaArrowUp, FaLightbulb, FaDice, FaArrowRight } from "react-icons/fa";
 import { signOut } from "next-auth/react";
 
 const DashboardNavbar = ({ firstName } : any) => {
@@ -54,17 +54,15 @@ const DashboardNavbar = ({ firstName } : any) => {
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Countdown Button */}
-          <button
-            className="md:px-5 px-4 py-2 rounded-md text-lg md:text-xl font-stix bg-light-primary dark:bg-dark-primary text-dark-text dark:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 flex items-center group"
-          >
-            {`${remainingDays} Days`}
-            <span className="ml-2 transition-transform duration-300 group-hover:rotate-180">
-              <FaClock className="text-xl group-hover:hidden" />
-              <FaArrowUp className="text-xl hidden group-hover:block" />
-            </span>
-          </button>
-
+        <button
+          className="hidden md:flex px-4 py-2 rounded-md text-lg md:text-xl font-stix bg-light-primary dark:bg-dark-primary text-dark-text dark:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 items-center group"
+        >
+          {`${remainingDays} Days`}
+          <span className="ml-2 transition-transform duration-300 group-hover:rotate-180">
+            <FaClock className="text-xl group-hover:hidden" />
+            <FaArrowUp className="text-xl hidden group-hover:block" />
+          </span>
+        </button>
           <button
             onClick={toggleDarkMode}
             className="p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
@@ -117,7 +115,7 @@ const DashboardNavbar = ({ firstName } : any) => {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="md:hidden z-[100] items-center fixed top-0 right-0 w-[20rem] h-screen bg-light-background dark:bg-dark-background flex flex-col p-4 space-y-4">
+        <div className="md:hidden z-[100] overflow-y-scroll items-center fixed top-0 right-0 w-[20rem] h-screen bg-light-background dark:bg-dark-background flex flex-col p-4 space-y-4">
           <button
             onClick={toggleMenu}
             className="absolute top-3 right-3 p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
@@ -198,6 +196,21 @@ const DashboardNavbar = ({ firstName } : any) => {
               <span className="ml-2">Profile</span>
             </Link>
             <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
+            <button
+              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            >
+              <span className="flex items-center">
+                <FaClock className="text-xl transition-transform duration-500 ease-in-out transform hover:rotate-360" />
+                <span className="ml-2">{`${remainingDays} Days`}</span>
+              </span>
+            </button>
+            <button
+              className="relative flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            >
+              <FaClock className="text-xl transition-transform duration-500 ease-in-out transform group-hover:rotate-360" />
+              <span className="ml-2">{`${remainingDays} Days`}</span>
+            </button>
+
             <button
               onClick={handleLogout}
               className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"

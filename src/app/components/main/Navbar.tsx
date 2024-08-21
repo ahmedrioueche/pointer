@@ -115,7 +115,7 @@ const DashboardNavbar = ({ firstName } : any) => {
 
       {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="md:hidden z-[100] overflow-y-scroll items-center fixed top-0 right-0 w-[16rem] h-screen bg-light-background dark:bg-dark-background flex flex-col p-4 space-y-4">
+        <div className="md:hidden z-[100] overflow-y-scroll items-center fixed top-0 right-0 w-[15.6rem] h-screen bg-light-background dark:bg-dark-background flex flex-col p-4 space-y-4">
           <button
             onClick={toggleMenu}
             className="absolute top-3 right-3 p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"

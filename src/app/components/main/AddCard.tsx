@@ -1,20 +1,17 @@
 import React from 'react';
-import { FaPlus } from 'react-icons/fa'; // Import a plus icon from react-icons
+import { FaUserPlus } from 'react-icons/fa'; // Import a user plus icon from react-icons
 
 const AddCard: React.FC = () => {
   return (
     <div
-      className="relative bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text p-6 rounded-lg shadow-lg flex items-center justify-center cursor-pointer transition-transform transform hover:scale-105 hover:shadow-xl"
-      // Added hover shadow and scale transformation for a modern effect
+      className="relative bg-gradient-to-br from-purple-300 via-blue-400 to-teal-500 dark:from-purple-700 dark:via-blue-800 dark:to-teal-600 text-white p-6 rounded-lg shadow-lg flex items-center justify-center cursor-pointer transition-transform transform hover:scale-105 hover:shadow-2xl"
     >
       <div className="flex flex-col items-center space-y-4">
-        <div className="w-20 h-20 bg-gradient-to-r from-light-accent to-light-primary dark:from-dark-accent dark:to-dark-primary rounded-full flex items-center justify-center shadow-lg">
-          <FaPlus className="text-white text-4xl" />
-          {/* Used a larger plus icon and changed the color to white */}
+        <div className="w-24 h-24 bg-gradient-to-r from-purple-500 via-blue-600 to-teal-700 dark:from-purple-800 dark:via-blue-900 dark:to-teal-800 rounded-full flex items-center justify-center shadow-xl">
+          <FaUserPlus className="text-white text-5xl" />
         </div>
-        <h3 className="text-2xl font-semibold font-satisfy text-light-primary dark:text-dark-primary">
+        <h3 className="text-3xl font-satisfy font-bold">
           Add Child
-          {/* Updated font size and color for better visibility */}
         </h3>
       </div>
     </div>

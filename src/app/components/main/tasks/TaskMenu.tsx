@@ -17,23 +17,22 @@ const Menu: React.FC<MenuProps> = ({
   onClose,
 }) => {
   const [pendingTasks, setPendingTasks] = useState<TaskCardIf[]>([
-    { title: "Make the bed", points: 10, creation_date: "2024-08-21T09:00", due_date: "2024-08-21T10:00", icon: FaCalendarAlt, bgColor: bgColors[0] },
-    { title: "Do homework", points: 10, creation_date: "2024-08-21T10:00", due_date: "2024-08-21T11:00", icon: FaCalendarAlt, bgColor: bgColors[1] },
-    { title: "Buy groceries", points: 10, creation_date: "2024-08-21T11:00", due_date: "2024-08-21T12:00", icon: FaCalendarAlt, bgColor: bgColors[2] },
+    { title: "Make the bed", points: 10, creation_date: "2024-08-21T09:00", due_date: "2024-08-21T10:00", approval_date: "2024-08-21T15:00", icon: FaCalendarAlt, bgColor: bgColors[0] },
+    { title: "Do homework", points: 10, creation_date: "2024-08-21T10:00", due_date: "2024-08-21T11:00", approval_date: "2024-08-21T15:00", icon: FaCalendarAlt, bgColor: bgColors[1] },
+    { title: "Buy groceries", points: 10, creation_date: "2024-08-21T11:00", due_date: "2024-08-21T12:00", approval_date: "2024-08-21T15:00",icon: FaCalendarAlt, bgColor: bgColors[2] },
   ]);
   
   const [tasks, setTasks] = useState<TaskCardIf[]>([
-    { title: "Make the bed", points: 10, creation_date: "2024-08-21T12:00", due_date: "2024-08-21T13:00", icon: FaClipboardList, bgColor: bgColors[0] },
-    { title: "Do homework", points: 10, creation_date: "2024-08-21T13:00", due_date: "2024-08-21T14:00", icon: FaClipboardList, bgColor: bgColors[1] },
-    { title: "Buy groceries", points: 10, creation_date: "2024-08-21T14:00", due_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[2] },
-    { title: "Walk the dog", points: 10, creation_date: "2024-08-21T15:00", due_date: "2024-08-21T16:00", icon: FaClipboardList, bgColor: bgColors[3] },
-    { title: "Clean the house", points: 10, creation_date: "2024-08-21T16:00", due_date: "2024-08-21T17:00", icon: FaClipboardList, bgColor: bgColors[4] },
-    { title: "Prepare dinner", points: 10, creation_date: "2024-08-21T17:00", due_date: "2024-08-21T18:00", icon: FaClipboardList, bgColor: bgColors[5] },
-    { title: "Read a book", points: 10, creation_date: "2024-08-21T18:00", due_date: "2024-08-21T19:00", icon: FaClipboardList, bgColor: bgColors[6] },
+    { title: "Make the bed", points: 10, creation_date: "2024-08-21T12:00", due_date: "2024-08-21T13:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[0] },
+    { title: "Do homework", points: 10, creation_date: "2024-08-21T13:00", due_date: "2024-08-21T14:00", approval_date: "2024-08-21T15:00",  icon: FaClipboardList, bgColor: bgColors[1] },
+    { title: "Buy groceries", points: 10, creation_date: "2024-08-21T14:00", due_date: "2024-08-21T15:00", approval_date: "2024-08-21T15:00",  icon: FaClipboardList, bgColor: bgColors[2] },
+    { title: "Walk the dog", points: 10, creation_date: "2024-08-21T15:00", due_date: "2024-08-21T16:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[3] },
+    { title: "Clean the house", points: 10, creation_date: "2024-08-21T16:00", due_date: "2024-08-21T17:00",  approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[4] },
+    { title: "Prepare dinner", points: 10, creation_date: "2024-08-21T17:00", due_date: "2024-08-21T18:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[5] },
+    { title: "Read a book", points: 10, creation_date: "2024-08-21T18:00", due_date: "2024-08-21T19:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[6] },
   ]);
   
   
-
   const assignTask = (newTask: TaskCardIf) => {
     setPendingTasks([newTask, ...pendingTasks]); 
   };
@@ -62,23 +61,24 @@ const Menu: React.FC<MenuProps> = ({
             onClick={onClose}
             className="p-2 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
           >
-            <FaTimes size={24} />
+            <FaTimes size={16} />
           </button>
         </div>
         
-        {/* Top row: CreateTask and PendingTasks */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="col-span-1">
-            <CreateTask type="task_menu" onCreate={assignTask} />
-          </div>
-          <div className="col-span-2">
-            <PendingTasks
-              tasks={pendingTasks}
-              onModify={modifyTask}
-              onRemove={removeTask} 
-            />
-          </div>
+       {/* Top row: CreateTask and PendingTasks */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="col-span-1 md:col-span-1 lg:col-span-1 mt-2">
+          <CreateTask type="task_menu" onCreate={assignTask} />
         </div>
+        <div className="col-span-1 md:col-span-2 lg:col-span-2">
+          <PendingTasks
+            tasks={pendingTasks}
+            onModify={modifyTask}
+            onRemove={removeTask}
+          />
+        </div>
+      </div>
+
 
         {/* Bottom row: Tasks list */}
         <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-4">

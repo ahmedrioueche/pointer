@@ -65,7 +65,7 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate }) => {
             type="datetime-local"
             value={newTaskDate}
             onChange={(e) => setNewTaskDate(e.target.value)}
-            className="flex-1 p-4  rounded-lg mt-3 bg-indigo-400 border border-indigo-400 focus:border-dark-background dark:focus:border-light-background text-light-text dark:text-dark-text placeholder:text-light-text dark:placeholder-dark-text transition-all duration-300"
+            className="flex-1 p-4  rounded-lg mt-3 bg-indigo-400 border border-indigo-400  focus:border-dark-background dark:focus:border-light-background text-light-text dark:text-dark-text placeholder:text-light-text dark:placeholder-dark-text transition-all duration-300 focus:outline-none"
           />
         </div>
       </div>

@@ -71,4 +71,3 @@ body {
 .radio-hidden:checked + .radio-custom::after {
   opacity: 1;
 }
-

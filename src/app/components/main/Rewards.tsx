@@ -3,24 +3,9 @@
 import React, { useState } from 'react';
 import { FaPlus, FaDollarSign, FaGlobeAmericas, FaXbox, FaPlaystation, FaLaptop, FaPhone, FaDog, FaEdit, FaTrashAlt, FaCheck, FaGift } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-
-interface Reward {
-  title: string;
-  points: string | number;
-  icon: React.ElementType;
-  bgColor: string;
-}
-
-// Define a list of background colors
-const bgColors = [
-  "bg-gradient-to-r from-green-400 to-blue-500",
-  "bg-gradient-to-r from-purple-500 to-pink-500",
-  "bg-gradient-to-r from-blue-500 to-cyan-500",
-  "bg-gradient-to-r from-blue-700 to-blue-500",
-  "bg-gradient-to-r from-gray-400 to-blue-600",
-  "bg-gradient-to-r from-green-500 to-teal-500",
-  "bg-gradient-to-r from-cyan-400 to-red-300",
-];
+import { Reward } from '@/lib/interface';
+import { bgColors } from '@/data/style';
+import { RewardCard } from './RewardCard';
 
 const initialRewards: Reward[] = [
   { title: "Money ($100)", points: 100, icon: FaDollarSign, bgColor: bgColors[0] },
@@ -69,6 +54,7 @@ const Rewards: React.FC = () => {
                 transition={{ duration: 0.3 }}
               >
                 <RewardCard
+                  type='reward_page'
                   {...reward}
                   onModify={() => modifyReward(index)}
                   onRemove={() => removeReward(index)}
@@ -83,11 +69,6 @@ const Rewards: React.FC = () => {
   );
 };
 
-interface RewardCardProps extends Reward {
-  onModify: () => void;
-  onRemove: () => void;
-  onAction: () => void;
-}
 
 // Function to get a random color from the list
 const getRandomBgColor = () => {
@@ -95,53 +76,6 @@ const getRandomBgColor = () => {
   return bgColors[randomIndex];
 };
 
-const RewardCard: React.FC<RewardCardProps> = ({ title, points, icon: Icon, bgColor, onModify, onRemove, onAction }) => {
-  const [randomBgColor, setRandomBgColor] = useState(bgColor);
-
-  // Set a random color when the component mounts
-  React.useEffect(() => {
-    setRandomBgColor(getRandomBgColor());
-  }, []);
-
-  return (
-    <div
-      className={`p-6 rounded-lg cursor-pointer font-stix shadow-md ${randomBgColor} text-dark-text dark:text-dark-text flex flex-col justify-between h-48 transform transition-transform hover:scale-105`}
-    >
-      <div className="flex items-center space-x-4">
-        <div className="text-4xl">
-          <Icon />
-        </div>
-        <div>
-          <h4 className="text-lg font-semibold mb-1">{title}</h4>
-          <div className="flex items-center">
-            <p className="text-xl font-bold font-satisfy">{points}</p>
-            <h4 className='text-base ml-1 font-satisfy'>Points</h4>
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={onModify}
-          className="p-4 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
-        >
-          <FaEdit size={20} />
-        </button>
-        <button
-          onClick={onRemove}
-          className="p-4 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
-        >
-          <FaTrashAlt size={20} />
-        </button>
-        <button
-          onClick={onAction}
-          className="p-4 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
-        >
-          <FaCheck size={20} />
-        </button>
-      </div>
-    </div>
-  );
-};
 
 interface CreateRewardProps {
   onCreate: (reward: Reward) => void; 

@@ -94,7 +94,7 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
     <div className="p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {children.map((child, index) => (
-          <div key={index} className="h-full">
+          <div key={index} className="h-full w-full">
             <Card
               id={child.id}
               name={child.name}

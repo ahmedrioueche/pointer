@@ -3,6 +3,8 @@ import { FaTasks, FaCheckCircle, FaUserShield, FaStar, FaGift, FaCalendarAlt, Fa
 import { format, isValid } from 'date-fns';
 import ProfileCard from './ProfileCard';
 import { useSwipeable } from 'react-swipeable';
+import { TaskCard } from './tasks/TaskCard';
+import { RewardCard } from './RewardCard';
 
 interface ChildProfileProps {
   name: string;
@@ -18,6 +20,54 @@ interface ChildProfileProps {
   password: string;
   level: string;
 }
+
+const handleAction = () => {};
+
+const handleModify = () => {};
+
+const handleRemove = () => {};
+
+const placeholderTaskData = [
+  {
+    title: 'Math Homework',
+    points: 50,
+    creation_date: new Date('2023-08-15').toISOString(),
+    due_date: new Date('2023-08-20').toISOString(),
+    approval_date: new Date('2023-08-20').toISOString(),
+    icon: FaTasks,
+    bgColor: 'bg-gradient-to-r from-yellow-500 to-red-500',
+  },
+  {
+    title: 'Science Project',
+    points: 100,
+    creation_date: new Date('2023-08-10').toISOString(),
+    due_date: new Date('2023-08-25').toISOString(),
+    approval_date: new Date('2023-08-20').toISOString(),
+    icon: FaTasks,
+    bgColor: 'bg-gradient-to-r from-blue-500 to-green-500',
+  },
+];
+
+const placeholderRewardData = [
+  {
+    title: 'New Bicycle',
+    points: 300,
+    icon: FaGift,
+    bgColor: 'bg-gradient-to-r from-purple-500 to-pink-500',
+    onModify: handleModify,
+    onRemove: handleRemove,
+    onAction: handleAction,
+  },
+  {
+    title: 'Video Game',
+    points: 200,
+    icon: FaGift,
+    bgColor: 'bg-gradient-to-r from-green-400 to-blue-500',
+    onModify: handleModify,
+    onRemove: handleRemove,
+    onAction: handleAction,
+  },
+];
 
 const placeholderChildData: ChildProfileProps = {
   name: "Bob",
@@ -35,35 +85,92 @@ const placeholderChildData: ChildProfileProps = {
 };
 
 const ChildProfile: React.FC = () => {
-  const [childData, setChildData] = useState<ChildProfileProps | null>(null);
+  const [childData, setChildData] = useState<ChildProfileProps>(placeholderChildData);
   const [showPassword, setShowPassword] = useState(false);
   const [copyIcon, setCopyIcon] = useState<{ field: string | null; icon: React.ReactNode }>({ field: null, icon: <FaCopy /> });
   const [currentPage, setCurrentPage] = useState(0);
-  const [pages, setPages] = useState<ChildProfileProps[]>([
-    placeholderChildData,
+  const pages = [
     {
-      ...placeholderChildData,
-      addedOn: new Date("2023-06-01"),
-      tasksAssigned: 20,
-      tasksCompleted: 18,
-      competence: "Advanced",
-      totalPoints: 300,
-      rewardsEarned: 7,
+      type: 'tasks',
+      content: (
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6">
+        {placeholderTaskData.map((task, index) => (
+          <div key={index} className="h-full">
+            <TaskCard
+              type="task_done"
+              key={index}
+              {...task}
+              onModify={handleModify}
+              onRemove={handleRemove}
+              onAction={handleAction}
+              onAssign={() => null}
+              onShowDetails={() => null}
+              onAddRemark={() => null}
+            />
+          </div>
+          ))}
+        </div>
+      ),
     },
     {
-      ...placeholderChildData,
-      addedOn: new Date("2023-03-15"),
-      tasksAssigned: 10,
-      tasksCompleted: 8,
-      competence: "Beginner",
-      totalPoints: 150,
-      rewardsEarned: 3,
+      type: 'rewards',
+      content: (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {placeholderRewardData.map((reward, index) => (
+            <RewardCard
+            type='reward_claimed'
+              key={index}
+              {...reward}
+            />
+          ))}
+        </div>
+      ),
     },
-  ]);
+    {
+      type: 'details',
+      content: (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-1">
+          <DetailCard
+            title="Added On"
+            value={isValid(new Date(childData.addedOn)) ? format(new Date(childData.addedOn), 'PPP') : 'Invalid Date'}
+            icon={<FaCalendarAlt />}
+            bgColor="bg-gradient-to-r from-green-400 to-blue-500"
+          />
+          <DetailCard
+            title="Tasks Assigned"
+            value={childData.tasksAssigned}
+            icon={<FaTasks />}
+            bgColor="bg-gradient-to-r from-pink-500 to-orange-500"
+          />
+          <DetailCard
+            title="Tasks Completed"
+            value={childData.tasksCompleted}
+            icon={<FaCheckCircle />}
+            bgColor="bg-gradient-to-r from-purple-500 to-indigo-500"
+          />
+          <DetailCard
+            title="Competence"
+            value={childData.competence}
+            icon={<FaUserShield />}
+            bgColor="bg-gradient-to-r from-yellow-500 to-red-500"
+          />
+          <DetailCard
+            title="Total Points Earned"
+            value={childData.totalPoints}
+            icon={<FaStar />}
+            bgColor="bg-gradient-to-r from-teal-400 to-cyan-500"
+          />
+          <DetailCard
+            title="Rewards Earned"
+            value={childData.rewardsEarned}
+            icon={<FaGift />}
+            bgColor="bg-gradient-to-r from-blue-500 to-purple-500"
+          />
+        </div>
+      ),
+    },
+  ];
 
-  useEffect(() => {
-    setChildData(pages[currentPage]);
-  }, [currentPage, pages]);
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -147,43 +254,8 @@ const ChildProfile: React.FC = () => {
 
       {/* Detail Cards */}
       <div className="flex flex-col w-full md:w-2/3 space-y-6 md:ml-5 relative" {...swipeHandlers}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-1">
-          <DetailCard
-            title="Added On"
-            value={isValid(new Date(childData.addedOn)) ? format(new Date(childData.addedOn), 'PPP') : 'Invalid Date'}
-            icon={<FaCalendarAlt />}
-            bgColor="bg-gradient-to-r from-green-400 to-blue-500"
-          />
-          <DetailCard
-            title="Tasks Assigned"
-            value={childData.tasksAssigned}
-            icon={<FaTasks />}
-            bgColor="bg-gradient-to-r from-pink-500 to-orange-500"
-          />
-          <DetailCard
-            title="Tasks Completed"
-            value={childData.tasksCompleted}
-            icon={<FaCheckCircle />}
-            bgColor="bg-gradient-to-r from-purple-500 to-indigo-500"
-          />
-          <DetailCard
-            title="Competence"
-            value={childData.competence}
-            icon={<FaUserShield />}
-            bgColor="bg-gradient-to-r from-yellow-500 to-red-500"
-          />
-          <DetailCard
-            title="Total Points Earned"
-            value={childData.totalPoints}
-            icon={<FaStar />}
-            bgColor="bg-gradient-to-r from-teal-400 to-cyan-500"
-          />
-          <DetailCard
-            title="Rewards Earned"
-            value={childData.rewardsEarned}
-            icon={<FaGift />}
-            bgColor="bg-gradient-to-r from-blue-500 to-purple-500"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mb-1">
+            {pages[currentPage].content}
         </div>
 
       <div className="flex flex-col w-full relative">

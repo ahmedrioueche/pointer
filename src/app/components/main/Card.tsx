@@ -45,7 +45,7 @@ const Card: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, pendi
       className={`relative p-6 ${gradientBg} ${hoverBg} z-[0] text-white rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl cursor-pointer mb-4`}
     >
       <Link href={`/main/child/${id}`}>
-        <div className="flex items-center justify-center w-30 h-30 mx-auto rounded-full overflow-hidden">
+        <div className="flex items-center justify-center w-38 h-30 mx-auto rounded-full overflow-hidden">
           <Image
             src={icon}
             alt={gender === 'male' ? 'Boy' : 'Girl'}

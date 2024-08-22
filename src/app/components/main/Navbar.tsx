@@ -80,7 +80,7 @@ const DashboardNavbar = ({ firstName } : any) => {
           <div className="hidden md:flex items-center space-x-4">
             {/* Notifications Icon */}
             <Link
-              href="/notifications"
+              href="/main/notifications"
               className="p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             >
               <FaBell size={20} />
@@ -88,7 +88,7 @@ const DashboardNavbar = ({ firstName } : any) => {
 
             {/* Settings Icon */}
             <Link
-              href="/settings"
+              href="/main/settings"
               className="p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             >
               <FaCog size={20} /> 

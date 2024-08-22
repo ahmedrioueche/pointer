@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FaClipboardList } from 'react-icons/fa';
 import Card from './Card'; // Adjust the import path if necessary
-import { Task, Child, TaskCardIf } from "../../../lib/interface";
+import { Child } from "../../../lib/interface";
 import Menu from './tasks/TaskMenu'; // Make sure to use the correct import path
-import { bgColors } from '@/data/style';
 import AddCard from './AddCard';
 
 interface HomeProps {

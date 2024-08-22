@@ -45,6 +45,9 @@ const Page = ({ params }: PageProps) => {
       case 'rewards':
         Component = dynamic(() => import('@/app/components/main/Rewards'));
         break;
+      case 'settings':
+        Component = dynamic(() => import('@/app/components/main/Settings'));
+        break;
       default:
         Component = dynamic(() => import('@/app/components/main/Home'));
         break;

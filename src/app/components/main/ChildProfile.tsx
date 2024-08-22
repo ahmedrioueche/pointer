@@ -5,6 +5,7 @@ import ProfileCard from './ProfileCard';
 import { useSwipeable } from 'react-swipeable';
 import { TaskCard } from './tasks/TaskCard';
 import { RewardCard } from './RewardCard';
+import ProfileModal from './ProfileModal';
 
 interface ChildProfileProps {
   name: string;
@@ -26,6 +27,7 @@ const handleAction = () => {};
 const handleModify = () => {};
 
 const handleRemove = () => {};
+
 
 const placeholderTaskData = [
   {
@@ -89,6 +91,20 @@ const ChildProfile: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [copyIcon, setCopyIcon] = useState<{ field: string | null; icon: React.ReactNode }>({ field: null, icon: <FaCopy /> });
   const [currentPage, setCurrentPage] = useState(0);
+  const [showTaskDetails, setShowTaskDetails] = useState(false);
+  const [showRewardDetails, setShowRewardDetails] = useState(false);
+
+  const toggleShowTaskDetails = () => {
+    setShowTaskDetails(!showTaskDetails);
+  }
+  const toggleShowRewardDetails = () => {
+    setShowRewardDetails(!showRewardDetails);
+  }
+  const closeModal = () => {
+    setShowRewardDetails(false);
+    setShowTaskDetails(false);
+  }
+
   const pages = [
     {
       type: 'tasks',
@@ -104,7 +120,7 @@ const ChildProfile: React.FC = () => {
               onRemove={handleRemove}
               onAction={handleAction}
               onAssign={() => null}
-              onShowDetails={() => null}
+              onShowDetails={() => toggleShowTaskDetails()}
               onAddRemark={() => null}
             />
           </div>
@@ -121,6 +137,7 @@ const ChildProfile: React.FC = () => {
             type='reward_claimed'
               key={index}
               {...reward}
+              onShowDetails={toggleShowRewardDetails}
             />
           ))}
         </div>
@@ -286,7 +303,10 @@ const ChildProfile: React.FC = () => {
       </div>
       </div>
       </div>
-
+            <ProfileModal  
+              isOpenOnTask={showTaskDetails}
+              isOpenOnReward={showRewardDetails}
+              onClose={closeModal}/>
     </div>
   );
 };

@@ -17,6 +17,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
   onRemove,
   onCreate,
   onAction,
+  onShowDetails,
 }) => {
   const [remark, setRemark] = useState('');
   const [currentRemark, setCurrentRemark] = useState<{ text: string, maker: string, date: string } | null>(null);
@@ -71,9 +72,6 @@ export const RewardCard: React.FC<RewardCardProps> = ({
     }
   };
 
-  const handleShowDetails = () => {
-
-  }
 
   const formattedCreationDate = creation_date
     ? capitalizeFirstLetter(formatDateTime(new Date(creation_date)))
@@ -171,7 +169,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
                 <FaComment size={16} />
               </button>
               <button
-                onClick={handleShowDetails}
+                onClick={onShowDetails}
                 className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
               >
                 <FaInfoCircle size={16} />

@@ -39,30 +39,34 @@ const Tasks: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text p-8">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div className="w-full min-h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text p-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
-          <CreateTask type="task_page" onCreate={addTask} />
+           <div className="col-span-1 lg:col-span-1 w-full">
+             <CreateTask type="task_page" onCreate={addTask} />
+          </div>
         </div>
         <div className="lg:col-span-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {tasks.map((task, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <TaskCard
-                  type='task_page'
-                  {...task}
-                  onModify={() => modifyTask(index)}
-                  onRemove={() => removeTask(index)}
-                  onAction={() => actionTask(index)}
-                  onAssign={() => null}
-                />
-              </motion.div>
-            ))}
+          <div className="col-span-1 lg:col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {tasks.map((task, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <TaskCard
+                    type='task_page'
+                    {...task}
+                    onModify={() => modifyTask(index)}
+                    onRemove={() => removeTask(index)}
+                    onAction={() => actionTask(index)}
+                    onAssign={() => null}
+                  />
+                </motion.div>
+              ))}
+                </div>
           </div>
         </div>
       </div>

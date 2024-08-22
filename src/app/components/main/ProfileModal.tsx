@@ -60,7 +60,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         isOpenOnTask || isOpenOnReward ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
       }`}
     >
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-[70vw] w-full h-full max-h-[90vh] overflow-y-auto task-menu" >
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:max-w-[90vw] lg:max-w-[70vw] md:max-w-[70vw] w-full h-full max-h-[90vh] overflow-y-auto task-menu" >
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center text-light-text dark:text-dark-text">
             {isOpenOnTask ? <FaTasks className="text-3xl mr-3" /> : <FaGift className="text-3xl mr-3" />}

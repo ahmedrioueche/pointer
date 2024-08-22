@@ -1,13 +1,14 @@
 import { bgColors } from "@/data/style";
 import { capitalizeFirstLetter } from "@/lib/formater";
 import { TaskCardIf } from "@/lib/interface";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaClipboardList, FaPlus, FaUserPlus } from "react-icons/fa";
 
 const getRandomBgColor = () => {
   const randomIndex = Math.floor(Math.random() * bgColors.length);
   return bgColors[randomIndex];
 };
+
 
 interface CreateTaskProps {
   type: "task_page" | "task_menu" | "task_pending"; 
@@ -19,6 +20,12 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate }) => {
   const [newTaskPoints, setNewTaskPoints] = useState<string | number>(10);
   const [newTaskDate, setNewTaskDate] = useState<string>("");
 
+  useEffect(() => {
+    const now = new Date();
+    const formattedDateTime = now.toISOString().slice(0, 16); // Format as 'YYYY-MM-DDTHH:MM'
+    setNewTaskDate(formattedDateTime);
+  }, []);
+  
   const handleCreate = () => {
     if (newTaskTitle.trim() && newTaskDate) {
       const now = new Date().toISOString(); // Current date and time in ISO format

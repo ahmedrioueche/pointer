@@ -75,9 +75,9 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate }) => {
           onChange={(e) => setNewTaskDate(e.target.value)}
           className="flex-1 p-4 rounded-lg mt-3 bg-indigo-400 border border-indigo-400 focus:border-dark-background dark:focus:border-light-background text-light-text dark:text-dark-text placeholder:text-light-text dark:placeholder-dark-text transition-all duration-300 focus:outline-none box-border"
           style={{
-            WebkitAppearance: 'textfield', // Force appearance to text field with icon
-            width: '100%', // Ensure full-width on smaller screens
-            color: '#ffffff', // Ensuring text is visible
+            WebkitAppearance: 'none',
+            width: '100%', 
+            color: '#ffffff', 
           }}
         />
       </div>

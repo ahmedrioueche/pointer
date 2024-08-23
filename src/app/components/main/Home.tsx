@@ -109,7 +109,9 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
   const addChild = (name: string, age: string, gender: "male" | "female", image: File | null) => { 
     const id = 5; 
     const ageNumber = parseInt(age, 10); 
-
+    console.log("image", image)
+      if(image)
+        console.log(" URL.createObjectURL(image)",  URL.createObjectURL(image))
     const child = {
       id: id,
       name: name,

@@ -5,7 +5,7 @@ import ProfileCard from './ProfileCard';
 import { useSwipeable } from 'react-swipeable';
 import { TaskCard } from './tasks/TaskCard';
 import { RewardCard } from './RewardCard';
-import ProfileModal from './ProfileModal';
+import ProfileModal from './DetailsModal';
 
 interface ChildProfileProps {
   name: string;
@@ -319,7 +319,7 @@ const DetailCard: React.FC<{ title: string; value: string | number; icon: React.
   bgColor,
 }) => (
   <div
-    className={`p-6 rounded-lg cursor-pointer font-stix shadow-md ${bgColor} text-light-text dark:text-dark-text flex items-center space-x-4 transform transition-transform hover:scale-105 w-full md:w-auto h-32`}
+    className={`p-6 rounded-lg cursor-pointer font-stix shadow-md ${bgColor} text-light-text dar  k:text-dark-text flex items-center space-x-4 transform transition-transform hover:scale-105 w-full md:w-auto h-32`}
   >
     <div className="text-4xl">{icon}</div>
     <div>

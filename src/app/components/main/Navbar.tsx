@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser, FaHome, FaClock, FaArrowDown, FaArrowUp, FaLightbulb, FaDice, FaArrowRight } from "react-icons/fa";
+import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser, FaHome, FaClock, FaArrowDown, FaArrowUp, FaLightbulb, FaDice, FaArrowRight, FaTrophy } from "react-icons/fa";
 import { signOut } from "next-auth/react";
 import DropdownNotifications from "./DropDownNotif";
 import PlansModal from "./PlansModal";
@@ -170,7 +170,7 @@ const DashboardNavbar = ({ firstName } : any) => {
             className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
-            <FaHome className="mr-2 text-lg" /> Competitions
+            <FaTrophy className="mr-2 text-lg" /> Competitions
           </Link>
           <Link
             href="/main/games"

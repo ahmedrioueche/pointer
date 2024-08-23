@@ -71,3 +71,10 @@ body {
 .radio-hidden:checked + .radio-custom::after {
   opacity: 1;
 }
+
+
+@layer components {
+  .input-placeholder::placeholder {
+    @apply font-satisfy; 
+}
+}

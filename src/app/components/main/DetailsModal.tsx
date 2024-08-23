@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaTimes, FaTasks, FaGift, FaCalendarAlt, FaCheck, FaCommentDots, FaUserCheck } from 'react-icons/fa';
+import { FaTimes, FaTasks, FaGift, FaCalendarAlt, FaCheck, FaCommentDots, FaUserCheck, FaFileAlt } from 'react-icons/fa';
 
 interface ProfileModalProps {
   isOpenOnTask: boolean;
@@ -16,6 +16,7 @@ const placeholderTaskData = [
     approval_date: new Date('2023-08-20').toISOString(),
     approved_by: 'John Doe',
     comment: 'Great work on the last assignment!',
+    attachedFiles: "homework",
     icon: FaTasks,
     bgColor: 'bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400',
   },
@@ -46,7 +47,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
     value: string | number,
     bgColor: string
   ) => (
-    <div className={`p-4 rounded-lg shadow-md flex items-center mb-4 ${bgColor}`}>
+    <div className={`p-4 rounded-lg shadow-md flex items-center mb-4 ${bgColor} transition duration-300 hover:scale-105`}>
       <div>
         <h3 className="text-lg font-semibold text-white">{label}</h3>
         <p className="text-white">{value}</p>
@@ -83,6 +84,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             {renderCard(FaUserCheck, 'Approved By', task.approved_by, 'bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400')}
             {renderCard(FaTasks, 'Points', task.points, 'bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400')}
             {renderCard(FaCommentDots, 'Comment', task.comment, 'bg-gradient-to-r from-green-400 via-blue-400 to-purple-400')}
+            {renderCard(FaFileAlt, 'Attached files', task.attachedFiles,  'bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400')}
           </div>
         )}
 

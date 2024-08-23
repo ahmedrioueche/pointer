@@ -37,7 +37,7 @@ const DropdownNotifications: React.FC<{ onClick: () => void, isMenuOpen: boolean
               notifications.map(({ id, message, icon, date }) => (
                 <div
                   key={id}
-                  className="flex items-center p-2 border-b border-gray-300 dark:border-gray-600 hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 cursor-pointer"
+                  className="flex items-center p-2 border-b border-gray-300 dark:border-gray-600 hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 cursor-pointer hover:text-light-text dark:hover:text-light-text"
                 >
                   <div className="mr-2 text-xl">{icon}</div>
                   <div className="flex-1">

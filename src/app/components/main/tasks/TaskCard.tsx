@@ -44,6 +44,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     }
   };
 
+  console.log("type, due_date", type, due_date)
+
   const handleRemarkSubmit = () => {
     if (remark.trim()) {
       const newRemark = {
@@ -97,10 +99,10 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             <FaCalendar className="text-lg mr-2" />
             <p>{capitalizeFirstLetter(formatDateTime(new Date(creation_date)))}</p>
           </div>
-          {type === "task_done" || type === "task_pending" && (
+          {(type === "task_done" || type === "task_pending") && (
             <div className="flex items-center text-sm mt-1 font-satisfy">
             <FaCalendarDay className="text-lg mr-2" />
-            <p>{capitalizeFirstLetter(getRelativeDate(new Date(due_date)))}</p>
+            <p>{capitalizeFirstLetter(formatDateTime(new Date(due_date)))}</p>
           </div>
           )}
           <div className="flex items-center mt-2 mb-2">

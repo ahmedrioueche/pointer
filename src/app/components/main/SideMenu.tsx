@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { FaTasks, FaCoins, FaGift, FaChartBar, FaUser, FaArrowLeft, FaArrowRight, FaHome, FaLightbulb, FaDice } from 'react-icons/fa';
+import { FaTasks, FaCoins, FaGift, FaChartBar, FaUser, FaArrowLeft, FaArrowRight, FaHome, FaLightbulb, FaDice, FaTrophy } from 'react-icons/fa';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -90,6 +90,19 @@ const SideMenu: React.FC = () => {
                     >
                         <FaTasks className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
                         {!isCollapsed && <span>Tasks</span>}
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href="/main/competitions"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/competitions' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
+                    >
+                        <FaTrophy className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                        {!isCollapsed && <span>Competitions</span>}
                     </Link>
                 </li>
              

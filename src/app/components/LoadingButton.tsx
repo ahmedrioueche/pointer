@@ -2,7 +2,7 @@ import React, { MouseEventHandler } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
 interface LoadingButtonProps {
-  isLoading: boolean;
+  isLoading?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   buttonText: string;
   type?: 'button' | 'submit' | 'reset';

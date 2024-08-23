@@ -48,6 +48,7 @@ const DashboardNavbar = ({ firstName } : any) => {
   const [isPlansModalOpen, setIsPlansMenuOpen] = useState(false);
 
   const togglePlansModal = () => {
+    isMenuOpen? toggleMenu() : null;
     setIsPlansMenuOpen(!isPlansModalOpen);
   };
 
@@ -131,49 +132,49 @@ const DashboardNavbar = ({ firstName } : any) => {
         <div className="flex flex-col items-start w-full space-y-2">
           <Link
             href="/main/home"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <FaHome className="mr-2 text-lg" /> Home
           </Link>
           <Link
             href="/main/dashboard"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <FaChartBar className="mr-2 text-lg" /> Dashboard
           </Link>
           <Link
             href="/main/rewards"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <FaGift className="mr-2 text-lg" /> Rewards
           </Link>
           <Link
             href="/main/tasks"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <FaTasks className="mr-2 text-lg" /> Tasks
           </Link>
           <Link
             href="/main/quizzes"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <FaLightbulb className="mr-2 text-lg" /> Quizzes
           </Link>
           <Link
             href="/main/competitions"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <FaHome className="mr-2 text-lg" /> Competitions
           </Link>
           <Link
             href="/main/games"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <FaDice className="mr-2 text-lg" /> Games
@@ -181,14 +182,14 @@ const DashboardNavbar = ({ firstName } : any) => {
           <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
           <Link
             href="/main/settings"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <FaCog className="mr-2 text-lg" /> Settings
           </Link>
           <Link
             href="/main/profile"
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
           >
             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-bold text-xl cursor-pointer hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300">
@@ -199,7 +200,7 @@ const DashboardNavbar = ({ firstName } : any) => {
           <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
           <button
             onClick={togglePlansModal}
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             <span className="flex items-center">
               <FaClock className="text-xl transition-transform duration-500 ease-in-out transform hover:rotate-360" />
@@ -208,7 +209,7 @@ const DashboardNavbar = ({ firstName } : any) => {
          </button>
           <button
             onClick={handleLogout}
-            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             <FaSignOutAlt className="mr-2 text-lg" />
             Logout

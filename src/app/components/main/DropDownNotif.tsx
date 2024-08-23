@@ -8,9 +8,8 @@ const notifications = [
   // Add more notifications as needed
 ];
 
-
 const DropdownNotifications: React.FC<{ onClick: () => void, isMenuOpen: boolean }> = ({ onClick, isMenuOpen }) => {
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -18,8 +17,8 @@ const DropdownNotifications: React.FC<{ onClick: () => void, isMenuOpen: boolean
   };
 
   useEffect(() => {
-    isMenuOpen? setIsDropdownOpen(false) : null;
-  }, [isMenuOpen])
+    if (isMenuOpen) setIsDropdownOpen(false);
+  }, [isMenuOpen]);
 
   return (
     <div className="relative">
@@ -30,7 +29,7 @@ const DropdownNotifications: React.FC<{ onClick: () => void, isMenuOpen: boolean
         <FaBell size={20} />
       </button>
       {isDropdownOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-light-background dark:bg-dark-background border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50">
+        <div className="absolute right-0 mt-2 w-60 bg-light-background dark:bg-dark-background border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50">
           <div className="p-4">
             {notifications.length === 0 ? (
               <p className="text-center text-light-text dark:text-dark-text">No notifications</p>

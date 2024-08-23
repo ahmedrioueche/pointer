@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Card from './Card'; // Adjust the import path if necessary
-import { Child } from "../../../lib/interface";
+import { Child, Task } from "../../../lib/interface";
 import TaskModal from './tasks/TaskModal'; // Make sure to use the correct import path
 import AddCard from './AddCard';
 import AddChildModal from './AddChildModal';
@@ -11,9 +11,17 @@ interface HomeProps {
   userType: string;
 }
 
+const getRandomIcon = (gender : string) => {
+  let iconNumber = 7;
+  let randomIndex = Math.floor(Math.random() * iconNumber) + 1;
+  let type = gender === "male"? "boy" : "girl";
+  let icon = `/icons/${type}_${randomIndex}.png`;
+  return icon;
+}
+
 
 const Home: React.FC<HomeProps> = ({ userType }) => {
-  const children: Child[] = [
+  const [children, setChildren] = useState<Child[]>([
     {
       id: 1,
       name: 'Alice',
@@ -74,14 +82,13 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
       ],
       icon: "",
     },
-  ];  
+  ]);  
 
   children.forEach((child, index) => {
     const iconIndex = (index % 7) + 1; 
     let type;
     type = child.gender === "male"? "boy" : "girl";
     child.icon = `/icons/${type}_${iconIndex}.png`;
-    console.log(" child.icon",  child.icon)
   });
 
   const [isTasksModalOpen, setIsTasksMenuOpen] = useState(false);
@@ -90,7 +97,7 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
   const toggleTaskModal = () => {
     setIsTasksMenuOpen(!isTasksModalOpen);
   };
-  
+
   const toggleAddChildModal = () => {
     setIsAddChildModalOpen(!isAddChildModalOpen);
   };
@@ -98,6 +105,25 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
   const handleAddChild = () => {
     setIsAddChildModalOpen(true);
   }
+
+  const addChild = (name: string, age: string, gender: "male" | "female", image: File | null) => { 
+    const id = 5; 
+    const ageNumber = parseInt(age, 10); 
+
+    const child = {
+      id: id,
+      name: name,
+      age: ageNumber,
+      gender: gender,
+      icon: image ? URL.createObjectURL(image) : getRandomIcon(gender), 
+      achievedTasks: [], 
+      pendingTasks: [], 
+    };
+
+    setChildren(prevChildren => [...prevChildren, child]);
+
+}
+
   
   return (
     <div className="p-6">
@@ -123,6 +149,7 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
 
       <AddChildModal
         isOpen={isAddChildModalOpen}
+        onAddChild={addChild}
         onClose={toggleAddChildModal}/>
 
       <TaskModal

@@ -6,9 +6,10 @@ import LoadingButton from '../LoadingButton';
 interface AddChildModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAddChild: (name : string, age : string, gender: "male" | "female", image: File | null) => void;
 }
 
-const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose }) => {
+const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChild }) => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
@@ -23,8 +24,10 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
     console.log({ name, age, gender, image });
+    const cgender = gender === "male"? "male" : "female";
+    onAddChild(name, age, cgender, image);
+    onClose();
   };
 
   return (
@@ -33,7 +36,7 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose }) => {
         isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
       }`}
     >
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-[90vw] max-h-[90vh] overflow-y-auto task-menu">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-[90vw] max-h-[95vh] overflow-y-auto task-menu">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center text-gray-800 dark:text-gray-200">
             <FaUserPlus className="text-3xl mr-3" />
@@ -104,7 +107,6 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
           </div>
-          {/* Submit Button Card */}
           <div className="col-span-1 flex justify-center mt-6">
             <LoadingButton
               isLoading={isLoading}

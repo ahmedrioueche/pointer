@@ -36,8 +36,8 @@ const DropdownNotifications = () => {
                 >
                   <div className="mr-2 text-xl">{icon}</div>
                   <div className="flex-1">
-                    <p className="text-light-text dark:text-dark-text">{message}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-light-text font-satisfy dark:text-dark-text">{message}</p>
+                    <p className="text-sm text-gray-500 font-satisfy dark:text-gray-400">
                       {capitalizeFirstLetter(formatDateTime(date))}     
                     </p>
                   </div>

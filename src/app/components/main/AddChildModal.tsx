@@ -101,7 +101,6 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose }) => {
                   onChange={handleImageChange}
                   className="w-full text-sm text-gray-700 file:py-2 file:px-4 file:border file:border-transparent file:rounded-md file:bg-gray-50 file:text-gray-700 cursor-pointer"
                 />
-                <span className="absolute top-0 right-0 mt-2 text-gray-600 dark:text-gray-400 text-sm">No file has been selected</span>
               </div>
             </div>
           </div>

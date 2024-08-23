@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser, FaHome, FaClock, FaArrowDown, FaArrowUp, FaLightbulb, FaDice, FaArrowRight } from "react-icons/fa";
 import { signOut } from "next-auth/react";
 import DropdownNotifications from "./DropDownNotif";
+import PlansModal from "./PlansModal";
 
 const DashboardNavbar = ({ firstName } : any) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -27,6 +28,10 @@ const DashboardNavbar = ({ firstName } : any) => {
     }
   }, []);
 
+  const onOpenNotifDropDown = () => {
+    isMenuOpen? setIsMenuOpen(false) : null;
+  }
+
   useEffect(() => {
       setRemainingDays(30);
     
@@ -39,11 +44,17 @@ const DashboardNavbar = ({ firstName } : any) => {
   const handleLogout = async () => {
     await signOut({ callbackUrl: "/api/auth/signout" });
   };
+  
+  const [isPlansModalOpen, setIsPlansMenuOpen] = useState(false);
+
+  const togglePlansModal = () => {
+    setIsPlansMenuOpen(!isPlansModalOpen);
+  };
 
   const firstLetter = firstName?.charAt(0).toUpperCase() || "P";
 
   return (
-    <nav className="relative z-1000 top-0 left-0 w-full py-4 px-6 shadow-md bg-light-background dark:bg-dark-background">
+    <nav className="relative font-satisfy z-1000 top-0 left-0 w-full py-4 px-6 shadow-md bg-light-background dark:bg-dark-background">
       <div className="container mx-auto flex items-center justify-between">
         <div className="text-3xl font-bold">
           <Link
@@ -56,6 +67,7 @@ const DashboardNavbar = ({ firstName } : any) => {
 
       <div className="flex items-center space-x-4">
         <button
+          onClick={togglePlansModal}
           className="hidden md:flex px-4 py-2 rounded-md text-lg md:text-xl font-satisfy bg-light-primary dark:bg-dark-primary text-dark-text dark:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 items-center group"
         >
           {`${remainingDays} Days`}
@@ -71,18 +83,18 @@ const DashboardNavbar = ({ firstName } : any) => {
             {isDarkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
           </button>
 
+          <DropdownNotifications onClick={onOpenNotifDropDown} isMenuOpen={isMenuOpen} />
+          
           <button
             onClick={toggleMenu}
             className="md:hidden p-2 font-satisfy rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
             {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
-
-          <DropdownNotifications />
+          
 
           <div className="hidden md:flex items-center space-x-4">
           
-
             {/* Settings Icon */}
             <Link
               href="/main/settings"
@@ -108,110 +120,104 @@ const DashboardNavbar = ({ firstName } : any) => {
             </div>
           </div>
         </div>
+            <PlansModal
+            isOpen={isPlansModalOpen}
+            onClose={togglePlansModal}
+           />
       </div>
 
-      {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="md:hidden z-[100] overflow-y-scroll items-center fixed top-0 right-0 w-[15.6rem] h-screen bg-light-background dark:bg-dark-background flex flex-col p-4 space-y-4">
-          <button
+      <div className="md:hidden z-[100] fixed top-[3.9rem] right-[1.4rem] w-[15.6rem] bg-light-background dark:bg-dark-background border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg flex flex-col p-4 space-y-4">
+        <div className="flex flex-col items-start w-full space-y-2">
+          <Link
+            href="/main/home"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             onClick={toggleMenu}
-            className="absolute top-3 right-3 p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           >
-            <FaTimes size={20} />
+            <FaHome className="mr-2 text-lg" /> Home
+          </Link>
+          <Link
+            href="/main/dashboard"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            onClick={toggleMenu}
+          >
+            <FaChartBar className="mr-2 text-lg" /> Dashboard
+          </Link>
+          <Link
+            href="/main/rewards"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            onClick={toggleMenu}
+          >
+            <FaGift className="mr-2 text-lg" /> Rewards
+          </Link>
+          <Link
+            href="/main/tasks"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            onClick={toggleMenu}
+          >
+            <FaTasks className="mr-2 text-lg" /> Tasks
+          </Link>
+          <Link
+            href="/main/quizzes"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            onClick={toggleMenu}
+          >
+            <FaLightbulb className="mr-2 text-lg" /> Quizzes
+          </Link>
+          <Link
+            href="/main/competitions"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            onClick={toggleMenu}
+          >
+            <FaHome className="mr-2 text-lg" /> Competitions
+          </Link>
+          <Link
+            href="/main/games"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            onClick={toggleMenu}
+          >
+            <FaDice className="mr-2 text-lg" /> Games
+          </Link>
+          <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
+          <Link
+            href="/main/settings"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            onClick={toggleMenu}
+          >
+            <FaCog className="mr-2 text-lg" /> Settings
+          </Link>
+          <Link
+            href="/main/profile"
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            onClick={toggleMenu}
+          >
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-bold text-xl cursor-pointer hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300">
+              {firstLetter}
+            </div>
+            <span className="ml-2">Profile</span>
+          </Link>
+          <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
+          <button
+            onClick={togglePlansModal}
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+          >
+            <span className="flex items-center">
+              <FaClock className="text-xl transition-transform duration-500 ease-in-out transform hover:rotate-360" />
+              <span className="ml-2">{`${remainingDays} Days`}</span>
+            </span>
+         </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+          >
+            <FaSignOutAlt className="mr-2 text-lg" />
+            Logout
           </button>
-          <div className="flex flex-col items-start w-full">
-            <Link
-              href="/main/home"
-              className="flex items-center w-full p-4 py-3 mt-4 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={toggleMenu}
-            >
-              <FaHome className="mr-2 text-lg" /> Home
-            </Link>
-            <Link
-              href="/main/dashboard"
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={toggleMenu}
-            >
-              <FaChartBar className="mr-2 text-lg" /> Dashboard
-            </Link>
-          
-            <Link
-              href="/main/rewards"
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={toggleMenu}
-            >
-              <FaGift className="mr-2 text-lg" /> Rewards
-            </Link>
-            <Link
-              href="/main/tasks"
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={toggleMenu}
-            >
-              <FaTasks className="mr-2 text-lg" /> Tasks
-            </Link>
-
-            <Link
-              href="/main/quizzes"
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={toggleMenu}
-            >
-              <FaLightbulb className="mr-2 text-lg" /> Quizzes
-            </Link>
-            <Link
-              href="/main/games"
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={toggleMenu}
-            >
-              <FaDice className="mr-2 text-lg" /> Games
-            </Link>
-           
-            <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
-            <Link
-              href="/main/notifications"
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <FaBell className="mr-2 text-lg" />
-              Notifications
-            </Link>
-            <Link
-              href="/main/settings"
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <FaCog className="mr-2 text-lg" />
-              Settings
-            </Link>
-            <Link
-              href="/main/profile"
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-bold text-xl cursor-pointer hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300">
-                {firstLetter}
-              </div>
-              <span className="ml-2">Profile</span>
-            </Link>
-            <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
-            <button
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-            >
-              <span className="flex items-center">
-                <FaClock className="text-xl transition-transform duration-500 ease-in-out transform hover:rotate-360" />
-                <span className="ml-2">{`${remainingDays} Days`}</span>
-              </span>
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full p-4 py-3 text-lg font-medium text-light-text  dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-            >
-              <FaSignOutAlt className="mr-2 text-lg" />
-              Logout
-            </button>
-          </div>
         </div>
-      )}
+      </div>
+    )}
+
+
     </nav>
   );
 };

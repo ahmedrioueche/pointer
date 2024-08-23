@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBell, FaUser, FaTrophy, FaCheckCircle } from "react-icons/fa";
 import { capitalizeFirstLetter, formatDateTime } from "@/lib/formater";
 
@@ -8,12 +8,18 @@ const notifications = [
   // Add more notifications as needed
 ];
 
-const DropdownNotifications = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+const DropdownNotifications: React.FC<{ onClick: () => void, isMenuOpen: boolean }> = ({ onClick, isMenuOpen }) => {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
+    onClick();
   };
+
+  useEffect(() => {
+    isMenuOpen? setIsDropdownOpen(false) : null;
+  }, [isMenuOpen])
 
   return (
     <div className="relative">

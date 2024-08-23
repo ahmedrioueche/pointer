@@ -90,6 +90,7 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
   const toggleTaskModal = () => {
     setIsTasksMenuOpen(!isTasksModalOpen);
   };
+  
   const toggleAddChildModal = () => {
     setIsAddChildModalOpen(!isAddChildModalOpen);
   };

@@ -15,6 +15,7 @@ const config: Config = {
           primary: '#1d4ed8',  // Tailwind's blue-700
           secondary: '#9ca3af', // Tailwind's gray-500
           accent: '#f59e0b',   // Tailwind's amber-400
+          'accent-hover': '#e67e22', // A darker shade of light-accent
         },
         dark: {
           background: '#1f2937', // Tailwind's gray-800
@@ -22,6 +23,7 @@ const config: Config = {
           primary: '#3b82f6',    // Tailwind's blue-500
           secondary: '#4b5563',  // Tailwind's gray-600
           accent: '#fbbf24',    // Tailwind's amber-300
+          'accent-hover': '#d97706', // A more orange and darker shade for better contrast
         },
       },
       fontFamily: {

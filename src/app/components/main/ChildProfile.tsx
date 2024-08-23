@@ -5,7 +5,8 @@ import ProfileCard from './ProfileCard';
 import { useSwipeable } from 'react-swipeable';
 import { TaskCard } from './tasks/TaskCard';
 import { RewardCard } from './RewardCard';
-import ProfileModal from './DetailsModal';
+import DetailsModal from './DetailsModal';
+import ProfileModal from './ProfileModal';
 
 interface ChildProfileProps {
   name: string;
@@ -93,6 +94,11 @@ const ChildProfile: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [showTaskDetails, setShowTaskDetails] = useState(false);
   const [showRewardDetails, setShowRewardDetails] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const toggleProfileModal = () => {
+    setIsProfileModalOpen(!isProfileModalOpen);
+  };
 
   const toggleShowTaskDetails = () => {
     setShowTaskDetails(!showTaskDetails);
@@ -222,7 +228,7 @@ const ChildProfile: React.FC = () => {
       {/* Profile Card */}
       <div className="flex flex-col items-center md:items-start md:w-1/3 space-y-6 md:space-y-4 mb-6 md:mb-0">
         <div className="w-full max-w-md md:max-w-lg lg:max-w-lg mb-2">
-          <ProfileCard name={childData.name} age={childData.age} gender={childData.gender} level={childData.level} />
+          <ProfileCard name={childData.name} age={childData.age} gender={childData.gender} level={childData.level} onClick={toggleProfileModal} />
         </div>
        {/* Username and Password */}
       <div className="flex flex-col space-y-4 w-full">
@@ -303,10 +309,14 @@ const ChildProfile: React.FC = () => {
       </div>
       </div>
       </div>
-            <ProfileModal  
+            <DetailsModal  
               isOpenOnTask={showTaskDetails}
               isOpenOnReward={showRewardDetails}
               onClose={closeModal}/>
+            <ProfileModal 
+              isOpen={isProfileModalOpen}
+              onClose={toggleProfileModal}
+        />
     </div>
   );
 };
@@ -326,6 +336,7 @@ const DetailCard: React.FC<{ title: string; value: string | number; icon: React.
       <h4 className="text-lg font-semibold mb-1">{title}</h4>
       <p className="text-xl font-bold">{value}</p>
     </div>
+ 
   </div>
 );
 

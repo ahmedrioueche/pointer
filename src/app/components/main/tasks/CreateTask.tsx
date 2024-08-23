@@ -56,7 +56,7 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate, taskToEd
   };
 
   return (
-    <div className="w-full bg-gradient-to-r transform transition-transform hover:scale-105 from-indigo-400 to-cyan-500 p-6 rounded-lg shadow-md text-light-text dark:text-dark-text">
+    <div className="w-full bg-gradient-to-r transform transition-transform hover:scale-105 from-indigo-400 to-cyan-500 p-6 rounded-lg shadow-md text-dark-text dark:text-dark-text">
     <div className="flex items-center mb-4">
       <FaClipboardList className="text-4xl mr-3" />
       <h2 className="text-xl font-stix">
@@ -76,7 +76,7 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate, taskToEd
         value={newTaskTitle}
         onChange={(e) => setNewTaskTitle(e.target.value)}
         placeholder="Title"
-        className="w-full p-4 rounded-lg placeholder:text-light-text dark:placeholder:text-dark-text shadow-md text-light-text dark:text-dark-text dark:placeholder-dark-text bg-indigo-400 border border-indigo-400 focus:border-dark-background dark:focus:border-light-background focus:outline-none transition-all duration-300 box-border"
+        className="w-full p-4 rounded-lg placeholder:text-dark-text dark:placeholder:text-dark-text shadow-md text-dark-text dark:text-dark-text dark:placeholder-dark-text bg-indigo-400 border border-indigo-400 focus:border-dark-background dark:focus:border-light-background focus:outline-none transition-all duration-300 box-border"
       />
       <div className="flex flex-col">
         <input
@@ -84,7 +84,7 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate, taskToEd
           value={newTaskPoints}
           onChange={(e) => setNewTaskPoints(e.target.value)}
           placeholder="Points"
-          className="flex-1 p-4 rounded-lg mt-3 placeholder:text-light-text dark:placeholder:text-dark-text shadow-md text-light-text dark:text-dark-text dark:placeholder-dark-text bg-indigo-400 border border-indigo-400 focus:border-dark-background dark:focus:border-light-background focus:outline-none transition-all duration-300 box-border no-spinner"
+          className="flex-1 p-4 rounded-lg mt-3 placeholder:text-dark-text dark:placeholder:text-dark-text shadow-md text-dark-text dark:text-dark-text dark:placeholder-dark-text bg-indigo-400 border border-indigo-400 focus:border-dark-background dark:focus:border-light-background focus:outline-none transition-all duration-300 box-border no-spinner"
         />
           {type != "task_page" && (
           <input
@@ -104,7 +104,7 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate, taskToEd
     </div>
     <button
       onClick={handleCreate}
-      className="w-full p-4 rounded-lg bg-primary text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 flex items-center justify-center"
+      className="w-full p-4 rounded-lg bg-primary text-dark-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 flex items-center justify-center"
     >
       {type === "task_page"
         ? taskToEdit

@@ -33,7 +33,7 @@ const placeholderRewardData = [
   },
 ];
 
-const ProfileModal: React.FC<ProfileModalProps> = ({
+const DetailsModal: React.FC<ProfileModalProps> = ({
   isOpenOnTask,
   isOpenOnReward,
   onClose,
@@ -101,4 +101,4 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   );
 };
 
-export default ProfileModal;
+export default DetailsModal;

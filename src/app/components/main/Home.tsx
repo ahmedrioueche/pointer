@@ -91,11 +91,11 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
     child.icon = `/icons/${type}_${iconIndex}.png`;
   });
 
-  const [isTasksModalOpen, setIsTasksMenuOpen] = useState(false);
+  const [isTasksModalOpen, setIsTasksModalOpen] = useState(false);
   const [isAddChildModalOpen, setIsAddChildModalOpen] = useState(false);
 
   const toggleTaskModal = () => {
-    setIsTasksMenuOpen(!isTasksModalOpen);
+    setIsTasksModalOpen(!isTasksModalOpen);
   };
 
   const toggleAddChildModal = () => {

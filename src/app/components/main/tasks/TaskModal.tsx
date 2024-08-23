@@ -7,12 +7,12 @@ import { TaskCardIf } from '@/lib/interface';
 import PendingTasks from './PendingTasks';
 import { bgColors } from '@/data/style';
 
-interface MenuProps {
+interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const Menu: React.FC<MenuProps> = ({
+const TaskModal: React.FC<TaskModalProps> = ({
   isOpen,
   onClose,
 }) => {
@@ -32,12 +32,24 @@ const Menu: React.FC<MenuProps> = ({
     { title: "Read a book", points: 10, creation_date: "2024-08-21T18:00", due_date: "2024-08-21T19:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[6] },
   ]);
   
+  const [selectedTask, setSelectedTask] = useState<TaskCardIf | null>(null);
+
   
   const assignTask = (newTask: TaskCardIf) => {
-    setPendingTasks([newTask, ...pendingTasks]); 
+    if (selectedTask) {
+      setPendingTasks(
+        pendingTasks.map((task) =>
+        task.title === selectedTask.title ? newTask : task
+        )
+      );
+      setSelectedTask(null); 
+    } else {
+      setPendingTasks([newTask, ...pendingTasks]);
+    }
   };
 
   const modifyTask = (index: number) => {
+    setSelectedTask(pendingTasks[index]);
     console.log("Modify task:", index);
   };
 
@@ -68,7 +80,7 @@ const Menu: React.FC<MenuProps> = ({
        {/* Top row: CreateTask and PendingTasks */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="col-span-1 md:col-span-1 lg:col-span-1 mt-2">
-          <CreateTask type="task_menu" onCreate={assignTask} />
+          <CreateTask taskToEdit={selectedTask} type="task_menu" onCreate={assignTask} />
         </div>
         <div className="col-span-1 md:col-span-2 lg:col-span-2">
           <PendingTasks
@@ -105,4 +117,4 @@ const Menu: React.FC<MenuProps> = ({
   );
 };
 
-export default Menu;
+export default TaskModal;

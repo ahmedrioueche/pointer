@@ -18,7 +18,7 @@ export interface Task {
 export interface Reward {
   title: string;
   points: string | number;
-  icon: React.ElementType;
+  icon?: React.ElementType;
   bgColor: string;
   creation_date?: string; 
   claimed_at?: string; 

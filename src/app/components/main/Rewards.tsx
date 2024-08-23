@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPlus, FaDollarSign, FaGlobeAmericas, FaXbox, FaPlaystation, FaLaptop, FaPhone, FaDog, FaEdit, FaTrashAlt, FaCheck, FaGift } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Reward } from '@/lib/interface';
@@ -16,17 +16,27 @@ const initialRewards: Reward[] = [
   { title: "Phone", points: 400, icon: FaPhone, bgColor: bgColors[5] },
   { title: "Pet", points: 600, icon: FaDog, bgColor: bgColors[6] },
 ];
-
 const Rewards: React.FC = () => {
   const [rewards, setRewards] = useState<Reward[]>(initialRewards);
+  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
 
   const addReward = (newReward: Reward) => {
-    setRewards([newReward, ...rewards]); // Prepend new reward
+    if (selectedReward) {
+      // Update the existing reward
+      setRewards(
+        rewards.map((reward) =>
+          reward.title === selectedReward.title ? newReward : reward
+        )
+      );
+      setSelectedReward(null); // Reset after update
+    } else {
+      // Add a new reward
+      setRewards([newReward, ...rewards]);
+    }
   };
 
   const modifyReward = (index: number) => {
-    // Logic to modify the reward
-    console.log("Modify reward:", index);
+    setSelectedReward(rewards[index]);
   };
 
   const removeReward = (index: number) => {
@@ -42,7 +52,7 @@ const Rewards: React.FC = () => {
     <div className="min-h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text p-8">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
-          <CreateReward onCreate={addReward} />
+          <CreateReward onCreate={addReward} rewardToEdit={selectedReward} />
         </div>
         <div className="lg:col-span-2">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -54,7 +64,7 @@ const Rewards: React.FC = () => {
                 transition={{ duration: 0.3 }}
               >
                 <RewardCard
-                  type='reward_page'
+                  type="reward_page"
                   {...reward}
                   onModify={() => modifyReward(index)}
                   onRemove={() => removeReward(index)}
@@ -70,28 +80,35 @@ const Rewards: React.FC = () => {
 };
 
 
+
 // Function to get a random color from the list
 const getRandomBgColor = () => {
   const randomIndex = Math.floor(Math.random() * bgColors.length);
   return bgColors[randomIndex];
 };
-
-
 interface CreateRewardProps {
-  onCreate: (reward: Reward) => void; 
+  onCreate: (reward: Reward) => void;
+  rewardToEdit?: Reward | null;
 }
 
-const CreateReward: React.FC<CreateRewardProps> = ({ onCreate }) => {
+const CreateReward: React.FC<CreateRewardProps> = ({ onCreate, rewardToEdit }) => {
   const [newRewardTitle, setNewRewardTitle] = useState<string>("");
   const [newRewardPoints, setNewRewardPoints] = useState<string | number>(10);
+
+  useEffect(() => {
+    if (rewardToEdit) {
+      setNewRewardTitle(rewardToEdit.title);
+      setNewRewardPoints(rewardToEdit.points);
+    }
+  }, [rewardToEdit]);
 
   const handleCreate = () => {
     if (newRewardTitle.trim()) {
       const newReward: Reward = {
         title: newRewardTitle,
         points: newRewardPoints,
-        icon: FaGift, 
-        bgColor: getRandomBgColor(), 
+        icon: rewardToEdit?.icon || FaGift, 
+        bgColor: rewardToEdit?.bgColor || getRandomBgColor(),
       };
       onCreate(newReward);
       setNewRewardTitle("");
@@ -103,7 +120,7 @@ const CreateReward: React.FC<CreateRewardProps> = ({ onCreate }) => {
     <div className="bg-gradient-to-r transform transition-transform hover:scale-105 from-purple-600 to-blue-500 p-6 rounded-lg shadow-md text-light-text dark:text-dark-text">
       <div className="flex items-center mb-4">
         <FaPlus className="text-4xl mr-3 text-dark-text" />
-        <h2 className="text-xl font-stix text-dark-text">Create New Reward</h2>
+        <h2 className="text-xl font-stix text-dark-text">{rewardToEdit ? "Edit Reward" : "Create New Reward"}</h2>
       </div>
       <div className="mb-4">
         <input
@@ -126,7 +143,7 @@ const CreateReward: React.FC<CreateRewardProps> = ({ onCreate }) => {
         className="w-full p-4 rounded-lg bg-primary text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 flex items-center justify-center"
       >
         <FaPlus size={20} className="inline mr-2" />
-        Create Reward
+        {rewardToEdit ? "Update Reward" : "Create Reward"}
       </button>
     </div>
   );

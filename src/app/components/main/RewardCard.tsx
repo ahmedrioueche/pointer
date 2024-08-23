@@ -40,7 +40,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
     if (remark.trim()) {
       const newRemark = {
         text: remark,
-        maker: "Parent", // Replace with logic to get the current user's name
+        maker: "Parent", 
         date: capitalizeFirstLetter(formatDateTime(new Date()))
       };
       setCurrentRemark(newRemark);
@@ -54,7 +54,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
   const handleApproval = () => {
     setShowApprovalMessage(true);
     const newApproval = {
-      maker: "Parent", // Replace with logic to get the current user's name
+      maker: "Parent", 
       date: capitalizeFirstLetter(formatDateTime(new Date()))
     };
     setApproval(newApproval);
@@ -91,18 +91,21 @@ export const RewardCard: React.FC<RewardCardProps> = ({
     >
       <div className="flex items-start space-x-4">
         <div className="text-4xl flex-shrink-0">
-          <Icon />
+          {Icon?  <Icon /> : null}
         </div>
         <div className="flex-grow">
           <h4 className="text-lg font-semibold mb-1">{title}</h4>
-          <div className="mt-2 flex items-center text-sm font-satisfy">
+          <div className="mt-2 flex items-center text-base font-satisfy">
             <FaCalendar className="text-lg mr-2" />
             <p>{formattedCreationDate}</p>
           </div>
-          <div className="flex items-center text-sm mt-1 font-satisfy">
+          {type === "reward_claimed" && (
+            <div className="flex items-center text-base mt-1 font-satisfy">
             <FaCalendarDay className="text-lg mr-2" />
             <p>{formattedClaimDate}</p>
           </div>
+          )}
+       
           <div className="flex items-center mt-2 mb-2">
             <p className="text-xl font-bold font-satisfy">{points}</p>
             <h4 className='text-base ml-1 font-satisfy'>Points</h4>

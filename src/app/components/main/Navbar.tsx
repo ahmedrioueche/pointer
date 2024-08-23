@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser, FaHome, FaClock, FaArrowDown, FaArrowUp, FaLightbulb, FaDice, FaArrowRight } from "react-icons/fa";
 import { signOut } from "next-auth/react";
+import DropdownNotifications from "./DropDownNotif";
 
 const DashboardNavbar = ({ firstName } : any) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -53,7 +54,7 @@ const DashboardNavbar = ({ firstName } : any) => {
           </Link>
         </div>
 
-        <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4">
         <button
           className="hidden md:flex px-4 py-2 rounded-md text-lg md:text-xl font-stix bg-light-primary dark:bg-dark-primary text-dark-text dark:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 items-center group"
         >
@@ -77,14 +78,10 @@ const DashboardNavbar = ({ firstName } : any) => {
             {isMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
 
+          <DropdownNotifications />
+
           <div className="hidden md:flex items-center space-x-4">
-            {/* Notifications Icon */}
-            <Link
-              href="/main/notifications"
-              className="p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-            >
-              <FaBell size={20} />
-            </Link>
+          
 
             {/* Settings Icon */}
             <Link

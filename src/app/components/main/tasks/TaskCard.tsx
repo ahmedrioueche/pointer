@@ -97,10 +97,12 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             <FaCalendar className="text-lg mr-2" />
             <p>{capitalizeFirstLetter(formatDateTime(new Date(creation_date)))}</p>
           </div>
-          <div className="flex items-center text-sm mt-1 font-satisfy">
+          {type === "task_done" || type === "task_pending" && (
+            <div className="flex items-center text-sm mt-1 font-satisfy">
             <FaCalendarDay className="text-lg mr-2" />
             <p>{capitalizeFirstLetter(getRelativeDate(new Date(due_date)))}</p>
           </div>
+          )}
           <div className="flex items-center mt-2 mb-2">
             <p className="text-xl font-bold font-satisfy">{points}</p>
             <h4 className='text-base ml-1 font-satisfy'>Points</h4>
@@ -152,12 +154,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
               >
                 <FaTrashAlt size={16} />
               </button>
-              <button
-                onClick={handleApprove}
-                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
-              >
-                <FaCheck size={16} />
-              </button>
+             
             </>
           )}
           {type === "task_pending" && (
@@ -219,7 +216,6 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             </button>
           </div>
         )}
-        {/* Remark input field */}
         {type === "task_done" && showRemarkInput && (
           <div className="mt-5 flex items-center">
             <input

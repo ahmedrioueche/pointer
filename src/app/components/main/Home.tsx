@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import Card from './Card'; // Adjust the import path if necessary
 import { Child } from "../../../lib/interface";
-import Menu from './tasks/TaskMenu'; // Make sure to use the correct import path
+import TaskModal from './tasks/TaskModal'; // Make sure to use the correct import path
 import AddCard from './AddCard';
+import AddChildModal from './AddChildModal';
 
 interface HomeProps {
   userType: string;
 }
+
 
 const Home: React.FC<HomeProps> = ({ userType }) => {
   const children: Child[] = [
@@ -82,12 +84,20 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
     console.log(" child.icon",  child.icon)
   });
 
-  const [isTasksMenuOpen, setIsTasksMenuOpen] = useState(false);
+  const [isTasksModalOpen, setIsTasksMenuOpen] = useState(false);
+  const [isAddChildModalOpen, setIsAddChildModalOpen] = useState(false);
 
-  const toggleTasksMenu = () => {
-    setIsTasksMenuOpen(!isTasksMenuOpen);
+  const toggleTaskModal = () => {
+    setIsTasksMenuOpen(!isTasksModalOpen);
+  };
+  const toggleAddChildModal = () => {
+    setIsAddChildModalOpen(!isAddChildModalOpen);
   };
 
+  const handleAddChild = () => {
+    setIsAddChildModalOpen(true);
+  }
+  
   return (
     <div className="p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -101,16 +111,22 @@ const Home: React.FC<HomeProps> = ({ userType }) => {
               achievedTasks={child.achievedTasks}
               pendingTasks={child.pendingTasks}
               icon={child.icon}
-              callback={toggleTasksMenu}
+              callback={toggleTaskModal}
             />
           </div>
         ))}
-        <AddCard/>
+        <div onClick={handleAddChild}>
+           <AddCard/>
+        </div>
       </div>
 
-      <Menu
-        isOpen={isTasksMenuOpen}
-        onClose={toggleTasksMenu}
+      <AddChildModal
+        isOpen={isAddChildModalOpen}
+        onClose={toggleAddChildModal}/>
+
+      <TaskModal
+        isOpen={isTasksModalOpen}
+        onClose={toggleTaskModal}
       />
     </div>
   );

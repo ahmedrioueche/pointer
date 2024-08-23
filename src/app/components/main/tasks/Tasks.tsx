@@ -9,6 +9,7 @@ import { CreateTask } from './CreateTask';
 import { bgColors } from '@/data/style';
 
 
+
 const Tasks: React.FC = () => {
   const [tasks, setTasks] = useState<TaskCardIf[]>([
     { title: "Make the bed", points: 10, creation_date: "2024-08-21T12:00", due_date: "2024-08-21T13:00", icon: FaClipboardList, bgColor: bgColors[0] },
@@ -19,13 +20,24 @@ const Tasks: React.FC = () => {
     { title: "Prepare dinner", points: 10, creation_date: "2024-08-21T17:00", due_date: "2024-08-21T18:00", icon: FaClipboardList, bgColor: bgColors[5] },
     { title: "Read a book", points: 10, creation_date: "2024-08-21T18:00", due_date: "2024-08-21T19:00", icon: FaClipboardList, bgColor: bgColors[6] },
   ]);
-  
+
+  const [selectedTask, setSelectedTask] = useState<TaskCardIf | null>(null);
+
   const addTask = (newTask: TaskCardIf) => {
-    setTasks([newTask, ...tasks]); // Prepend new task
+    if (selectedTask) {
+      setTasks(
+        tasks.map((task) =>
+        task.title === selectedTask.title ? newTask : task
+        )
+      );
+      setSelectedTask(null); 
+    } else {
+      setTasks([newTask, ...tasks]);
+    }
   };
 
   const modifyTask = (index: number) => {
-    // Logic to modify the task
+    setSelectedTask(tasks[index]);
     console.log("Modify task:", index);
   };
 
@@ -43,7 +55,7 @@ const Tasks: React.FC = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
            <div className="col-span-1 lg:col-span-1 w-full">
-             <CreateTask type="task_page" onCreate={addTask} />
+             <CreateTask taskToEdit={selectedTask} type="task_page" onCreate={addTask} />
           </div>
         </div>
         <div className="lg:col-span-2">

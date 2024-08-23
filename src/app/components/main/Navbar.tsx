@@ -56,7 +56,7 @@ const DashboardNavbar = ({ firstName } : any) => {
 
       <div className="flex items-center space-x-4">
         <button
-          className="hidden md:flex px-4 py-2 rounded-md text-lg md:text-xl font-stix bg-light-primary dark:bg-dark-primary text-dark-text dark:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 items-center group"
+          className="hidden md:flex px-4 py-2 rounded-md text-lg md:text-xl font-satisfy bg-light-primary dark:bg-dark-primary text-dark-text dark:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 items-center group"
         >
           {`${remainingDays} Days`}
           <span className="ml-2 transition-transform duration-300 group-hover:rotate-180">

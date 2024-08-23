@@ -63,7 +63,7 @@ const Page = ({ params }: PageProps) => {
           <Navbar firstName={firstName} />
           <div className="flex flex-1">
             <SideMenu />
-            <main className="flex-1 p-6">
+            <main className="flex-1 p-1">
               {MainContainer ? (
                 <MainContainer />
               ) : (

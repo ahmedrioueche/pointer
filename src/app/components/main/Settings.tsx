@@ -46,7 +46,6 @@ const settingsData = [
     options: ['Auto Updates', 'App Version', 'Backup & Restore'],
   },
 ];
-
 const Settings: React.FC = () => {
   const [openIndexMain, setOpenIndexMain] = useState<number | null>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -65,9 +64,9 @@ const Settings: React.FC = () => {
         <FaCog className="mr-3" />
         Settings
       </h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      <div className="w-full max-w-[90vw] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {settingsData.map((setting, index) => (
-          <div key={index} className="relative">
+          <div key={index} className="relative w-full max-w-full">
             <div
               className={`p-6 rounded-lg shadow-md ${setting.bgColor} transition-transform duration-300`}
               style={{ height: openIndexMain === index ? 'auto' : '150px' }}
@@ -124,6 +123,7 @@ const Settings: React.FC = () => {
     </div>
   );
 };
+
 
 const renderSettingContent = (openIndexMain: number | null, openIndex: number | null, bgColor: string) => {
   if (openIndexMain === null || openIndex === null) return null;

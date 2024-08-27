@@ -2,8 +2,8 @@
 // Read more about it in the Prisma documentation: https://pris.ly/d/schema
 
 datasource db {
-  provider = "mysql" // Specify MySQL as the database provider
-  url      = env("DATABASE_URL") // Ensure this URL is set in your .env file
+  provider = "postgresql" /
+  url      = env("DATABASE_URL") 
 }
 
 generator client {

@@ -56,7 +56,7 @@ export const insertParent = async (parent: Parent): Promise<Response> => {
     } catch (error) {
             return {
                 status: 'failed',
-                message: 'Email already exists',
+                message: 'Failed to insert user',
             };
     } finally {
         await prisma.$disconnect();

@@ -35,7 +35,8 @@ function LoadingPage() {
                 });
 
                 const parent = await response.json();
-            
+                console.log("parent", parent);
+
                 if (parent) {
                     
                     sessionStorage.setItem("userId", parent.id);
@@ -62,14 +63,14 @@ function LoadingPage() {
                 } else {
                     const result: any = await apiInsertDB(session?.user, "", "/api/insert-parent");
 
-                    console.log("parentId", result)
+                    console.log("parentId in else", result)
 
                     const parentId = result.parentId;
 
                     sessionStorage.setItem("userId", parentId);
                     sessionStorage.setItem("userType", "parent");
 
-                    router.push('/auth/confirm');
+                  //  router.push('/auth/confirm');
                 }
             } catch (error) {
                 console.error('Error fetching parent data:', error);

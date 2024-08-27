@@ -16,7 +16,7 @@ export const insertChild = async (child: Child): Promise<any> => {
     
     const newChild = await prisma.child.create({
       data: {
-        parent_id: child.parent_id? parentId : undefined,
+        parent_id: parentId,
         name: child.name,
         age: age,
         gender: child.gender,

@@ -22,6 +22,11 @@ function LoadingPage() {
     useEffect(() => {
         if (status !== 'authenticated' || hasFetched) return;
 
+        
+        session? console.log("session", session) : '';
+
+        console.log("email", session?.user.email)
+
         const fetchParentData = async () => {
             setHasFetched(true); 
 
@@ -33,6 +38,7 @@ function LoadingPage() {
                     },
                     body: JSON.stringify({ email: session?.user.email }),
                 });
+
 
                 const parent = await response.json();
                 console.log("parent", parent);

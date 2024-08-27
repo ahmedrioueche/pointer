@@ -1,4 +1,5 @@
-import pool from "./db";
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 // Interface for parent data
 export interface Parent {
@@ -24,102 +25,73 @@ interface Response {
     message?: string;
     parentId? : Number;
 }
+
+
 export const insertParent = async (parent: Parent): Promise<Response> => {
-    const connection = await pool.getConnection();
     try {
-        await connection.beginTransaction();
-        
-        const [result] = await connection.query(
-            `INSERT INTO parent (
-                first_name, last_name, email, password
-            ) VALUES (?, ?, ?, ?)`,
-            [
-                parent.first_name,
-                parent.last_name,
-                parent.email,
-                parent.password,
-            ]
-        );
-
-        const parentId = (result as any).insertId;
-
-        await connection.commit();
+        const newParent = await prisma.parent.create({
+            data: {
+                first_name: parent.first_name,
+                last_name: parent.last_name,
+                email: parent.email,
+                password: parent.password,
+                is_verified: parent.is_verified,
+                age: parent.age,
+                gender: parent.gender,
+                children_count: parent.children_count,
+                subscription_type: parent.subscription_type,
+                subscription_start_date: parent.subscription_start_date,
+                subscription_end_date: parent.subscription_end_date,
+                is_subscription_active: parent.is_subscription_active,
+                payment_method: parent.payment_method,
+                last_payment_date: parent.last_payment_date,
+                subscription_price: parent.subscription_price,
+            },
+        });
 
         return {
             status: 'success',
-            parentId,
+            parentId: newParent.id,
         };
     } catch (error) {
-        await connection.rollback();
-
-        // Type assertion to narrow the error type
-        if (error instanceof Error && (error as any).code === 'ER_DUP_ENTRY') {
             return {
                 status: 'failed',
                 message: 'Email already exists',
             };
-        }
-
-        // If the error is not the expected type, rethrow it
-        throw error;
     } finally {
-        connection.release();
+        await prisma.$disconnect();
     }
 };
 
 
 export const updateParent = async (parentId: number, updateData: Partial<Parent>): Promise<Response> => {
-    const connection = await pool.getConnection();
     try {
-        await connection.beginTransaction();
+        await prisma.parent.update({
+            where: { id: parentId },
+            data: updateData,
+        });
 
-        if (updateData && Object.keys(updateData).length > 0) {
-            const setClause = Object.keys(updateData)
-                .map((key) => `${key} = ?`)
-                .join(', ');
-            const query = `UPDATE parent SET ${setClause} WHERE parent_id = ?`;
-            const values = [...Object.values(updateData), parentId];
-            console.log("Updating parent table values:", values);
-
-            await connection.query(query, values);
-            await connection.commit();
-
-            return { status: 'success' }; 
-        } else {
-            console.log("updateData is undefined or empty");
-            return { status: 'failed', message: 'No data to update' }; 
-        }
+        return { status: 'success' };
     } catch (error) {
-        await connection.rollback();
         console.error('Error updating parent:', error);
-        return { status: 'error', message: 'An error occurred' }; 
+        return { status: 'error', message: 'An error occurred' };
     } finally {
-        connection.release();
+        await prisma.$disconnect();
     }
 };
 
+
 export async function getParentByEmail(email: string): Promise<any | null> {
-  let connection;
-  try {
-    connection = await pool.getConnection();
-    await connection.beginTransaction();
+    try {
+        const parent = await prisma.parent.findUnique({
+            where: { email },
+        });
 
-    const [rows] = await connection.query(
-      'SELECT * FROM parent WHERE email = ?',
-      [email]
-    );
-
-    await connection.commit();
-    connection.release();
-
-    return Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
-
-  } catch (error) {
-    if (connection) {
-      await connection.rollback();
-      connection.release();
+        return parent;
+    } catch (error) {
+        console.error('Error retrieving user from database:', error);
+        return null;
+    } finally {
+        await prisma.$disconnect();
     }
-    console.error('Error retrieving user from database:', error);
-    return null;
-  }
 }

@@ -16,7 +16,7 @@ const CustomSelect: React.FC<{ value: string; onChange: (value: string) => void,
         <div className="relative w-full">
             <div
                 className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 
-                rounded-lg px-6 py-3 text-light-text dark:text-dark-text cursor-pointer 
+                rounded-lg px-6 py-4 text-light-text dark:text-dark-text cursor-pointer 
                 hover:bg-light-primary dark:hover:bg-dark-primary hover:text-dark-text transition-colors duration-200 ${classname}`}
                 onClick={() => setIsOpen(!isOpen)}
             >

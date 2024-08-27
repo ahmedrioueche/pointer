@@ -18,7 +18,8 @@ export async function POST(request: Request) {
             first_name: firstName,
             last_name:lastName,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
+            is_verified: true,
         }
 
         const result = await insertParent(parent);

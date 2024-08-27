@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server';
 import { insertChild } from '@/db/childService';
-import { updateParent } from '@/db/parentService';
 
-// Handler function for POST requests
 async function handlePost(req: Request) {
     try {
-        const { name, age, gender, parentId, hasDevice, usesSharedDevice } = await req.json();
+        const { name, age, gender, parent_id, has_device, uses_shared_device, username, password } = await req.json();
 
-        if (!name || !age || !gender || !parentId || !hasDevice) {
+        if (!name || !age || !gender || !parent_id || !has_device) {
             return NextResponse.json({ message: 'Please provide all required fields.' }, { status: 400 });
         }
 
@@ -15,9 +13,11 @@ async function handlePost(req: Request) {
             name,
             age,
             gender,
-            parentId,
-            hasDevice,
-            usesSharedDevice
+            parent_id,
+            has_device,
+            uses_shared_device,
+            username,
+            password,
         };
 
         await insertChild(child); 

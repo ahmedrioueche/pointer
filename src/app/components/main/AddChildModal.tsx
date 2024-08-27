@@ -22,7 +22,7 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChi
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleAddChild = (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ name, age, gender, image });
     const cgender = gender === "male"? "male" : "female";
@@ -32,7 +32,7 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChi
 
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-transform duration-300 ${
+      className={`fixed inset-0 bg-black bg-opacity-50 flex items-center font-stix justify-center z-50 transition-transform duration-300 ${
         isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
       }`}
     >
@@ -49,12 +49,12 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChi
             <FaTimes size={16} />
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2">
+        <form  className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2">
           {/* Name Card */}
           <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
             <FaUser className="text-3xl" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-2">Name</h3>
+              <h3 className="text-lg font-semibold font-satisfy mb-2">Name</h3>
               <input
                 type="text"
                 value={name}
@@ -69,7 +69,7 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChi
           <div className="bg-gradient-to-r from-green-400 via-blue-500 to-teal-400 text-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
             <FaBirthdayCake className="text-3xl" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-2">Age</h3>
+              <h3 className="text-lg font-semibold  font-satisfy mb-2">Age</h3>
               <input
                 type="number"
                 value={age}
@@ -84,7 +84,7 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChi
           <div className="bg-gradient-to-r from-yellow-400 via-red-500 to-orange-400 text-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
             <FaGenderless className="text-3xl" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-2">Gender</h3>
+              <h3 className="text-lg font-semibold font-satisfy mb-2">Gender</h3>
               <CustomSelect
                 value={gender}
                 onChange={(value) => setGender(value)}
@@ -96,7 +96,7 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChi
           <div className="bg-gradient-to-r from-teal-400 via-cyan-500 to-blue-400 text-white p-4 rounded-lg shadow-lg flex items-center space-x-4">
             <FaImage className="text-3xl" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold mb-2">Image</h3>
+              <h3 className="text-lg font-semibold font-satisfy mb-2">Image</h3>
               <div className="relative">
                 <input
                   type="file"
@@ -107,15 +107,15 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChi
               </div>
             </div>
           </div>
-          <div className="col-span-1 flex justify-center mt-6">
-            <LoadingButton
-              isLoading={isLoading}
-              type="submit"
-              buttonText="Add Child"
-              className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-colors duration-300 flex items-center"
-            />
-          </div>
+         
         </form>
+        <div className="col-span-1 flex justify-center mt-6">
+         <button className="w-60 bg-light-primary text-white px-4 py-3 rounded-md hover:bg-accent hover:text-light-text dark:hover:text-light-text font-satisfy transition duration-300 dark:hover:bg-dark-accent hover:bg-light-accent"
+            onClick={handleAddChild}
+          >
+            Save Changes
+          </button>
+          </div>
       </div>
     </div>
   );

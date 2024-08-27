@@ -1,53 +1,79 @@
 'use client';
 
-import React, { useState } from 'react';
-import {FaCalendarAlt, FaClipboardList } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { TaskCard } from './TaskCard';
-import { TaskCardIf } from '@/lib/interface';
+import { Task } from '@/lib/interface';
 import { CreateTask } from './CreateTask';
-import { bgColors } from '@/data/style';
+import { fetcher, generateUniqueId } from '@/utils/helper';
+import useSWR from 'swr';
+import { apiAddTask, apiDeleteTask, apiUpdateTask } from '@/lib/apiHelper';
 
+const Tasks: React.FC = (user : any) => {
 
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [tasks, setTasks] = useState<Task[]>();
 
-const Tasks: React.FC = () => {
-  const [tasks, setTasks] = useState<TaskCardIf[]>([
-    { title: "Make the bed", points: 10, creation_date: "2024-08-21T12:00", due_date: "2024-08-21T13:00", icon: FaClipboardList, bgColor: bgColors[0] },
-    { title: "Do homework", points: 10, creation_date: "2024-08-21T13:00", due_date: "2024-08-21T14:00", icon: FaClipboardList, bgColor: bgColors[1] },
-    { title: "Buy groceries", points: 10, creation_date: "2024-08-21T14:00", due_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[2] },
-    { title: "Walk the dog", points: 10, creation_date: "2024-08-21T15:00", due_date: "2024-08-21T16:00", icon: FaClipboardList, bgColor: bgColors[3] },
-    { title: "Clean the house", points: 10, creation_date: "2024-08-21T16:00", due_date: "2024-08-21T17:00", icon: FaClipboardList, bgColor: bgColors[4] },
-    { title: "Prepare dinner", points: 10, creation_date: "2024-08-21T17:00", due_date: "2024-08-21T18:00", icon: FaClipboardList, bgColor: bgColors[5] },
-    { title: "Read a book", points: 10, creation_date: "2024-08-21T18:00", due_date: "2024-08-21T19:00", icon: FaClipboardList, bgColor: bgColors[6] },
-  ]);
+  const userId = user? user.user.userId : undefined;
 
-  const [selectedTask, setSelectedTask] = useState<TaskCardIf | null>(null);
+  const { data: data, error, mutate } = useSWR('/api/main/task/get-task-parent-id', (url) => fetcher(url, userId), {
+    revalidateOnFocus: true, 
+  });
 
-  const addTask = (newTask: TaskCardIf) => {
+  useEffect(() => {
+    if(data){
+      const fetchedTasks = data.tasks
+      if (Array.isArray(fetchedTasks)) {
+        const notApprovedTasks = fetchedTasks.filter((task : Task) => ( !task.assignedTo && !task.isApproved ));
+        setTasks(notApprovedTasks);
+      }
+    }
+  }, [data]);
+
+  const addTask = async (newTask: Task) => {
+    newTask = {...newTask, creatorId: userId}
+
     if (selectedTask) {
+      const selectedTaskId = selectedTask.id;
+      const response = await apiUpdateTask(selectedTaskId, {...newTask, id: selectedTaskId});
+      console.log("response", response)
       setTasks(
-        tasks.map((task) =>
-        task.title === selectedTask.title ? newTask : task
-        )
+        tasks?.map((task) =>
+          task.id === selectedTask.id ? {...newTask, id: selectedTaskId} : task
+        ) 
       );
-      setSelectedTask(null); 
+
+        setSelectedTask(null);
     } else {
-      setTasks([newTask, ...tasks]);
+
+        const tempId = generateUniqueId();
+        const tempTask = { ...newTask, id: tempId };
+        tasks ? setTasks([tempTask, ...tasks]) : setTasks([tempTask]);
+
+        const response = await apiAddTask(newTask);
+        console.log("response", response)
+
+        const taskId = response.id;
+        setTasks((prevTasks) =>
+            prevTasks?.map((task) =>
+                task.id === tempId ? { ...task, id: taskId } : task
+            )
+        );
     }
   };
 
   const modifyTask = (index: number) => {
-    setSelectedTask(tasks[index]);
-    console.log("Modify task:", index);
+    tasks? setSelectedTask(tasks[index]) : null;
   };
 
-  const removeTask = (index: number) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-  };
-
-  const actionTask = (index: number) => {
-    // Logic for task action (e.g., mark as done)
-    console.log("Action task:", index);
+  const removeTask = async (index: number) => {
+    const taskToDelete = tasks? tasks[index] : undefined;
+    setTasks(tasks?.filter((_, i) => i !== index));
+    let response;
+    if(taskToDelete){
+      response = await apiDeleteTask(taskToDelete.id);
+      console.log("response", response)
+    }
   };
 
   return (
@@ -61,7 +87,7 @@ const Tasks: React.FC = () => {
         <div className="lg:col-span-2">
           <div className="col-span-1 lg:col-span-2">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {tasks.map((task, index) => (
+              {tasks && tasks?.map((task, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -73,12 +99,12 @@ const Tasks: React.FC = () => {
                     {...task}
                     onModify={() => modifyTask(index)}
                     onRemove={() => removeTask(index)}
-                    onAction={() => actionTask(index)}
+                    onApprove={() => null}
                     onAssign={() => null}
                   />
                 </motion.div>
               ))}
-                </div>
+             </div>
           </div>
         </div>
       </div>

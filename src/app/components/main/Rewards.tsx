@@ -4,48 +4,99 @@ import React, { useEffect, useState } from 'react';
 import { FaPlus, FaDollarSign, FaGlobeAmericas, FaXbox, FaPlaystation, FaLaptop, FaPhone, FaDog, FaEdit, FaTrashAlt, FaCheck, FaGift } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Reward } from '@/lib/interface';
-import { bgColors } from '@/data/style';
 import { RewardCard } from './RewardCard';
+import useSWR from 'swr';
+import { fetcher, generateUniqueId } from '@/utils/helper';
+import { apiAddReward, apiClaimReward, apiDeleteReward, apiUpdateReward } from '@/lib/apiHelper';
+import Alert from '../Alert';
 
-const initialRewards: Reward[] = [
-  { title: "Money ($100)", points: 100, icon: FaDollarSign, bgColor: bgColors[0] },
-  { title: "Trip to Europe", points: 1000, icon: FaGlobeAmericas, bgColor: bgColors[1] },
-  { title: "Xbox", points: 300, icon: FaXbox, bgColor: bgColors[2] },
-  { title: "PlayStation", points: 350, icon: FaPlaystation, bgColor: bgColors[3] },
-  { title: "PC", points: 800, icon: FaLaptop, bgColor: bgColors[4] },
-  { title: "Phone", points: 400, icon: FaPhone, bgColor: bgColors[5] },
-  { title: "Pet", points: 600, icon: FaDog, bgColor: bgColors[6] },
-];
-const Rewards: React.FC = () => {
-  const [rewards, setRewards] = useState<Reward[]>(initialRewards);
+const Rewards: React.FC = (user : any) => {
+  const userId = user? user.user.userId : undefined;
+
+  const [rewards, setRewards] = useState<Reward[]>([]);
   const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
+  const [status, setStatus] = useState<{ success: string; message: string }>();
+  const [showAlert, setShowAlert] = useState(false);
 
-  const addReward = (newReward: Reward) => {
+  const { data: data, error, mutate } = useSWR('/api/main/reward/get-reward-parent-id', (url) => fetcher(url, userId), {
+    revalidateOnFocus: true, 
+  });
+  
+  useEffect(() => {
+    if(data){
+      const fetchedRewards = data.rewards
+      if (Array.isArray(fetchedRewards)) {
+        setRewards(fetchedRewards);
+      }
+    }
+  }, [data]);
+
+  
+  const addReward = async (newReward: Reward) => {
+    newReward = {...newReward, creatorId: typeof userId === "string" ? parseInt(userId) : userId}
+
     if (selectedReward) {
-      // Update the existing reward
+      const selectedRewardId = selectedReward.id;
+      const response = await apiUpdateReward(selectedRewardId, {...newReward, id: selectedRewardId});
+
       setRewards(
-        rewards.map((reward) =>
-          reward.title === selectedReward.title ? newReward : reward
+        rewards?.map((reward) =>
+          reward.id === selectedReward.id ? { ...newReward, id: selectedRewardId } : reward
         )
       );
-      setSelectedReward(null); // Reset after update
+      
+      setSelectedReward(null); 
     } else {
-      // Add a new reward
-      setRewards([newReward, ...rewards]);
-    }
+
+        const tempId = generateUniqueId();
+        const tempReward = { ...newReward, id: tempId };
+        rewards ? setRewards([tempReward, ...rewards]) : setRewards([tempReward]);
+
+        const response = await apiAddReward(newReward);
+
+        const rewardId = response.id;
+        setRewards((prevRewards) =>
+          prevRewards?.map((reward) =>
+            reward.id === tempId ? { ...reward, id: rewardId } : reward
+          )
+        );    
+      }
   };
 
   const modifyReward = (index: number) => {
     setSelectedReward(rewards[index]);
   };
 
-  const removeReward = (index: number) => {
-    setRewards(rewards.filter((_, i) => i !== index));
+  const removeReward = async (index: number) => {
+    const rewardToDelete = rewards? rewards[index] : undefined;
+    setRewards(rewards?.filter((_, i) => i !== index));
+    let response;
+    if(rewardToDelete){
+      response = await apiDeleteReward(rewardToDelete.id);
+    }
+
+    if(response.error){
+      setStatus({success : "Error", message : "Could not delete reward, it is claimed by a child!"});
+      setShowAlert(true);
+      rewardToDelete? setRewards(prev => [...prev, rewardToDelete]) : null;
+    }            
+
   };
 
-  const actionReward = (index: number) => {
-    // Logic for reward action (e.g., mark as redeemed)
-    console.log("Action reward:", index);
+  const handleClaimReward = async () =>{
+
+    const rewardId = 1;
+    const childId = 1;
+
+    const result = await apiClaimReward(rewardId, childId);
+  }
+
+  //useEffect(()=>{
+  //  handleClaimReward()
+  // },[])
+
+  const handleClose = () => {
+    setShowAlert(false);
   };
 
   return (
@@ -68,24 +119,23 @@ const Rewards: React.FC = () => {
                   {...reward}
                   onModify={() => modifyReward(index)}
                   onRemove={() => removeReward(index)}
-                  onAction={() => actionReward(index)}
                 />
               </motion.div>
             ))}
           </div>
         </div>
+        {showAlert && (
+        <Alert
+          title={status?.success}
+          message={status?.message}
+          onClose={handleClose}
+        />
+      )}
       </div>
     </div>
   );
 };
 
-
-
-// Function to get a random color from the list
-const getRandomBgColor = () => {
-  const randomIndex = Math.floor(Math.random() * bgColors.length);
-  return bgColors[randomIndex];
-};
 interface CreateRewardProps {
   onCreate: (reward: Reward) => void;
   rewardToEdit?: Reward | null;
@@ -97,7 +147,7 @@ const CreateReward: React.FC<CreateRewardProps> = ({ onCreate, rewardToEdit }) =
 
   useEffect(() => {
     if (rewardToEdit) {
-      setNewRewardTitle(rewardToEdit.title);
+      setNewRewardTitle(rewardToEdit.name);
       setNewRewardPoints(rewardToEdit.points);
     }
   }, [rewardToEdit]);
@@ -105,10 +155,9 @@ const CreateReward: React.FC<CreateRewardProps> = ({ onCreate, rewardToEdit }) =
   const handleCreate = () => {
     if (newRewardTitle.trim()) {
       const newReward: Reward = {
-        title: newRewardTitle,
+        name: newRewardTitle,
         points: newRewardPoints,
         icon: rewardToEdit?.icon || FaGift, 
-        bgColor: rewardToEdit?.bgColor || getRandomBgColor(),
       };
       onCreate(newReward);
       setNewRewardTitle("");
@@ -145,6 +194,7 @@ const CreateReward: React.FC<CreateRewardProps> = ({ onCreate, rewardToEdit }) =
         <FaPlus size={20} className="inline mr-2" />
         {rewardToEdit ? "Update Reward" : "Create Reward"}
       </button>
+
     </div>
   );
 };

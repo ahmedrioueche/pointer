@@ -6,22 +6,15 @@ import CustomSelect from '@/app/components/CustomSelect';
 import { apiInsertDB } from '@/lib/dbHelper';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/components/Loading';
-import { apiUpdateParent } from '@/lib/apiHelper';
+import { apiInsertChild, apiUpdateParent } from '@/lib/apiHelper';
 import LoadingButton from '@/app/components/LoadingButton';
-
-interface Child {
-    name: string;
-    age: string;
-    gender: string;
-    parentId: Number | null;
-    hasDevice: string; 
-    usesSharedDevice: string;
-}
+import { generateRandomUsernamePassword } from '@/utils/helper';
+import { Child } from '@/lib/interface';
 
 const Confirm: React.FC = () => {
     const router = useRouter();
     const { data: session, status } = useSession();
-    const [parentId, setParentId] = useState<Number | null>(0);
+    const [parentId, setParentId] = useState<any>(0);
     const [childrenCount, setChildrenCount] = useState('');
     const [children, setChildren] = useState<Child[]>([]);
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
@@ -55,9 +48,9 @@ const Confirm: React.FC = () => {
 
     useEffect(()=> {
         if (typeof window !== 'undefined') {
-            const parentIdString = sessionStorage.getItem("parentId");
+            const parentIdString = sessionStorage.getItem("userId");
             console.log("parentIdString", parentIdString);
-            const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
+            const parentId = parentIdString ? parseInt(parentIdString, 10) : undefined;
             setParentId(parentId);
         }
     })
@@ -89,8 +82,8 @@ const Confirm: React.FC = () => {
                 }
                 if (!child.gender) currentErrors[`childGender${index}`] = `Please select a gender for the child.`;
 
-                if (!child.hasDevice) currentErrors[`childHasDevice${index}`] = `Please select if ${child.name || `Child ${index + 1}`} is allowed a separate device.`;
-                if (child.hasDevice === 'no' && !child.usesSharedDevice) {
+                if (!child.has_device) currentErrors[`childHasDevice${index}`] = `Please select if ${child.name || `Child ${index + 1}`} is allowed a separate device.`;
+                if (child.has_device === false && !child.uses_shared_device) {
                     currentErrors[`childUsesSharedDevice${index}`] = `Please select if ${child.name || `Child ${index + 1}`} uses a shared device with you.`;
                 }
             });
@@ -100,20 +93,27 @@ const Confirm: React.FC = () => {
             setErrors(currentErrors);
             setIsLoading(false);
         } else {
+            let childInserted = false;
             for (const child of children) {
 
                 const childData: Child = {
                     name: child.name,
                     age: child.age,
                     gender: child.gender,
-                    parentId: parentId,
-                    hasDevice: child.hasDevice,
-                    usesSharedDevice: child.usesSharedDevice,
+                    parent_id: parentId,
+                    has_device: child.has_device,
+                    uses_shared_device: child.uses_shared_device,
                 };
 
                 //function to insert child in db 
-                const result = await apiInsertDB(childData, "", '/api/auth/confirm');
-                //TODO: handle response
+                const result = await apiInsertChild(childData);
+
+                console.log("result", result)
+
+                if(result.status === "success"){
+                    console.log("success", result)
+                    childInserted = true;
+                }
            }
 
             const parentData = {
@@ -124,14 +124,15 @@ const Confirm: React.FC = () => {
 
            try{
                 const result = await apiUpdateParent(parentId, parentData);
-                
-                if (result.status === "success") {
+                console.log("result", result)
+                if (result.status === "success" && childInserted ) {
 
                     router.push('/auth/plans');
                 }
                 
                 else {  
-                    setStatus({ success: false, message: 'Ops! An error occured!' });
+                    setStatus({ success: false, message: 'Ops! An error occured! Please try again' });
+                    setIsLoading(false);
                 }
 
            }
@@ -145,17 +146,23 @@ const Confirm: React.FC = () => {
         const count = parseInt(e.target.value, 10);
         setChildrenCount(e.target.value);
         if (!isNaN(count) && count > 0) {
-            setChildren(Array(count).fill({ name: '', age: '', gender: '' }));
+            setChildren(Array(count).fill({ name: '', age: '', gender: '', has_device: true }));
         } else {
             setChildren([]);
         }
     };
 
-    const handleChildChange = (index: number, field: 'name' | 'age' | 'gender' | 'hasDevice' | 'usesSharedDevice', value: string) => {
+    const handleChildChange = (index: number, field: 'name' | 'age' | 'gender' | 'has_device' | 'uses_shared_device', value: string) => {
         const updatedChildren = [...children];
-        updatedChildren[index] = { ...updatedChildren[index], [field]: value };
+        if (field === 'has_device' || field === 'uses_shared_device') {
+            // Convert value to boolean
+            updatedChildren[index] = { ...updatedChildren[index], [field]: value === 'true' };
+        } else {
+            updatedChildren[index] = { ...updatedChildren[index], [field]: value };
+        }
         setChildren(updatedChildren);
-    };    
+    };
+      
 
     return (
         <>
@@ -247,8 +254,8 @@ const Confirm: React.FC = () => {
                                                     <input
                                                         type="radio"
                                                         value="yes"
-                                                        checked={child.hasDevice === 'yes'}
-                                                        onChange={(e) => handleChildChange(index, 'hasDevice', e.target.value)}
+                                                        checked={child.has_device === true}
+                                                        onChange={() => handleChildChange(index, 'has_device', 'true')}
                                                         className="radio-hidden"
                                                     />
                                                     <div className="radio-custom"></div>
@@ -258,8 +265,8 @@ const Confirm: React.FC = () => {
                                                     <input
                                                         type="radio"
                                                         value="no"
-                                                        checked={child.hasDevice === 'no'}
-                                                        onChange={(e) => handleChildChange(index, 'hasDevice', e.target.value)}
+                                                        checked={child.has_device === false}
+                                                        onChange={() => handleChildChange(index, 'has_device', 'false')}
                                                         className="radio-hidden"
                                                     />
                                                     <div className="radio-custom"></div>
@@ -269,7 +276,7 @@ const Confirm: React.FC = () => {
                                             {errors[`childHasDevice${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`childHasDevice${index}`]}</p>}
                                         </div>
 
-                                        {child.hasDevice === 'no' && (
+                                        {!child.has_device && (
                                             <div className="space-y-2">
                                                 <p className={`text-lg dark:text-dark-text text-light-text`}>
                                                     Do they use a shared device with you?
@@ -279,8 +286,8 @@ const Confirm: React.FC = () => {
                                                         <input
                                                             type="radio"
                                                             value="yes"
-                                                            checked={child.usesSharedDevice === 'yes'}
-                                                            onChange={(e) => handleChildChange(index, 'usesSharedDevice', e.target.value)}
+                                                            checked={child.uses_shared_device === false}
+                                                            onChange={() => handleChildChange(index, 'uses_shared_device', 'true')}
                                                             className="radio-hidden"
                                                         />
                                                         <div className="radio-custom"></div>
@@ -290,8 +297,8 @@ const Confirm: React.FC = () => {
                                                         <input
                                                             type="radio"
                                                             value="no"
-                                                            checked={child.usesSharedDevice === 'no'}
-                                                            onChange={(e) => handleChildChange(index, 'usesSharedDevice', e.target.value)}
+                                                            checked={child.uses_shared_device === false}
+                                                            onChange={() => handleChildChange(index, 'uses_shared_device', 'false')}
                                                             className="radio-hidden"
                                                         />
                                                         <div className="radio-custom"></div>

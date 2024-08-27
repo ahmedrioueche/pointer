@@ -75,7 +75,7 @@ const Signup: React.FC = () => {
             if (result.status === "success") {
                 const parentId = result.parentId;
                
-                sessionStorage.setItem("parentId", parentId);
+                sessionStorage.setItem("userId", parentId);
                 sessionStorage.setItem("userEmail", signupDetails.email);
 
                 const signInResult = await signIn('credentials', {

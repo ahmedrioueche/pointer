@@ -45,6 +45,13 @@ const settingsData = [
     bgColor: 'bg-gradient-to-r from-teal-400 via-blue-500 to-purple-600',
     options: ['Auto Updates', 'App Version', 'Backup & Restore'],
   },
+  {
+    title: 'Preferences',
+    description: 'General Preferences.',
+    icon: FaCog,
+    bgColor: 'bg-gradient-to-r from-teal-500 via-blue-700 to-purple-600',
+    options: ['', '', ''],
+  },
 ];
 const Settings: React.FC = () => {
   const [openIndexMain, setOpenIndexMain] = useState<number | null>(null);

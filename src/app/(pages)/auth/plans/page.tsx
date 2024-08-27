@@ -32,7 +32,7 @@ const Plans: React.FC = () => {
   }, []);
 
   useEffect(()=> {
-    const parentIdString = sessionStorage.getItem("parentId");
+    const parentIdString = sessionStorage.getItem("userId");
     console.log("parentIdString", parentIdString);
     const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
     console.log("parentId", parentId);
@@ -97,7 +97,7 @@ const Plans: React.FC = () => {
             <p className={`text-lg text-center mb-6 font-stix text-light-text dark:text-dark-text`}>
               Select the plan that best fits your needs. All plans come with a 14-day free trial!
             </p>
-            <div className="flex flex-col md:flex-row justify-center gap-8">
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center gap-8">
               {pricingOptions.map((option, index) => (
                 <PricingCard
                   key={index}

@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation';
 import Loading from '@/app/components/Loading';
 import Navbar from '@/app/components/main/Navbar';
 import SideMenu from '@/app/components/main/SideMenu';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import MainLoading from '@/app/components/main/MainLoading';
+import LoadingSkeleton from '@/app/components/LoadingSceleton';
 
 interface PageProps {
   params: {
@@ -19,42 +20,53 @@ const Page = ({ params }: PageProps) => {
   const { slug } = params;
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [MainContainer, setMainContainer] = useState<React.ComponentType<any> | null>(null);
+  const [Component, setComponent] = useState<React.LazyExoticComponent<React.FC<any>> | null>(null);
+  let userType, userIdString, userId, user;
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/login');
     }
+ 
   }, [status, router]);
+
+
+  if(session){
+    userType = sessionStorage.getItem("userType");
+    userIdString = sessionStorage.getItem("userId");
+    userId = userIdString ? parseInt(userIdString, 10) : null;
+    user = {userType, userId}
+  }
 
   const firstName = session?.user?.name?.split(' ')[0];
 
   useEffect(() => {
-    let Component: React.ComponentType<any> | null = null;
-
     switch (slug) {
       case 'home':
-        Component = dynamic(() => import('@/app/components/main/Home'));
+        setComponent(() => lazy(() => import('@/app/components/main/Home')));
         break;
       case 'dashboard':
-        Component = dynamic(() => import('@/app/components/main/Dashboard'));
+        setComponent(() => lazy(() => import('@/app/components/main/Dashboard')));
         break;
       case 'tasks':
-        Component = dynamic(() => import('@/app/components/main/tasks/Tasks'));
+        setComponent(() => lazy(() => import('@/app/components/main/tasks/Tasks')));
         break;
       case 'rewards':
-        Component = dynamic(() => import('@/app/components/main/Rewards'));
+        setComponent(() => lazy(() => import('@/app/components/main/Rewards')));
         break;
       case 'settings':
-        Component = dynamic(() => import('@/app/components/main/Settings'));
+        setComponent(() => lazy(() => import('@/app/components/main/Settings')));
         break;
       default:
-        Component = dynamic(() => import('@/app/components/main/Home'));
+        setComponent(() => lazy(() => import('@/app/components/main/Home')));
         break;
     }
-
-    setMainContainer(() => Component);
   }, [slug]);
+
+  if (status === 'loading') return <LoadingSkeleton/>;
+  if (!session) return <Loading />;
+
+  const MainContainer = Component ? Component : null;
 
   return (
     <>
@@ -65,7 +77,9 @@ const Page = ({ params }: PageProps) => {
             <SideMenu />
             <main className="flex-1 p-1">
               {MainContainer ? (
-                <MainContainer />
+                 <Suspense fallback={<MainLoading numCards={6} />}>
+                    <MainContainer user={user} />
+                </Suspense>
               ) : (
                 <></>
               )}

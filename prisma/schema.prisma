@@ -1,0 +1,131 @@
+// This is the Prisma schema file.
+// Read more about it in the Prisma documentation: https://pris.ly/d/schema
+
+datasource db {
+  provider = "mysql" // Specify MySQL as the database provider
+  url      = env("DATABASE_URL") // Ensure this URL is set in your .env file
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Parent {
+  id                     Int      @id @default(autoincrement())
+  first_name             String   @db.VarChar(255)
+  last_name              String   @db.VarChar(255)
+  email                  String   @unique @db.VarChar(255)
+  password               String   @db.VarChar(255)
+  is_verified            Boolean?
+  age                    Int?
+  gender                 String?
+  children_count         Int?
+  subscription_type      String?
+  subscription_start_date DateTime?
+  subscription_end_date  DateTime?
+  is_subscription_active Boolean?
+  payment_method         String?
+  last_payment_date      DateTime?
+  subscription_price     Float?
+
+}
+
+model Child {
+  id                  Int      @id @default(autoincrement())
+  parent_id           Int?
+  name                String   @db.VarChar(255)
+  age                 Int     
+  gender              String   @db.VarChar(10)
+  has_device          Boolean?
+  uses_shared_device  Boolean?
+  username            String?  @unique @db.VarChar(255)
+  email               String?  @unique
+  password            String?  @db.VarChar(255)
+  competence          String?  @default("beginner") @db.VarChar(50)
+  currentPoints       Int?     @default(0) @map("current_points")
+  totalPoints         Int?     @default(0) @map("total_points")
+  rewardsEarned       Int?     @default(0) @map("rewards_earned")
+  tasksAssigned       Int?     @default(0) @map("tasks_assigned")
+  tasksCompleted      Int?     @default(0) @map("tasks_completed")
+  level               String?  @default("silver") @db.VarChar(50)
+  created_at          DateTime @default(now()) @db.Timestamp(6)
+  icon                String?  
+
+  // Relations
+  taskAssignments     TaskAssignment[] @relation("ChildAssignments")
+  rewardClaimRecords RewardClaim[]    @relation("ChildRewardClaims")
+
+}
+
+model Task {
+  id                   Int                 @id @default(autoincrement())
+  name                 String
+  description          String? 
+  points               Int?
+  creatorId            Int                 @map("creator_id")               
+  creatorName          String?              @map("creator_name")
+  creationDate         DateTime?            @map("creation_date")
+
+  taskAssignments TaskAssignment[]    @relation("TaskAssignments")
+}
+
+model TaskAssignment {
+  id                   Int                 @id @default(autoincrement())
+  task                 Task                @relation("TaskAssignments", fields: [taskId], references: [id])
+  taskId               Int                 @unique @map("task_id")
+  child                Child               @relation("ChildAssignments", fields: [childId], references: [id])
+  childId              Int                 @map("child_id")
+  assignedBy           Int?                @map("assigned_by")
+  assignedByName       String?             @map("assigned_by_name")
+  assignmentDate       DateTime?           @map("assignment_date")
+  dueDate              DateTime?           @map("due_date")                 
+  isCompleted          Boolean?            @map("is_completed")            
+  isApproved           Boolean?            @map("is_approved")             
+  completionDate       DateTime?           @map("completion_date")          
+  approvalDate         DateTime?           @map("approval_date")            
+  approvedBy           Int?                @map("approved_by")              
+  approvedByName       String?             @map("approved_by_name")         
+  creatorComment       String?             @map("creator_comment")          
+  creatorCommentDate   DateTime?           @map("creator_comment_date")     
+  createdForComment    String?             @map("createdFor_comment")       
+  attachedFiles        String?             @map("attached_files")           
+
+  @@map("task_assignment")
+}
+
+model Reward {
+  id             Int        @id @default(autoincrement()) @map("id")
+  name           String     @map("name")
+  points         Int        @map("points") 
+  icon           String?    @map("icon")    
+  creationDate   DateTime?  @db.DateTime @map("creation_date")
+  creatorId      Int?        @map("creator_id")
+  creatorName    String?     @map("creator_name")
+  isClaimed      Boolean?    @map("is_claimed")
+  description    String? 
+  attachedFiles  String?    @map("attached_files")
+
+  // Relations
+  rewardClaims RewardClaim[]
+}
+
+model RewardClaim {
+  id                   Int            @id @default(autoincrement()) @map("id")
+  rewardId             Int            @map("reward_id")
+  childId              Int            @map("child_id")
+  claimedAt            DateTime?      @db.DateTime @map("claimed_at")
+  isApproved           Boolean?       @map("is_approved")
+  approvedBy           Int?           @map("approved_by") 
+  approvedByName       String?        @map("approved_by_name")
+  approvedAt           DateTime?      @db.DateTime @map("approved_at")
+  claimComment         String?        @map("claim_comment")
+  approveComment       String?        @map("approve_comment")
+  approveCommentDate   DateTime?       @map("approve_comment_date")
+  
+  // Relations
+  reward Reward @relation(fields: [rewardId], references: [id])
+  child  Child  @relation("ChildRewardClaims", fields: [childId], references: [id])
+
+  @@map("reward_claim")
+
+}

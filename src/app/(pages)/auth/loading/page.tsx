@@ -1,3 +1,12 @@
+/* signup logic
+    if user signs up using email, their data is stored directly in db in /auth/signup/page.tsx.
+    since user is always redirected to this page (/auth/loading/page.tsx) when signing up or login in,
+    this page checks if user exists in db (either they have signed up with email, or they have logged in via
+    email or 0auth), if the user exists, it checks the user data to detemine what page to route to.
+    if the user doesnt exist in db (signed up using 0auth for the first time), this page inserts the user in db
+    with setting is_verified to true, since no future email verification is required when using 0auth.
+*/
+
 "use client";
 import Loading from '@/app/components/Loading';
 import { apiInsertDB } from '@/lib/dbHelper';
@@ -26,10 +35,13 @@ function LoadingPage() {
                 });
 
                 const parent = await response.json();
-
-                console.log("parent", parent);
-                
+            
                 if (parent) {
+                    
+                    sessionStorage.setItem("userId", parent.id);
+                    sessionStorage.setItem("userEmail", parent.email);
+                    sessionStorage.setItem("userType", "parent");
+
                     if (parent.is_verified === null) {
                         router.push('/auth/verify');
                         return;
@@ -48,11 +60,14 @@ function LoadingPage() {
                     router.push('/main/home');
                     
                 } else {
-                    const parentId: any = await apiInsertDB(session?.user, "", "/api/insert-parent");
+                    const result: any = await apiInsertDB(session?.user, "", "/api/insert-parent");
 
-                    console.log("parentId", parentId)
+                    console.log("parentId", result)
 
-                    sessionStorage.setItem("parentId", parentId);
+                    const parentId = result.parentId;
+
+                    sessionStorage.setItem("userId", parentId);
+                    sessionStorage.setItem("userType", "parent");
 
                     router.push('/auth/confirm');
                 }

@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RewardCardProps } from "@/lib/interface";
-import { FaCheck, FaEdit, FaTrashAlt, FaCalendar, FaCalendarDay, FaInfoCircle, FaComment } from "react-icons/fa";
+import { FaCheck, FaEdit, FaTrashAlt, FaCalendar, FaCalendarDay, FaInfoCircle, FaComment, FaGift } from "react-icons/fa";
 import { formatDateTime, capitalizeFirstLetter } from '@/lib/formater';
+import { getRandomBgColor } from '@/utils/helper';
 
 export const RewardCard: React.FC<RewardCardProps> = ({
   type,
-  title,
+  name,
   points,
   icon: Icon,
-  bgColor,
-  creation_date,
-  claimed_at,
-  approved_by,
-  approved_at,
+  creationDate,
+  claimedAt,
+  approvedAt,
+  isApproved,
+  approvedBy,
+  approvedByName,
+  approveCommentDate,
+  claimComment,
+  approveComment,
   onModify,
   onRemove,
   onCreate,
-  onAction,
+  onApprove,
+  onAddRemark,
+  onUndo,
   onShowDetails,
 }) => {
   const [remark, setRemark] = useState('');
@@ -24,8 +31,13 @@ export const RewardCard: React.FC<RewardCardProps> = ({
   const [showRemarkInput, setShowRemarkInput] = useState(false);
   const [approval, setApproval] = useState<{ maker: string, date: string } | null>(null);
   const [showApprovalMessage, setShowApprovalMessage] = useState(false);
+  const [bgColor, setBgColor] = useState("");
 
-  
+  useEffect(()=> {
+    let bgColor = getRandomBgColor();
+    setBgColor(bgColor);
+  },[])
+
   const handleRemarkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRemark(event.target.value);
     if (currentRemark) {
@@ -40,29 +52,44 @@ export const RewardCard: React.FC<RewardCardProps> = ({
     if (remark.trim()) {
       const newRemark = {
         text: remark,
-        maker: "Parent", 
-        date: capitalizeFirstLetter(formatDateTime(new Date()))
+        maker: "Parent",
+        date: new Date().toISOString()
       };
+
+      onAddRemark?.(newRemark);
+
+      newRemark.date = capitalizeFirstLetter(formatDateTime(new Date()))
       setCurrentRemark(newRemark);
+
     } else {
       setCurrentRemark(null);
+      onAddRemark?.(null);
     }
     setRemark('');
     setShowRemarkInput(false);
   };
 
-  const handleApproval = () => {
+  const handleApprove = () => {
+
     setShowApprovalMessage(true);
+
     const newApproval = {
       maker: "Parent", 
       date: capitalizeFirstLetter(formatDateTime(new Date()))
     };
+
     setApproval(newApproval);
+
+    onApprove? onApprove() : null;
   };
 
+  
   const handleUndo = () => {
     setApproval(null);
+
     setShowApprovalMessage(false);
+
+    onUndo? onUndo() : null;
   };
 
   const toggleRemarkInput = () => {
@@ -73,28 +100,28 @@ export const RewardCard: React.FC<RewardCardProps> = ({
   };
 
 
-  const formattedCreationDate = creation_date
-    ? capitalizeFirstLetter(formatDateTime(new Date(creation_date)))
+  const formattedCreationDate = creationDate
+    ? capitalizeFirstLetter(formatDateTime(new Date(creationDate)))
     : capitalizeFirstLetter(formatDateTime(new Date()));
 
-  const formattedClaimDate = claimed_at
-    ? capitalizeFirstLetter(formatDateTime(new Date(claimed_at)))
+  const formattedClaimDate = claimedAt
+    ? capitalizeFirstLetter(formatDateTime(new Date(claimedAt)))
     : capitalizeFirstLetter(formatDateTime(new Date()));
 
-  const formattedApprovalDate = approved_at
-    ? capitalizeFirstLetter(formatDateTime(new Date(approved_at)))
+  const formattedApprovalDate = approvedAt
+    ? capitalizeFirstLetter(formatDateTime(new Date(approvedAt)))
     : capitalizeFirstLetter(formatDateTime(new Date()));
 
   return (
     <div
-      className={`relative p-6 rounded-lg cursor-pointer font-stix shadow-md ${bgColor} text-dark-text dark:text-dark-text flex flex-col h-full transform transition-transform hover:scale-105`}
+      className={`relative p-6 rounded-lg cursor-pointer font-stix shadow-md bg-gradient-to-r from-purple-400 to-blue-800 ${bgColor} text-dark-text dark:text-dark-text flex flex-col h-full transform transition-transform hover:scale-105`}
     >
       <div className="flex items-start space-x-4">
         <div className="text-4xl flex-shrink-0">
-          {Icon?  <Icon /> : null}
+          {Icon?  <Icon /> : <FaGift/>}
         </div>
         <div className="flex-grow">
-          <h4 className="text-lg font-semibold mb-1">{title}</h4>
+          <h4 className="text-2xl font-semibold mb-1">{capitalizeFirstLetter(name)}</h4>
           <div className="mt-2 flex items-center text-base font-satisfy">
             <FaCalendar className="text-lg mr-2" />
             <p>{formattedCreationDate}</p>
@@ -110,29 +137,29 @@ export const RewardCard: React.FC<RewardCardProps> = ({
             <p className="text-xl font-bold font-satisfy">{points}</p>
             <h4 className='text-base ml-1 font-satisfy'>Points</h4>
           </div>
-          {type === "reward_claimed" && approval && (
+          {type === "reward_claimed" && (approval || isApproved) && (
             <div className="mt-2">
               <div className="flex items-start space-x-2 mb-2">
                 <FaCheck className="text-xl" />
                 <div>
                   <div className="flex items-center text-sm font-satisfy mb-1">
-                    <p className="font-semibold">by {approval.maker}</p>
-                    <p className="ml-2">{approval.date}</p>
+                  <p className="font-semibold">by {approval? approval.maker : approvedByName? approvedByName : "Parent"}</p>
+                  <p className="ml-2">{approval? approval.date : approvedAt ? formatDateTime(new Date(approvedAt)) : "At unknown date"}</p>
                   </div>
                 </div>
               </div>
             </div>
           )}
-          {type === "reward_claimed" && currentRemark && (
+          {type === "reward_claimed" && (currentRemark  || approveComment) && (
             <div className="mt-2">
               <div className="flex items-start space-x-2 mb-2">
                 <FaComment className="text-xl" />
                 <div>
                   <div className="flex items-center text-sm font-satisfy mb-1">
-                    <p className="font-semibold">{currentRemark.maker}</p>
-                    <p className="ml-2">{currentRemark.date}</p>
+                  <p className="font-semibold">{currentRemark? currentRemark.maker : "Parent"}</p>
+                  <p className="ml-2">{currentRemark? currentRemark.date : approveCommentDate? formatDateTime(new Date(approveCommentDate)) : "Unknown date"}</p>
                   </div>
-                  <p className="font-satisfy">{currentRemark.text}</p>
+                  <p className="font-satisfy">{currentRemark? currentRemark.text : approveComment}</p>
                 </div>
               </div>
             </div>
@@ -160,7 +187,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
           {type === "reward_claimed" && (
             <>
               <button
-                onClick={handleApproval}
+                onClick={handleApprove}
                 className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
               >
                 <FaCheck size={16} />
@@ -180,7 +207,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
             </>
           )}
         </div>
-        {showApprovalMessage && (
+        {(showApprovalMessage || isApproved) &&  (
           <div className="mt-3 flex items-center text-base font-satisfy text-dark-text">
             <p className="mr-2">Reward approved,</p>
             <button

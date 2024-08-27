@@ -68,7 +68,7 @@ const EmailVerification: React.FC = () => {
 
     const verifyCode = async (userVerificationCode : string) => {
         setIsLoading(true);
-        const parentIdString = sessionStorage.getItem("parentId");
+        const parentIdString = sessionStorage.getItem("userId");
         const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
 
         if(sentVerificationCode === userVerificationCode) {

@@ -71,6 +71,7 @@ const Login: React.FC = () => {
                 if (signInResult?.error) {
                     console.log("error", signInResult?.error);
                     setStatus({ success: false, message: 'Login failed.' });
+                    
                 } else {
                     router.push('/auth/loading');
                 }

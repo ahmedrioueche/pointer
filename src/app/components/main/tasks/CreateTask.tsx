@@ -1,25 +1,18 @@
-import { bgColors } from "@/data/style";
 import { capitalizeFirstLetter } from "@/lib/formater";
-import { TaskCardIf } from "@/lib/interface";
+import { Task } from "@/lib/interface";
 import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaClipboardList, FaEdit, FaPlus, FaUserPlus } from "react-icons/fa";
 
-const getRandomBgColor = () => {
-  const randomIndex = Math.floor(Math.random() * bgColors.length);
-  return bgColors[randomIndex];
-};
-
-
 interface CreateTaskProps {
   type: "task_page" | "task_menu" | "task_pending" | "task_done"; 
-  onCreate: (task: TaskCardIf) => void;
-  taskToEdit: TaskCardIf | null;
+  onCreate: (task: Task) => void;
+  taskToEdit: Task | null;
 }
 
 export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate, taskToEdit}) => {
   const [newTaskTitle, setNewTaskTitle] = useState<string>("");
-  const [newTaskPoints, setNewTaskPoints] = useState<string | number>(10);
-  const [newTaskDate, setNewTaskDate] = useState<string>("");
+  const [newTaskPoints, setNewTaskPoints] = useState<string | number | undefined>(10);
+  const [newTaskDate, setNewTaskDate] = useState<string | undefined>("");
 
   useEffect(() => {
     const now = new Date();
@@ -27,27 +20,39 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate, taskToEd
     setNewTaskDate(formattedDateTime);
     
   }, []);
-
+  
   useEffect(() => {
     if (taskToEdit) {
-      setNewTaskTitle(taskToEdit.title);
+      setNewTaskTitle(taskToEdit.name);
       setNewTaskPoints(taskToEdit.points);
-      setNewTaskDate(taskToEdit.due_date);
+      
+      if (taskToEdit.dueDate) {
+        const dueDateObj = new Date(taskToEdit.dueDate);
+        if (!isNaN(dueDateObj.getTime())) {
+          setNewTaskDate(dueDateObj.toISOString().slice(0, 16));
+        } else {
+          setNewTaskDate(""); 
+        }
+      } else {
+        setNewTaskDate(""); 
+      }
     }
   }, [taskToEdit]);
-
+  
   
   const handleCreate = () => {
     if (newTaskTitle.trim()) {
-      const now = new Date().toISOString(); // Current date and time in ISO format
-      const newTask: TaskCardIf = {
-        title: capitalizeFirstLetter(newTaskTitle),
+      const now = new Date();
+      const newTask: Task = {
+        name: capitalizeFirstLetter(newTaskTitle),
         points: newTaskPoints,
-        creation_date: now,
-        due_date: newTaskDate,
+        creationDate: now,
+        ...(type !== "task_page" && {
+          dueDate: newTaskDate ? new Date(newTaskDate) : undefined,
+        }),
         icon: taskToEdit?.icon || FaCalendarAlt,
-        bgColor: getRandomBgColor(), 
-      };
+      };      
+
       onCreate(newTask);
       setNewTaskTitle("");
       setNewTaskPoints(10);

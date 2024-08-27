@@ -1,60 +1,101 @@
-import React, { useState } from 'react';
-import { FaCalendarAlt, FaClipboardList, FaTimes } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import { FaClipboardList, FaTimes } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { CreateTask } from './CreateTask';
 import { TaskCard } from './TaskCard';
-import { TaskCardIf } from '@/lib/interface';
+import { Task } from '@/lib/interface';
 import PendingTasks from './PendingTasks';
-import { bgColors } from '@/data/style';
+import { generateUniqueId } from '@/utils/helper';
+import { apiAddTask as apiAddTask, apiAssignTask, apiDeleteTask, apiUnAssignTask, apiUpdateTask } from '@/lib/apiHelper';
+import MainLoading from '../MainLoading';
 
 interface TaskModalProps {
+  parent_id: number;
+  child_id: number;
+  fetchedPendingTasks: Task[] | undefined;
   isOpen: boolean;
   onClose: () => void;
+  onUpdate: () => void;
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({
+  parent_id,
+  child_id: childId,
+  fetchedPendingTasks,
   isOpen,
   onClose,
+  onUpdate,
 }) => {
-  const [pendingTasks, setPendingTasks] = useState<TaskCardIf[]>([
-    { title: "Make the bed", points: 10, creation_date: "2024-08-21T09:00", due_date: "2024-08-21T10:00", approval_date: "2024-08-21T15:00", icon: FaCalendarAlt, bgColor: bgColors[0] },
-    { title: "Do homework", points: 10, creation_date: "2024-08-21T10:00", due_date: "2024-08-21T11:00", approval_date: "2024-08-21T15:00", icon: FaCalendarAlt, bgColor: bgColors[1] },
-    { title: "Buy groceries", points: 10, creation_date: "2024-08-21T11:00", due_date: "2024-08-21T12:00", approval_date: "2024-08-21T15:00",icon: FaCalendarAlt, bgColor: bgColors[2] },
-  ]);
-  
-  const [tasks, setTasks] = useState<TaskCardIf[]>([
-    { title: "Make the bed", points: 10, creation_date: "2024-08-21T12:00", due_date: "2024-08-21T13:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[0] },
-    { title: "Do homework", points: 10, creation_date: "2024-08-21T13:00", due_date: "2024-08-21T14:00", approval_date: "2024-08-21T15:00",  icon: FaClipboardList, bgColor: bgColors[1] },
-    { title: "Buy groceries", points: 10, creation_date: "2024-08-21T14:00", due_date: "2024-08-21T15:00", approval_date: "2024-08-21T15:00",  icon: FaClipboardList, bgColor: bgColors[2] },
-    { title: "Walk the dog", points: 10, creation_date: "2024-08-21T15:00", due_date: "2024-08-21T16:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[3] },
-    { title: "Clean the house", points: 10, creation_date: "2024-08-21T16:00", due_date: "2024-08-21T17:00",  approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[4] },
-    { title: "Prepare dinner", points: 10, creation_date: "2024-08-21T17:00", due_date: "2024-08-21T18:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[5] },
-    { title: "Read a book", points: 10, creation_date: "2024-08-21T18:00", due_date: "2024-08-21T19:00", approval_date: "2024-08-21T15:00", icon: FaClipboardList, bgColor: bgColors[6] },
-  ]);
-  
-  const [selectedTask, setSelectedTask] = useState<TaskCardIf | null>(null);
 
+  const [pendingTasks, setPendingTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);  
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    if(fetchedPendingTasks){
+      setPendingTasks(fetchedPendingTasks);
+    }
+    
+    setLoading(false);
+    
+  }, [isOpen]);
   
-  const assignTask = (newTask: TaskCardIf) => {
+  if (loading) return <MainLoading numCards={3}/>;
+
+
+  const assignTask = async (newTask: Task) => {
+   
+    newTask = { ...newTask, creatorId: parent_id, creatorName: "Parent",};
+
     if (selectedTask) {
+      const selectedTaskId = selectedTask.id;
+      const response = await apiUpdateTask(selectedTaskId, {...newTask, id: selectedTaskId});
+
       setPendingTasks(
         pendingTasks.map((task) =>
-        task.title === selectedTask.title ? newTask : task
-        )
+          task.id === selectedTask.id ? {...newTask, id: selectedTaskId} : task
+        ) 
       );
       setSelectedTask(null); 
+      
+      console.log("response", response)
+      onUpdate();
+
     } else {
-      setPendingTasks([newTask, ...pendingTasks]);
+      const tempId = generateUniqueId();
+      const tempTask = { ...newTask, id: tempId };
+      tasks ? setPendingTasks([tempTask, ...pendingTasks]) : setPendingTasks([tempTask]);
+
+      const response = await apiAssignTask(newTask, childId);
+      console.log("response", response)
+
+      const taskId = response.id;
+      setPendingTasks((prevTasks) =>
+          prevTasks?.map((task) =>
+              task.id === tempId ? { ...task, id: taskId } : task
+          )
+      );
+      onUpdate();
     }
   };
 
   const modifyTask = (index: number) => {
     setSelectedTask(pendingTasks[index]);
-    console.log("Modify task:", index);
   };
 
-  const removeTask = (index: number) => {
+  const removeTask = async (index: number) => {
+    console.log("index", index)
+    console.log("pendingTasks in removeTasks", pendingTasks)
+    const taskToDelete = pendingTasks[index];
+    console.log("taskToDelete", taskToDelete)
     setPendingTasks(pendingTasks.filter((_, i) => i !== index));
+
+    const response = taskToDelete.id? await apiUnAssignTask(taskToDelete.id, childId) : null;
+    console.log("response in removeTask", response)
+
+    onUpdate();
   };
 
   return (
@@ -77,7 +118,6 @@ const TaskModal: React.FC<TaskModalProps> = ({
           </button>
         </div>
         
-       {/* Top row: CreateTask and PendingTasks */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="col-span-1 md:col-span-1 lg:col-span-1 mt-2">
           <CreateTask taskToEdit={selectedTask} type="task_menu" onCreate={assignTask} />
@@ -87,12 +127,11 @@ const TaskModal: React.FC<TaskModalProps> = ({
             tasks={pendingTasks}
             onModify={modifyTask}
             onRemove={removeTask}
+            onClose={() => null}
           />
         </div>
       </div>
 
-
-        {/* Bottom row: Tasks list */}
         <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-4">
           {tasks.map((task, index) => (
             <motion.div
@@ -106,7 +145,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
                 {...task}
                 onModify={() => null}
                 onRemove={() => null}
-                onAction={() => null}
+                onApprove={() => null}
                 onAssign={() => assignTask(task)}
               />
             </motion.div>

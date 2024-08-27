@@ -22,7 +22,7 @@ function LoadingPage() {
     useEffect(() => {
         if (status !== 'authenticated' || hasFetched) return;
 
-        
+
         session? console.log("session", session) : '';
 
         console.log("email", session?.user.email)
@@ -54,7 +54,7 @@ function LoadingPage() {
                         return;
                     }
 
-                    if (parent.children_count === 0) {
+                    if (parent.children_count === null) {
                         router.push('/auth/confirm');
                         return;
                     }
@@ -69,7 +69,7 @@ function LoadingPage() {
                 } else {
                     const result: any = await apiInsertDB(session?.user, "", "/api/insert-parent");
 
-                    console.log("parentId in else", result)
+                    console.log("result in else", result)
 
                     const parentId = result.parentId;
 

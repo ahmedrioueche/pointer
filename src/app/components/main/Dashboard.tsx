@@ -175,21 +175,21 @@ const Dashboard: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <RewardCard
               type="reward_page"
-              title="Top Performer"
+              name="Top Performer"
               points={500}
               icon={FaStar}
               bgColor="bg-gradient-to-r from-yellow-400 to-yellow-600"
-              creation_date={new Date().toISOString()}
+              creationDate={new Date().toISOString()}
               onModify={() => alert('Modify reward')}
               onRemove={() => alert('Remove reward')}
             />
             <RewardCard
               type="reward_page"
-              title="Employee of the Month"
+              name="Employee of the Month"
               points={1000}
               icon={FaGift}
               bgColor="bg-gradient-to-r from-pink-400 to-red-500"
-              creation_date={new Date().toISOString()}
+              creationDate={new Date().toISOString()}
               onModify={() => alert('Modify reward')}
               onRemove={() => alert('Remove reward')}
             />

@@ -168,8 +168,8 @@ const Confirm: React.FC = () => {
         <>
             {session? (
                 <section className={`py-16 flex items-center justify-center min-h-screen dark:bg-dark-background bg-light-background`}>
-                <div className="container mx-auto flex flex-col items-center">
-                    <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix">
+                <div className="container mx-auto flex flex-col items-center overflow-hidden">
+                    <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix overflow-hidden">
                         <button
                             onClick={toggleTheme}
                             className="absolute top-4 right-4 text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"

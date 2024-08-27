@@ -1,7 +1,7 @@
 import pool from './db';
 import { PrismaClient } from '@prisma/client';
 import { Child } from '@/lib/interface';
-import { generateRandomUsernamePassword, getRandomIcon } from '@/utils/helper';
+import { assertInt, generateRandomUsernamePassword, getRandomIcon } from '@/utils/helper';
 
 const prisma = new PrismaClient();
 
@@ -10,10 +10,12 @@ export const insertChild = async (child: Child): Promise<any> => {
 
     console.log("child in insertChild", child);
     const [username, password] = generateRandomUsernamePassword(child.name);
-  
+    
+    let parentId = assertInt(child.parent_id);
+
     const newChild = await prisma.child.create({
       data: {
-        parent_id: child.parent_id? child.parent_id : undefined,
+        parent_id: child.parent_id? parentId : undefined,
         name: child.name,
         age: typeof child.age == "string"? parseInt(child.age) : child.age,
         gender: child.gender,

@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server';
 import { updateParent } from '@/db/parentService';
+import { assertInt } from '@/utils/helper';
 
 async function handlePost(req: Request) {
     try {
-        const { parentId, updateData } = await req.json();
+        let { parentId, updateData } = await req.json();
 
         if (!updateData) {
             return NextResponse.json({ message: 'Please provide all required fields.' }, { status: 400 });
         }
+
+        parentId = assertInt(parentId);
 
         const response = await updateParent(parentId, { ...updateData });
 

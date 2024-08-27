@@ -72,7 +72,7 @@ export const updateParent = async (parentId: number, updateData: Partial<Parent>
         });
 
         return { status: 'success' };
-    } catch (error) {
+    } catch (error) {   
         console.error('Error updating parent:', error);
         return { status: 'error', message: 'An error occurred' };
     } finally {

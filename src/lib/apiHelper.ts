@@ -54,7 +54,7 @@ interface ContactFormData {
   
   export const apiInsertChild = async (child : any): Promise<any> => {
     try {
-
+      console.log("child in apiInsertChild", child)
       const response = await fetch('/api/main/child/insert-child', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

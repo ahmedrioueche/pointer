@@ -4,7 +4,9 @@ import { insertChild } from '@/db/childService';
 // Handler function for POST requests
 async function handlePost(req: Request) {
     try {
+
         const { child } = await req.json();
+
         console.log("child in handlePost", child)
         const id = await insertChild(child); 
 

@@ -10,14 +10,15 @@ export const insertChild = async (child: Child): Promise<any> => {
 
     console.log("child in insertChild", child);
     const [username, password] = generateRandomUsernamePassword(child.name);
-    
-    let parentId = assertInt(child.parent_id);
 
+    let parentId = assertInt(child.parent_id);
+    let age = assertInt(child.age);
+    
     const newChild = await prisma.child.create({
       data: {
         parent_id: child.parent_id? parentId : undefined,
         name: child.name,
-        age: typeof child.age == "string"? parseInt(child.age) : child.age,
+        age: age,
         gender: child.gender,
         has_device: child.has_device,
         uses_shared_device: child.uses_shared_device || null,

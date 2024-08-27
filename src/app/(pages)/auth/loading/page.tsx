@@ -31,7 +31,7 @@ function LoadingPage() {
             setHasFetched(true); 
 
             try {
-                const response = await fetch('/api/auth/loading', {
+                const response = await fetch('/api/main/parent/get-parent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ function LoadingPage() {
                     router.push('/main/home');
                     
                 } else {
-                    const result: any = await apiInsertDB(session?.user, "", "/api/insert-parent");
+                    const result: any = await apiInsertDB(session?.user, "", "/api/main/parent/insert-parent");
 
                     console.log("result in else", result)
 

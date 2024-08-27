@@ -1,3 +1,4 @@
+import { assertInt } from '@/utils/helper';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
@@ -66,9 +67,12 @@ export const insertParent = async (parent: Parent): Promise<Response> => {
 
 export const updateParent = async (parentId: number, updateData: Partial<Parent>): Promise<Response> => {
     try {
+        let age = assertInt(updateData.age);
+        let children_count = assertInt(updateData.children_count)
+        
         await prisma.parent.update({
             where: { id: parentId },
-            data: updateData,
+            data: {...updateData, age, children_count}
         });
 
         return { status: 'success' };

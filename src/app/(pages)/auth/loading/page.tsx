@@ -54,7 +54,7 @@ function LoadingPage() {
                         return;
                     }
 
-                    if (parent.children_count === null) {
+                    if (parent.children_count === null || parent.children_count === 0) {
                         router.push('/auth/confirm');
                         return;
                     }

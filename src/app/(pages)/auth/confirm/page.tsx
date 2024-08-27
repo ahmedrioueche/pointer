@@ -110,7 +110,7 @@ const Confirm: React.FC = () => {
 
                 console.log("result", result)
 
-                if(result.status === "success"){
+                if(result){
                     console.log("success", result)
                     childInserted = true;
                 }

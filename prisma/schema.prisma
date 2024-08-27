@@ -1,11 +1,6 @@
 // This is the Prisma schema file.
 // Read more about it in the Prisma documentation: https://pris.ly/d/schema
 
-generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

@@ -70,7 +70,7 @@ function LoadingPage() {
                     sessionStorage.setItem("userId", parentId);
                     sessionStorage.setItem("userType", "parent");
 
-                  //  router.push('/auth/confirm');
+                    router.push('/auth/confirm');
                 }
             } catch (error) {
                 console.error('Error fetching parent data:', error);

@@ -176,7 +176,7 @@ const Confirm: React.FC = () => {
                         >
                             {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}
                         </button>
-                        <h2 className={`text-3xl sm:text-3xl md:text-4xl font-bold font-satisfy mb-8 text-center
+                        <h2 className={`text-3xl sm:text-3xl md:text-3xl font-bold font-satisfy mb-8 text-center
                             ${isDarkMode ? 
                                 'bg-gradient-to-r from-dark-primary to-dark-accent text-transparent bg-clip-text' 
                                 : 

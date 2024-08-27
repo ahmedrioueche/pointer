@@ -28,7 +28,7 @@ export const insertChild = async (child: Child): Promise<any> => {
       },
     });
 
-    return newChild.id; // Return the newly created child's ID
+    return newChild.id; 
   } catch (error) {
     console.error('Error inserting child:', error);
     throw new Error('Failed to insert child');

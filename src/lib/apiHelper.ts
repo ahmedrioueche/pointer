@@ -29,7 +29,7 @@ interface ContactFormData {
   
   export const apiUpdateParent = async (parentId: Number | null, updateData: any): Promise<ApiResponse> => {
     try {
-      const response = await fetch('/api/update-parent', {
+      const response = await fetch('/api/main/parent/update-parent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ parentId, updateData }),
@@ -79,7 +79,7 @@ interface ContactFormData {
   
   export const apiUpdateChild = async (id: Number | undefined, updateData: any): Promise<ApiResponse> => {
     try {
-      const response = await fetch('/api/main/update-child', {
+      const response = await fetch('/api/main/child/update-child', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, updateData }),

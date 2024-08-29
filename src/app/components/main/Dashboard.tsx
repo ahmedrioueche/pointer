@@ -8,12 +8,12 @@ import { FaStar, FaGift, FaTrophy, FaMedal, FaUsers, FaDollarSign, FaClock, FaCh
 
 const Dashboard: React.FC = () => {
   return (
-    <div className="min-h-screen bg-light-background font-stix dark:bg-dark-background text-light-text dark:text-dark-text p-8">
+    <div className="min-h-screen bg-light-background font-stix dark:bg-dark-background text-light-text dark:text-dark-text">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
         {/* Statistics Container */}
         <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-4">
-          <h2 className="text-xl font-semibold mb-6 font-stix">Statistics</h2>
+          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Statistics</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <StatisticCard
               title="Total Points Earned"
@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
 
         {/* Pending Tasks Container */}
         <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-xl font-semibold mb-6 font-stix">Pending Tasks</h2>
+          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Pending Tasks</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <StatisticCard
               title="Total Pending Tasks"
@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
 
         {/* Finished Tasks Container */}
         <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-xl font-semibold mb-6 font-stix">Finished Tasks</h2>
+          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Finished Tasks</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <StatisticCard
               title="Total Completed Tasks"
@@ -104,7 +104,7 @@ const Dashboard: React.FC = () => {
 
         {/* Competitions Container */}
         <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-xl font-semibold mb-6 font-stix">Competitions</h2>
+          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Competitions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <CompetitionCard
               title="Annual Contest"
@@ -129,7 +129,7 @@ const Dashboard: React.FC = () => {
 
         {/* Quizzes Container */}
         <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-xl font-semibold mb-6 font-stix">Quizzes</h2>
+          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Quizzes</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <StatisticCard
               title="Upcoming Quizzes"
@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
 
         {/* Games Container */}
         <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-xl font-semibold mb-6 font-stix">Games</h2>
+          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Games</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <StatisticCard
               title="Active Games"

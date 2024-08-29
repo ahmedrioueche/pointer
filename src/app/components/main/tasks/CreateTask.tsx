@@ -61,7 +61,7 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, onCreate, taskToEd
   };
 
   return (
-    <div className="w-full bg-gradient-to-r transform transition-transform hover:scale-105 from-indigo-400 to-cyan-500 p-6 rounded-lg shadow-md text-dark-text dark:text-dark-text">
+    <div className="w-full bg-gradient-to-r from-purple-800 via-blue-800 to-blue-900 transform transition-transform hover:scale-105 p-6 py-10 rounded-lg shadow-md text-dark-text dark:text-dark-text">
     <div className="flex items-center mb-4">
       <FaClipboardList className="text-4xl mr-3" />
       <h2 className="text-xl font-stix">

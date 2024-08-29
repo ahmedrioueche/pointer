@@ -78,3 +78,12 @@ body {
     @apply font-satisfy; 
 }
 }
+
+.card-container {
+  max-width: 100%; 
+  overflow-x: hidden; 
+}
+
+.comment-container {
+  max-width: 100%; 
+}

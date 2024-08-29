@@ -35,6 +35,8 @@ const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, achievedTasks, 
     callback(id);
   };
 
+  console.log("pendingTasks",pendingTasks);
+
   const maleGradient = 'bg-gradient-to-br from-blue-300 to-blue-500';
   const femaleGradient = 'bg-gradient-to-br from-pink-300 to-pink-500';
 

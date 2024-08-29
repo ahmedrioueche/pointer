@@ -9,8 +9,9 @@ export interface Task {
   creatorId?: number;
   creatorName?: string;
   assignedTo?: number;
+  assignmentDate? :Date;
   assignedBy?:number;
-  assginedByName?: string;
+  assignedByName?: string;
   dueDate?: Date;
   completionDate?: Date;
   approvalDate?: Date;
@@ -19,8 +20,9 @@ export interface Task {
   approvedBy?: number;
   approvedByName? : string;
   creatorComment?: string;
-  creatorCommentDate?: string;
+  creatorCommentDate?: Date;
   createdForComment?: string;
+  createdForCommentDate?: Date;
   attachedFiles?: string;
   icon?: React.ElementType;
   bgColor?: string;
@@ -69,8 +71,8 @@ export interface Child {
   parent_id?: number;
   has_device?: boolean,
   uses_shared_device?: boolean,
-  achievedTasks?: Task[];
-  pendingTasks?: Task[];
+  achieved_tasks?: Task[];
+  pending_tasks?: Task[];
   tasksAssigned?: number;
   tasksCompleted?: number;
   created_at?: Date;

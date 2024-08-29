@@ -67,10 +67,7 @@ const Settings: React.FC = () => {
 
   return (
     <div className="w-full p-6 bg-light-background dark:bg-dark-background min-h-screen">
-      <h1 className="text-3xl flex flex-row font-bold font-stix mb-6 text-light-text dark:text-dark-text">
-        <FaCog className="mr-3" />
-        Settings
-      </h1>
+    
       <div className="w-full max-w-[100vw] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {settingsData.map((setting, index) => (
           <div key={index} className="relative w-full max-w-full">

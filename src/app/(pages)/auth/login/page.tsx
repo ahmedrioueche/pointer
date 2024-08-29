@@ -7,13 +7,13 @@ import { useRouter } from 'next/navigation';
 import LoadingButton from '@/app/components/LoadingButton';
 
 interface LoginDetails {
-    email: string;
+    identifier: string;
     password: string;
 }
 
 const Login: React.FC = () => {
     const initialDetails: LoginDetails = {
-        email: '',
+        identifier: '',
         password: '',
     };
 
@@ -45,42 +45,29 @@ const Login: React.FC = () => {
         e.preventDefault();
         setIsPrimaryLoading(true);
 
-        if (!loginDetails.email || !loginDetails.password) {
+        if (!loginDetails.identifier || !loginDetails.password) {
             setIsPrimaryLoading(false);
             setStatus({ success: false, message: 'Please fill in all required fields.' });
             return;
         }
 
         try {
-            const response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(loginDetails),
+              
+            const signInResult = await signIn('credentials', {
+                redirect: false,
+                identifier: loginDetails.identifier,
+                password: loginDetails.password,
             });
+            console.log("signInResult", signInResult)
 
-            const data = await response.json();
-            console.log("data:", data);
-            
-            if (response.ok) {                
-                const signInResult = await signIn('credentials', {
-                    redirect: false,
-                    email: loginDetails.email,
-                    password: loginDetails.password,
-                });
-
-                if (signInResult?.error) {
-                    console.log("error", signInResult?.error);
-                    setStatus({ success: false, message: 'Login failed.' });
-                    
-                } else {
-                    router.push('/auth/loading');
-                }
+            if (signInResult?.error) {
+                console.log("error", signInResult?.error);
+                setStatus({ success: false, message: 'Login failed.' });
+                setIsPrimaryLoading(false);
+            } else {
+                router.push('/auth/loading');
             }
-            else 
-               setStatus({ success: false, message: data.message });
-
-            setIsPrimaryLoading(false);
-
+    
         } catch (error) {
             setButtonText("Log In");
             setStatus({ success: false, message: 'Login failed. Please try again.' });
@@ -128,10 +115,10 @@ const Login: React.FC = () => {
                     </h2>
                     <form onSubmit={handleLogin} className="space-y-4 w-full max-w-lg">
                         <input
-                            type="email"
-                            value={loginDetails.email}
-                            placeholder="Email"
-                            onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('email', e.target.value)}
+                            type="text"
+                            value={loginDetails.identifier}
+                            placeholder="Email or Username"
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('identifier', e.target.value)}
                             className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
                         />
                         <input
@@ -144,7 +131,7 @@ const Login: React.FC = () => {
                         <LoadingButton
                             isLoading={isPrimaryLoading}
                             type="submit"
-                            buttonText="Sign Up"
+                            buttonText="Log In"
                             className="" 
                         />
                         {status && (

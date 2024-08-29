@@ -12,18 +12,23 @@ const authHandler = NextAuth({
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-              email: { label: 'Email', type: 'email' },
+              identifier: { label: 'Email or Username', type: 'text' },
               password: { label: 'Password', type: 'password' },
-            },
+           },
             async authorize(credentials) {
-              if (!credentials || !credentials.email || !credentials.password) {
+              if (!credentials || !credentials.identifier || !credentials.password) {
                 return null;
               }
 
-              let user = await authenticateUser(credentials.email, credentials.password);
+              let user = await authenticateUser(credentials.identifier, credentials.password);
 
               if (user) {
-                return user;
+                return {
+                  id: user.id,
+                  identifier: user.identifier,
+                  name: user.name,
+                  userType: user.userType, 
+                };
               } else {
                 return null;
               }
@@ -56,6 +61,7 @@ const authHandler = NextAuth({
                 token.email = user.email as string;
                 token.name = user.name as string | undefined;
                 token.image = user.image as string | undefined;
+                token.userType = user.userType as string | undefined;
             }
             return token;
         },
@@ -65,7 +71,8 @@ const authHandler = NextAuth({
                     id: token.id as string,
                     email: token.email as string,
                     name: token.name as string | undefined,
-                    image: token.image as string | undefined
+                    image: token.image as string | undefined,
+                    userType: token.userType as string | undefined,
                 };
             }
             return session;

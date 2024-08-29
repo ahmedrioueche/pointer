@@ -16,7 +16,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
   if(user.userType === "parent"){
     return <ParentHome id={user.userId}/>
   }
-  else return <ChildHome id={user.userId}/>
+  else return <ChildHome user={user}/>
 }
 
 export default Home;

@@ -20,12 +20,20 @@ const Page = ({ params }: PageProps) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [MainContainer, setMainContainer] = useState<React.ComponentType<any> | null>(null);
+  let userType, userIdString, userId, user;
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth/login');
     }
   }, [status, router]);
+
+  if(session){
+    userType = sessionStorage.getItem("userType");
+    userIdString = sessionStorage.getItem("userId");
+    userId = userIdString ? parseInt(userIdString, 10) : null;
+    user = {userType, userId}
+  }
 
   const firstName = session?.user?.name?.split(' ')[0];
 
@@ -38,9 +46,9 @@ const Page = ({ params }: PageProps) => {
     <>
       {session ? (
         <div className="flex flex-col min-h-screen bg-light-background dark:bg-dark-background">
-          <Navbar firstName={firstName} />
+          <Navbar firstName={firstName} user={user}/>
           <div className="flex flex-1">
-            <SideMenu />
+            <SideMenu user={user}/>
             <main className="flex-1 p-6">
               {MainContainer ? (
                 <MainContainer id={id} />

@@ -5,13 +5,14 @@ import { signOut } from "next-auth/react";
 import DropdownNotifications from "./DropDownNotif";
 import PlansModal from "./PlansModal";
 
-const DashboardNavbar = ({ firstName } : any) => {
+const DashboardNavbar: React.FC<{firstName : any, user : any }> = ( {firstName, user } ) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [remainingDays, setRemainingDays] = useState(30);
+  const [userType, setUserType] = useState();
 
   const toggleDarkMode = () => {
-    setIsDarkMode((prevMode) => {
+    setIsDarkMode((prevMode) => { 
       const newMode = !prevMode;
       document.documentElement.classList.toggle("dark", newMode);
       localStorage.setItem("theme", newMode ? "dark" : "light");
@@ -20,6 +21,7 @@ const DashboardNavbar = ({ firstName } : any) => {
   };
 
   useEffect(() => {
+    setUserType(user.userType);
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         const isDark = savedTheme === 'dark';
@@ -66,8 +68,10 @@ const DashboardNavbar = ({ firstName } : any) => {
           </Link>
         </div>
 
+    
       <div className="flex items-center space-x-4">
-        <button
+        {userType != "child" && (
+          <button
           onClick={togglePlansModal}
           className="hidden md:flex px-4 py-2 rounded-md text-lg md:text-xl font-satisfy bg-light-primary dark:bg-dark-primary text-dark-text dark:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 items-center group"
         >
@@ -77,6 +81,7 @@ const DashboardNavbar = ({ firstName } : any) => {
             <FaArrowUp className="text-xl hidden group-hover:block" />
           </span>
         </button>
+        )}
           <button
             onClick={toggleDarkMode}
             className="p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
@@ -151,13 +156,15 @@ const DashboardNavbar = ({ firstName } : any) => {
           >
             <FaGift className="mr-2 text-lg" /> Rewards
           </Link>
-          <Link
-            href="/main/tasks"
-            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-            onClick={toggleMenu}
-          >
-            <FaTasks className="mr-2 text-lg" /> Tasks
-          </Link>
+          {user.userType !== "child" && (
+            <Link
+              href="/main/tasks"
+              className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+              onClick={toggleMenu}
+            >
+              <FaTasks className="mr-2 text-lg" /> Tasks
+            </Link>
+          )}
           <Link
             href="/main/quizzes"
             className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
@@ -198,15 +205,17 @@ const DashboardNavbar = ({ firstName } : any) => {
             <span className="ml-2">Profile</span>
           </Link>
           <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
-          <button
-            onClick={togglePlansModal}
-            className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-          >
-            <span className="flex items-center">
-              <FaClock className="text-xl transition-transform duration-500 ease-in-out transform hover:rotate-360" />
-              <span className="ml-2">{`${remainingDays} Days`}</span>
-            </span>
-         </button>
+          {user.userType != "child" && (
+            <button
+              onClick={togglePlansModal}
+              className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            >
+              <span className="flex items-center">
+                <FaClock className="text-xl transition-transform duration-500 ease-in-out transform hover:rotate-360" />
+                <span className="ml-2">{`${remainingDays} Days`}</span>
+              </span>
+          </button>
+          )}
           <button
             onClick={handleLogout}
             className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"

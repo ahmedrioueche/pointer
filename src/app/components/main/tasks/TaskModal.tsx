@@ -118,20 +118,23 @@ const TaskModal: React.FC<TaskModalProps> = ({
           </button>
         </div>
         
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div className="col-span-1 md:col-span-1 lg:col-span-1 mt-2">
-          <CreateTask taskToEdit={selectedTask} type="task_menu" onCreate={assignTask} />
-        </div>
-        <div className="col-span-1 md:col-span-2 lg:col-span-2">
-          <PendingTasks
-            tasks={pendingTasks}
-            onModify={modifyTask}
-            onRemove={removeTask}
-            onClose={() => null}
-          />
-        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="col-span-1 md:col-span-1 lg:col-span-1 flex flex-col justify-between">
+            <div className="h-full">
+              <CreateTask taskToEdit={selectedTask} type="task_menu" onCreate={assignTask} />
+            </div>
+          </div>
+          <div className="col-span-1 md:col-span-2 lg:col-span-2 flex flex-col justify-between">
+            <div className="h-full">
+              <PendingTasks
+                tasks={pendingTasks}
+                onModify={modifyTask}
+                onRemove={removeTask}
+                onClose={() => null}
+              />
+            </div>
+          </div>
       </div>
-
         <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-4">
           {tasks.map((task, index) => (
             <motion.div

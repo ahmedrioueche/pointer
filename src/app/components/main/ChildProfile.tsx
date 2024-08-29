@@ -15,17 +15,6 @@ import TaskModal from './tasks/TaskModal';
 import Alert from '../Alert';
 import { capitalizeFirstLetter } from '@/lib/formater';
 
-
-
-const handleModify = () => {};
-
-const handleRemove = () => {};
-
-let placeholderRewardData : Reward[] = [
- 
-];
-
-
 const ChildProfile: React.FC<{id: number}> = ({id}) => {
 
   const [childData, setChildData] = useState<Child>();
@@ -45,15 +34,17 @@ const ChildProfile: React.FC<{id: number}> = ({id}) => {
   const [fetchedRewards, setFetchedRewards] = useState<Reward[]>([])
   const [status, setStatus] = useState<{ success: string; message: string }>();
   const [showAlert, setShowAlert] = useState(false);
+  const [pages, setPages] = useState<{ type: string; content: JSX.Element }[]>([]);
   
   useEffect(() => {
     const fetchChildData = async () => {
       try {
         const data = await apiGetChildData(id);
-      
+        
         const child: Child = {
           ...data,
         };
+        console.log("child", child)
         setChildData(child);
       } catch (err) {
         console.error("Error fetching child data:", err);
@@ -62,6 +53,7 @@ const ChildProfile: React.FC<{id: number}> = ({id}) => {
 
     fetchChildData();
     setProfileUpdated(false);
+    
   }, [id, profileUpdated]);
 
   useEffect(() => {
@@ -71,17 +63,18 @@ const ChildProfile: React.FC<{id: number}> = ({id}) => {
         const fetchedTasks = data.tasks;
         setFetchedTasks(fetchedTasks)
 
-
       } catch (err) {
         console.error("Error fetching child data:", err);
       }
+
     };
 
     fetchCompletedTasks();
 
-  }, [id]);
+  }, [childData]);
 
   useEffect(() => {
+
     fetchedTasks.forEach((taskAssignment: any) => {
         // Structure the task object with the required properties
         const structuredTask = {
@@ -115,6 +108,7 @@ const ChildProfile: React.FC<{id: number}> = ({id}) => {
                 return prev;
             });
         } else {  
+
             setPendingTasks(prev => {
                 const isTaskPresent = prev.some(pendingTask => pendingTask.id === taskAssignment.task.id);
 
@@ -126,29 +120,30 @@ const ChildProfile: React.FC<{id: number}> = ({id}) => {
         }
     });
 
-}, [fetchedTasks]);
+  }, [fetchedTasks]);
 
 
-useEffect(() => {
-  const fetchClaimedRewards = async () => {
-    try {
-      const data = await apiGetRewardsByChildId(id);
-      const fetchedRewards = data.rewards;
+  useEffect(() => {
 
-      const rewardsArray = fetchedRewards.map((rewardClaim: any) => ({
-        ...rewardClaim,
-        ...rewardClaim.reward, 
-      }));
+    const fetchClaimedRewards = async () => {
+      try {
+        const data = await apiGetRewardsByChildId(id);
+        const fetchedRewards = data.rewards;
 
-      setFetchedRewards(rewardsArray);
+        const rewardsArray = fetchedRewards.map((rewardClaim: any) => ({
+          ...rewardClaim,
+          ...rewardClaim.reward, 
+        }));
 
-    } catch (err) {
-      console.error("Error fetching child data:", err);
-    }
-  };
+        setFetchedRewards(rewardsArray);
 
-  fetchClaimedRewards();
-}, [id]);
+      } catch (err) {
+        console.error("Error fetching child data:", err);
+      }
+    };
+
+    fetchClaimedRewards();
+  }, [childData]);
 
 
   const handleTaskApprove = async (index : number) => {
@@ -171,10 +166,10 @@ useEffect(() => {
     }
   }
 
-  const handleTaskAddRemark = async (index: number, remark: { text: string, maker: string, date: string } | null) => {
+  const handleTaskAddComment = async (index: number, comment: { text: string, maker: string, date: string } | null) => {
     const taksToUpdate = completedTasks[index];
 
-    const response = await apiUpdateTaskAssignment(taksToUpdate.id, {creatorComment: remark?.text, creatorCommentDate: remark?.date })
+    const response = await apiUpdateTaskAssignment(taksToUpdate.id, {creatorComment: comment?.text, creatorCommentDate: comment?.date })
     if(!response.ok){
       setStatus({success : "Error", message : "Could not perform action, something went wrong!"});
       setShowAlert(true);  
@@ -211,7 +206,6 @@ useEffect(() => {
     }
   }  
   
-
   const toggleProfileModal = () => {
 
     if(isProfileModalOpen){
@@ -273,100 +267,118 @@ useEffect(() => {
     setShowAlert(false);
   };
 
-  const pages = [
-    {
-      type: 'tasks',
-      content: (
-        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6">
-        {completedTasks.map((task, index) => (
-          <div key={index} className="h-full">
-            <TaskCard
-              type="task_done"
-              key={index}
-              {...task}
-              child_name={childData?.name}
-              bgColor={getRandomBgColor()}
-              onModify={handleModify}
-              onRemove={handleRemove}
-              onApprove={() => handleTaskApprove(index)}
-              onAssign={() => null}
-              onShowDetails={() => toggleShowTaskDetails(index)}
-              onAddRemark={(remark) => handleTaskAddRemark(index, remark)} 
-              onUndo={() => handleTaskUndo(index)}
-            />
+  useEffect(() => {
+    setPages(() => [
+      {
+        type: 'tasks',
+        content: (
+          <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6">
+            {completedTasks.map((task, index) => (
+              <div key={index} className="h-full">
+                <TaskCard
+                  type="task_done"
+                  {...task}
+                  child_name={childData?.name}
+                  bgColor={getRandomBgColor()}
+                  onModify={()=> {null}}
+                  onRemove={()=>{null}}
+                  onApprove={() => handleTaskApprove(index)}
+                  onAssign={() => null}
+                  onShowDetails={() => toggleShowTaskDetails(index)}
+                  onAddComment={(remark) => handleTaskAddComment(index, remark)} 
+                  onApprovalUndo={() => handleTaskUndo(index)}
+                />
+              </div>
+            ))}
           </div>
-          ))}
-        </div>
-      ),
-    },
-    {
-      type: 'rewards',
-      content: (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {fetchedRewards && fetchedRewards.map((reward, index) => (
-            <RewardCard 
-              type='reward_claimed'
-              key={index}
-              {...reward}
-              onApprove={() => handleRewardApprove(index)}
-              onUndo={() => handleRewardUndo(index)}
-              onAddRemark={(remark) => handleRewardAddRemark(index, remark)} 
-              onShowDetails={()=> toggleShowRewardDetails(index)}
-            />
-          ))}
-        </div>
-      ),
-    },
-    {
-      type: 'details',
-      content: (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-1">
-        <DetailCard
-            title="Added On"
-            value={
-              childData?.created_at
-                ? format(new Date(childData.created_at), 'PPP')
-                : 'Unknown date'
-            }
-            icon={<FaCalendarAlt />}
-            bgColor="bg-gradient-to-r from-green-400 to-blue-500"
-          />
-          <DetailCard
-            title="Tasks Assigned"
-            value={childData?.tasksAssigned ?? 'N/A'}
-            icon={<FaTasks />}
-            bgColor="bg-gradient-to-r from-pink-500 to-orange-500"
-          />
-          <DetailCard
-            title="Tasks Completed"
-            value={childData?.tasksCompleted ?? 'N/A'}
-            icon={<FaCheckCircle />}
-            bgColor="bg-gradient-to-r from-purple-500 to-indigo-500"
-          />
-        
-          <DetailCard
-            title="Total Points Earned"
-            value={childData?.totalPoints ?? 0}
-            icon={<FaStar />}
-            bgColor="bg-gradient-to-r from-teal-400 to-cyan-500"
-          />
-          <DetailCard
-            title="Rewards Earned"
-            value={childData?.rewardsEarned ?? 0}
-            icon={<FaGift />}
-            bgColor="bg-gradient-to-r from-blue-500 to-purple-500"
-          />
-            <DetailCard
-            title="Competence"
-            value={childData?.competence? capitalizeFirstLetter(childData?.competence) : "unknown"} 
-            icon={<FaUserShield />}
-            bgColor="bg-gradient-to-r from-yellow-500 to-red-500"
-          />
+        ),
+      },
+      {
+        type: 'rewards',
+        content: (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {fetchedRewards && fetchedRewards.map((reward, index) => (
+              <RewardCard 
+                type="reward_claimed"
+                key={index}
+                {...reward}
+                onApprove={() => handleRewardApprove(index)}
+                onUndo={() => handleRewardUndo(index)}
+                onAddRemark={(remark) => handleRewardAddRemark(index, remark)} 
+                onShowDetails={() => toggleShowRewardDetails(index)}
+              />
+            ))}
+          </div>
+        ),
+      }
+    ]);
+  }, [completedTasks.length > 0, fetchedRewards.length > 0]);
 
-        </div>
-      ),
-    },
-  ];
+  useEffect(() => {
+    if (childData) {
+      setPages((prevPages) => [
+        ...prevPages,
+        {
+          type: 'details',
+          content: (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-1">
+              <DetailCard
+                title="Added On"
+                value={
+                  childData.created_at
+                    ? format(new Date(childData.created_at), 'PPP')
+                    : 'Unknown date'
+                }
+                icon={<FaCalendarAlt />}
+                bgColor="bg-gradient-to-r from-green-400 to-blue-500"
+              />
+              <DetailCard
+                title="Tasks Assigned"
+                value={childData.tasksAssigned ?? 'N/A'}
+                icon={<FaTasks />}
+                bgColor="bg-gradient-to-r from-pink-500 to-orange-500"
+              />
+              <DetailCard
+                title="Tasks Completed"
+                value={childData.tasksCompleted ?? 'N/A'}
+                icon={<FaCheckCircle />}
+                bgColor="bg-gradient-to-r from-purple-500 to-indigo-500"
+              />
+              <DetailCard
+                title="Total Points Earned"
+                value={childData.totalPoints ?? 0}
+                icon={<FaStar />}
+                bgColor="bg-gradient-to-r from-teal-400 to-cyan-500"
+              />
+              <DetailCard
+                title="Rewards Earned"
+                value={childData.rewardsEarned ?? 0}
+                icon={<FaGift />}
+                bgColor="bg-gradient-to-r from-blue-500 to-purple-500"
+              />
+              <DetailCard
+                title="Competence"
+                value={childData.competence ? capitalizeFirstLetter(childData.competence) : 'Unknown'} 
+                icon={<FaUserShield />}
+                bgColor="bg-gradient-to-r from-yellow-500 to-red-500"
+              />
+            </div>
+          ),
+        },
+      ]);
+    }
+  }, [childData]);
+  
+  useEffect(() => {
+    if (completedTasks.length === 0) {
+      setPages((prevPages: any[]) => prevPages.filter(page => page.type != "tasks"));
+    }
+  
+    if (fetchedRewards.length === 0) {
+      setPages((prevPages: any[]) => prevPages.filter(page => page.type != "rewards"));
+    }
+  }, [completedTasks.length, fetchedRewards.length]);
+  
 
   if (!childData) {
     return <MainLoading numCards={6}/>;
@@ -374,8 +386,8 @@ useEffect(() => {
 
   return (
     <div className="flex flex-col md:flex-row p-6 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text rounded-lg shadow-lg" {...swipeHandlers}>
-      <div className="flex flex-col items-center md:items-start md:w-1/3 space-y-6 md:space-y-4 mb-6 md:mb-0">
-        <div className="w-full max-w-md md:max-w-xl lg:max-w-lg mb-2">
+      <div className="flex flex-col items-center md:items-start md:w-1/2 lg:w-1/3 space-y-6 md:space-y-4 mb-6 md:mb-0">
+        <div className="w-full max-w-3xl mb-2">
           <ProfileCard name={childData.name} age={childData.age} gender={childData.gender} level={childData.level} icon={childData.icon} current_points={childData.current_points} onEditProfile={toggleProfileModal} onAssignTasks={toggleTaskModal} />
         </div>
       <div className="flex flex-col space-y-4 w-full">
@@ -421,40 +433,39 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Detail Cards */}
-      <div className="flex flex-col w-full md:w-2/3 space-y-6 md:ml-5 relative" {...swipeHandlers}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mb-1">
-            {pages[currentPage].content}
-        </div>
+    <div className="flex flex-col w-full md:w-2/3 space-y-6 md:ml-5 relative" {...swipeHandlers}>
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6 mb-1">
+        {pages[currentPage]? pages[currentPage].content : null}
+      </div>
+        {pages.length > 1 ? (
+          <div className="flex flex-col w-full relative">
+            <div className="flex justify-between items-center absolute top-0 left-0 right-0 transform -translate-y-1/2 z-10">
+              <button
+                className="text-light-primary dark:text-dark-primary hover:text-light-accent dark:hover:text-dark-accent focus:outline-none"
+                onClick={handlePrevPage}
+              >
+                <FaArrowLeft className="text-2xl" />
+              </button>
+              <div className="flex justify-center">
+                {pages.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`w-3 h-3 rounded-full mx-1 ${index === currentPage ? 'bg-light-accent dark:bg-dark-accent' : 'bg-light-primary dark:bg-dark-primary'}`}
+                  />
+                ))}
+              </div>
+              <button
+                className="text-light-primary dark:text-dark-primary hover:text-light-accent dark:hover:text-dark-accent focus:outline-none"
+                onClick={handleNextPage}
+                disabled={currentPage === pages.length - 1}
+              >
+                <FaArrowRight className="text-2xl" />
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </div>
 
-      <div className="flex flex-col w-full relative">
-      {/* Pagination Arrows */}
-      <div className="flex justify-between items-center absolute top-0 left-0 right-0 transform -translate-y-1/2 z-10">
-        <button
-          className="text-light-primary dark:text-dark-primary hover:text-l ight-accent dark:hover:text-dark-accent focus:outline-none"
-          onClick={handlePrevPage}
-          disabled={currentPage === 0}
-        >
-          <FaArrowLeft className="text-2xl" />
-        </button>
-        <div className="flex justify-center">
-          {pages.map((_, index) => (
-            <div
-              key={index}
-              className={`w-3 h-3 rounded-full mx-1 ${index === currentPage ? 'bg-light-accent dark:bg-dark-accent' : 'bg-light-primary dark:bg-dark-primary'}`}
-            />
-          ))}
-        </div>
-        <button
-          className="text-light-primary dark:text-dark-primary hover:text-light-accent dark:hover:text-dark-accent focus:outline-none"
-          onClick={handleNextPage}
-          disabled={currentPage === pages.length - 1}
-        >
-          <FaArrowRight className="text-2xl" />
-        </button>
-      </div>
-      </div>
-      </div>
         <DetailsModal  
           task={openedTask}
           reward={openedReward}
@@ -483,7 +494,7 @@ useEffect(() => {
             message={status?.message}
             onClose={handleAlertClose}
           />
-      )}
+        )}
   
     </div>
   );

@@ -119,7 +119,7 @@ const ParentHome: React.FC<{id : number}> = ({id}) => {
     
     const getChildPendingTasks = (id : number) : any=>  {
         const child = children.find(child => child.id === id);
-        return child ? child.pendingTasks : [];  
+        return child ? child.pending_tasks : [];  
     }
 
     const toggleTaskModal = (id : number) => {
@@ -148,8 +148,8 @@ const ParentHome: React.FC<{id : number}> = ({id}) => {
             age: ageNumber,
             gender: gender,
             icon: image ? URL.createObjectURL(image) : getRandomIcon(gender, 6),
-            achievedTasks: [],
-            pendingTasks: [],
+            achieved_tasks: [],
+            pending_tasks: [],
         };
 
         const result = await apiInsertChild(child);
@@ -170,8 +170,8 @@ const ParentHome: React.FC<{id : number}> = ({id}) => {
                     name={child.name}
                     age={child.age}
                     gender={child.gender}
-                    achievedTasks={child.achievedTasks}
-                    pendingTasks={child.pendingTasks}
+                    achievedTasks={child.achieved_tasks}
+                    pendingTasks={child.pending_tasks}
                     icon={child.icon}
                     callback={toggleTaskModal}
                 />

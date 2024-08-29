@@ -80,7 +80,7 @@ const Signup: React.FC = () => {
 
                 const signInResult = await signIn('credentials', {
                     redirect: false,
-                    email: signupDetails.email,
+                    identifier: signupDetails.email,
                     password: signupDetails.password,
                 });
 
@@ -93,7 +93,7 @@ const Signup: React.FC = () => {
             } else {
                 setIsPrimaryLoading(false);
                 console.log("result.message", result.message)
-                setStatus({ success: false, message: result.message});
+                setStatus({ success: false, message: "Sign up failed"});
               
             }
         } catch (error) {

@@ -18,14 +18,22 @@ function LoadingPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
     const [hasFetched, setHasFetched] = useState(false);
-
+    
     useEffect(() => {
         if (status !== 'authenticated' || hasFetched) return;
 
-
-        session? console.log("session", session) : '';
-
-        console.log("email", session?.user.email)
+        console.log("session", session);
+        const userType = session.user.userType;
+        console.log("userType", userType);
+        const userId = session.user.id;
+        console.log("userId", userId);
+        
+        //in loggin with child creds userType is defined, in case of loggin in with google (only for parent), 
+        //so we set userType manually
+        userType? sessionStorage.setItem("userType", userType) : sessionStorage.setItem("userType", "parent");
+        //in loggin with child creds userId is defined, in case of loggin in with google we dont want the gooogle id, 
+        //so we get the parent id from db later
+        (userId && userType != "parent") ? sessionStorage.setItem("userId", userId) : null;
 
         const fetchParentData = async () => {
             setHasFetched(true); 
@@ -45,9 +53,8 @@ function LoadingPage() {
 
                 if (parent) {
                     
-                    sessionStorage.setItem("userId", parent.id);
                     sessionStorage.setItem("userEmail", parent.email);
-                    sessionStorage.setItem("userType", "parent");
+                    sessionStorage.setItem("userId", parent.id);
 
                     if (parent.is_verified === null) {
                         router.push('/auth/verify');
@@ -72,9 +79,10 @@ function LoadingPage() {
                     console.log("result in else", result)
 
                     const parentId = result.parentId;
+                    const email = result.email;
 
+                    sessionStorage.setItem("userEmail", email);
                     sessionStorage.setItem("userId", parentId);
-                    sessionStorage.setItem("userType", "parent");
 
                     router.push('/auth/confirm');
                 }
@@ -84,7 +92,19 @@ function LoadingPage() {
             }
         };
 
-        fetchParentData();
+        if(userType === "parent" || userType === undefined)
+            fetchParentData();
+        else 
+            router.push('/main/home')
+
+        const userIdLast = sessionStorage.getItem("userId")
+        const emailLast = sessionStorage.getItem("userEmail");
+        const userTypeLast = sessionStorage.getItem("userType")
+
+        console.log("userIdLast",userIdLast)
+        console.log("emailLast",emailLast)
+        console.log("userTypeLast",userTypeLast)
+
 
     }, [status, session, router, hasFetched]);
 

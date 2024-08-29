@@ -5,12 +5,16 @@ import { FaTasks, FaCoins, FaGift, FaChartBar, FaUser, FaArrowLeft, FaArrowRight
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-const SideMenu: React.FC = () => {
+const SideMenu: React.FC<{user : any}> = ( user : any ) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState<boolean>(false);
+    const [userType, setUserType] = useState();
     const pathname = usePathname();
 
     useEffect(() => {
+
+        setUserType(user.user.userType);
+
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
         };
@@ -79,7 +83,8 @@ const SideMenu: React.FC = () => {
                         {!isCollapsed && <span>Rewards</span>}
                     </Link>
                 </li>
-                <li>
+                {userType != "child" && (
+                 <li>
                     <Link
                         href="/main/tasks"
                         className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
@@ -91,7 +96,9 @@ const SideMenu: React.FC = () => {
                         <FaTasks className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
                         {!isCollapsed && <span>Tasks</span>}
                     </Link>
-                </li>
+                 </li>
+                )}
+              
                 <li>
                     <Link
                         href="/main/competitions"

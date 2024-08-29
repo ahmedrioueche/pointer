@@ -1,4 +1,5 @@
 import { Task } from '@/lib/interface';
+import { assertInt } from '@/utils/helper';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -7,6 +8,7 @@ export const addTask = async (task: Task): Promise<number> => {
   console.log("task in addTasks", task);
 
   try {
+
         const taskData: any = {
             name: task.name,
             creatorId: typeof task.creatorId === "string" ? parseInt(task.creatorId, 10) : task.creatorId || undefined,
@@ -16,6 +18,7 @@ export const addTask = async (task: Task): Promise<number> => {
             points: typeof task.points === "string" ? parseInt(task.points, 10) : task.points || undefined,
         };
   
+        console.log("taskData in addTask", taskData)
           // Create new task
           const createdTask = await prisma.task.create({ data: taskData });
           
@@ -36,14 +39,14 @@ export const assignTask = async (task: Task, childId : number): Promise<number> 
   try {
     const taskData: any = {
       name: task.name,
-      creatorId: typeof task.creatorId === "string" ? parseInt(task.creatorId, 10) : task.creatorId || undefined,
+      creatorId: assertInt(task.creatorId),
       creatorName: task.creatorName || undefined,
       creationDate: task.creationDate ? new Date(task.creationDate) : undefined,
       description: task.description || undefined,
       points: typeof task.points === "string" ? parseInt(task.points, 10) : task.points || undefined,
     };
 
-    // Create new task
+    console.log("taskData", taskData)    
     const createdTask = await prisma.task.create({ data: taskData });
     
     const taskAssignmentData: any = {
@@ -51,7 +54,7 @@ export const assignTask = async (task: Task, childId : number): Promise<number> 
       childId : childId,
       dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
       assignedBy : task.assignedBy || undefined,
-      assignedByName : task.assginedByName || undefined,
+      assignedByName : task.assignedByName || undefined,
     };
 
     const createdAssignment = await prisma.taskAssignment.create({ data: taskAssignmentData });

@@ -21,7 +21,7 @@ const Page = ({ params }: PageProps) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [Component, setComponent] = useState<React.LazyExoticComponent<React.FC<any>> | null>(null);
-  let userType, userIdString, userId, user;
+  let userType, userIdString, userId, username, user;
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -34,8 +34,9 @@ const Page = ({ params }: PageProps) => {
   if(session){
     userType = sessionStorage.getItem("userType");
     userIdString = sessionStorage.getItem("userId");
+    username = session?.user?.name;
     userId = userIdString ? parseInt(userIdString, 10) : null;
-    user = {userType, userId}
+    user = {userType, userId, username}
   }
 
   const firstName = session?.user?.name?.split(' ')[0];
@@ -72,9 +73,9 @@ const Page = ({ params }: PageProps) => {
     <>
       {session ? (
         <div className="flex flex-col min-h-screen bg-light-background dark:bg-dark-background">
-          <Navbar firstName={firstName} />
+          <Navbar firstName={firstName} user={user} />
           <div className="flex flex-1">
-            <SideMenu />
+            <SideMenu user={user} />
             <main className="flex-1 p-1">
               {MainContainer ? (
                  <Suspense fallback={<MainLoading numCards={6} />}>

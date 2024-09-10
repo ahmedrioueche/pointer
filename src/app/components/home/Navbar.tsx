@@ -1,47 +1,66 @@
   "use client";
 
   import Link from "next/link";
-  import { useState } from "react";
-  import { FaMoon, FaSun, FaBars, FaTimes, FaHome, FaInfoCircle, FaPhone, FaAppStore, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+  import { useEffect, useRef, useState } from "react";
+  import { FaMoon, FaSun, FaBars, FaTimes, FaHome, FaInfoCircle, FaPhone, FaAppStore, FaSignInAlt, FaUserPlus, FaSpinner } from "react-icons/fa";
+  import { useRouter } from 'next/navigation';
+import { useTheme } from "@/app/context/ThemeContext";
 
   const Navbar = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const {isDarkMode, toggleDarkMode } = useTheme();
     const [activeLink, setActiveLink] = useState("home");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    const toggleDarkMode = () => {
-      setIsDarkMode((prevMode) => {
-        const newMode = !prevMode;
-        document.documentElement.classList.toggle("dark", newMode);
-        localStorage.setItem("theme", newMode ? "dark" : "light");
-        return newMode;
-      });
-    };
+    const [isLoginLoading, setIsLoginLoading] = useState(false);
+    const [isSignupLoading, setIsSignupLoading] = useState(false);
+    const router  = useRouter();
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
 
     const handleSetActiveLink = (link : any) => {
       setActiveLink(link);
-  
-      // Scroll to the section
+
       const section = document.getElementById(link);
       if (section) {
         section.scrollIntoView({
-          behavior: "smooth", // Enables smooth scrolling
-          block: "start",     // Aligns the top of the section with the top of the viewport
+          behavior: "smooth", 
+          block: "start",    
         });
       }
     };
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+          if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            setIsMenuOpen(false);
+          }
+      };
+  
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+      };
+  }, []);
 
     const toggleMenu = () => {
       setIsMenuOpen((prevOpen) => !prevOpen);
     };
 
+    const handleLogin = () => {
+      setIsLoginLoading(true);
+      router.push("/auth/login")
+    }
+
+    const handleSignup = () => {
+      setIsSignupLoading(true);
+      router.push("/auth/signup")
+    }
+
     return (
       <nav className="relative z-1000 top-0 left-0 w-full py-4 px-6 shadow-md bg-light-background dark:bg-dark-background">
         <div className="container mx-auto flex items-center justify-between font-satisfy">
-          <div className="text-3xl font-bold">
+          <div className="text-3xl font-bold">  
             <Link
               href="/"
-              className={`relative cursor-pointer dark:text-dark-text text-light-text transition-colors duration-300 hover:text-light-primary dark:hover:text-dark-primary`}
+              className={`relative cursor-pointer dark:hover:text-dark-accent hover:text-light-accent transition-colors duration-300 text-light-primary dark:text-dark-primary`}
               onClick={() => setActiveLink("home")}
             >
               Pointer
@@ -79,18 +98,18 @@
           </ul>
 
           <div className="flex items-center space-x-4">
-            <Link
-              href="/auth/login"
-              className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+            <button
+              onClick={handleLogin}
+              className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-text dark:text-dark-text font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             >
-              Login
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+              {isLoginLoading? <FaSpinner className="animate-spin"/> : "Login"} 
+            </button>
+            <button
+              onClick={handleSignup}
+              className="hidden md:block px-4 py-2 rounded-md bg-light-primary dark:bg-dark-primary text-light-text dark:text-dark-text font-medium hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
             >
-              Signup
-            </Link>
+              {isSignupLoading? <FaSpinner className="animate-spin"/> : "Signup"} 
+            </button>
             <button
               onClick={toggleDarkMode}
               className="p-2 rounded-md bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text  hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
@@ -109,7 +128,9 @@
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="absolute top-full right-0 w-56 md:hidden flex flex-col items-start bg-light-background dark:bg-dark-background shadow-md py-4 mt-2 rounded-lg z-50">
+          <div className="md:hidden overflow-y-auto mt-5 z-[100] absolute top-[2.8rem] right-[1.4rem] w-[15.6rem] bg-light-background dark:bg-dark-background border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg flex flex-col p-2 space-y-4"
+            ref={dropdownRef}
+          >
             {[
               { name: "Home", icon: FaHome },
               { name: "How It Works", icon: FaAppStore },
@@ -119,31 +140,31 @@
               <Link
                 key={index}
                 href={`/`}
-                className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+                className="flex items-center px-4 py-2 w-full text-lg font-medium font-satisfy text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
                 onClick={() => {
                   handleSetActiveLink(item.name.toLowerCase());
                   setIsMenuOpen(false);
                 }}
               >
-                <item.icon className="mr-2 text-lg" />
+                <item.icon className="mr-3 text-lg" />
                 {item.name}
               </Link>
             ))}
             <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
             <Link
               href="/auth/login"
-              className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              className="flex items-center px-4 py-2  w-full text-lg font-medium font-satisfy text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
-              <FaSignInAlt className="mr-2 text-lg" />
+              <FaSignInAlt className="mr-3 text-lg" />
               Login
             </Link>
             <Link
               href="/auth/signup"
-              className="flex items-center px-4 py-2 w-full text-lg font-medium text-light-text dark:text-dark-text hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-300"
+              className="flex items-center px-4 py-2 w-full text-lg font-medium font-satisfy text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
-              <FaUserPlus className="mr-2 text-lg" />
+              <FaUserPlus className="mr-3 text-lg" />
               Signup
             </Link>
           </div>

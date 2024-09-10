@@ -7,12 +7,13 @@ import Loading from '@/app/components/Loading';
 import LoadingButton from '@/app/components/LoadingButton';
 import { updateParent } from '@/db/parentService';
 import { apiUpdateParent } from '@/lib/apiHelper';
+import { useTheme } from '@/app/context/ThemeContext';
 
 const EmailVerification: React.FC = () => {
     const [userEmail, setUserEmail] = useState<string | null>('');
     const [userVerificationCode, setUserVerificationCode] = useState<string>('');
     const [sentVerificationCode, setSentVerificationCode] = useState<string>('');
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+    const {isDarkMode, toggleDarkMode } = useTheme();
     const [resultStatus, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     let codeSent : boolean = false;
@@ -25,15 +26,6 @@ const EmailVerification: React.FC = () => {
         }
       }, [status, router]);
       
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            const isDark = savedTheme === 'dark';
-            setIsDarkMode(isDark);
-            document.documentElement.classList.toggle('dark', isDark);
-        }
-    }, []);
-
     useEffect(()=> {
         const email = sessionStorage.getItem("userEmail");
         if (!codeSent && email) {
@@ -72,7 +64,7 @@ const EmailVerification: React.FC = () => {
         const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
 
         if(sentVerificationCode === userVerificationCode) {
-            const response = await apiUpdateParent(parentId, { is_verified: true });
+            const response = await apiUpdateParent(parentId, { isVerified: true });
 
             if (response.status === 'success') {
                 console.log("verifyCode success")
@@ -104,13 +96,6 @@ const EmailVerification: React.FC = () => {
         sendVerificationCode(userEmail);
     }
 
-    const toggleTheme = () => {
-        const newTheme = !isDarkMode ? 'dark' : 'light';
-        setIsDarkMode(!isDarkMode);
-        document.documentElement.classList.toggle('dark', !isDarkMode);
-        localStorage.setItem('theme', newTheme);
-    };
-
     return (
         <>
             {session? (
@@ -120,7 +105,7 @@ const EmailVerification: React.FC = () => {
                         <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix">
                             {/* Theme Toggle Button */}
                             <button 
-                                onClick={toggleTheme} 
+                                onClick={toggleDarkMode} 
                                 className="absolute top-4 right-4 text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
                             >
                                 {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}

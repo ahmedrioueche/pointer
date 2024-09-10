@@ -3,12 +3,13 @@ import React from 'react';
 interface AlertProps {
   title: string | undefined;
   message: string | undefined;
+  bg?: string;
   onClose: () => void;
 }
 
-const Alert: React.FC<AlertProps> = ({ title, message, onClose }) => {
+const Alert: React.FC<AlertProps> = ({ title, message, bg, onClose }) => {
   return (
-    <div className="fixed bottom-5 z-1000000 left-1/2 transform -translate-x-1/2 bg-red-500 text-white p-4 px-3 rounded-lg shadow-lg max-w-sm w-full">
+    <div className={`fixed bottom-5 z-1000000 left-1/2 transform -translate-x-1/2 ${bg ? bg : 'bg-red-500'} text-white p-4 px-3 rounded-lg shadow-lg w-11/12 sm:w-10/12 md:w-8/12 lg:w-6/12`}>
       <div className="flex justify-between items-start">
         <div>
           <h4 className="font-bold text-lg">{title}</h4>

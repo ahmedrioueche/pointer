@@ -11,13 +11,13 @@ const ErrorPage: React.FC = () => {
 
     return (
         <section
-            className={`py-16 flex items-center justify-center min-h-screen ${
+            className={`py-16 flex items-center justify-center min-h-screen font-stix ${
                 isDarkMode ? 'bg-gray-900' : 'bg-gray-100'
             } transition-colors duration-300`}
         >
             <div className="container mx-auto flex flex-col items-center">
                 <div
-                    className={`relative md:w-1/2 flex flex-col items-center rounded-lg shadow-2xl p-8 ${
+                    className={`relative md:w-1/2 flex flex-col items-center justify-center text-center rounded-lg shadow-2xl p-8 ${
                         isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-800'
                     } transition-all duration-500`}
                 >
@@ -46,7 +46,7 @@ const ErrorPage: React.FC = () => {
                             isDarkMode ? 'bg-blue-600 text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500' : 'bg-blue-500 text-white hover:bg-gradient-to-r hover:from-purple-400 hover:to-blue-400'
                         }`}
                     >
-                        <span>Go Home</span>
+                        <span>Back Home</span>
                     </Link>
                 </div>
             </div>

@@ -1,9 +1,9 @@
 // components/Dashboard.tsx
 
 import React from 'react';
-import { RewardCard } from './RewardCard';
-import { CompetitionCard } from './CompetitionCard';
-import { StatisticCard } from './StatisticCard';
+import { RewardCard } from './rewards/RewardCard';
+import { CompetitionCard } from './cards/CompetitionCard';
+import { StatisticCard } from './cards/StatisticCard';
 import { FaStar, FaGift, FaTrophy, FaMedal, FaUsers, FaDollarSign, FaClock, FaChartLine, FaTasks, FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaGamepad } from 'react-icons/fa';
 
 const Dashboard: React.FC = () => {

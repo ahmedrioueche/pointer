@@ -19,11 +19,13 @@ const PendingTasks: React.FC<PendingTasksProps> = ({
   onClose,
 }) => {
 
+  const defaultBgColor = 'bg-gradient-to-br from-blue-600 to-blue-500';
+
   return(
-    <div className="font-stix bg-gradient-to-r from-purple-800 via-blue-800 to-blue-900 border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6 min-h-full flex flex-col">
+    <div className={`font-stix  ${defaultBgColor}  border-gray-200 dark:border-gray-700 rounded-xl shadow-lg p-6 min-h-full flex flex-col`}>
       <div className="flex items-center mb-6">
-        <FaHourglassStart className="text-4xl text-indigo-500 dark:text-indigo-300 mr-4" />
-        <h2 className="text-2xl font-semibold text-dark-text">Pending Tasks</h2>
+        <FaHourglassStart className="text-3xl text-indigo-500 dark:text-indigo-300 mr-4" />
+        <h2 className="text-xl font-semibold font-stix text-dark-text">Pending Tasks</h2>
       </div>
       
       {/* Grid layout for tasks */}
@@ -34,7 +36,7 @@ const PendingTasks: React.FC<PendingTasksProps> = ({
           tasks.map((task, index) => (
             <TaskCard
               key={index}
-              type="task_pending"
+              cardType="task_pending"
               {...task}
               onModify={() => onModify(index)}
               onRemove={() => onRemove(index)}

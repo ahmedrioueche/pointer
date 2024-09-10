@@ -1,131 +1,39 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import ChildCard from './ChildCard'; 
+import ChildCard from './child/ChildCard'; 
 import { Child, Task } from "../../../lib/interface";
 import TaskModal from './tasks/TaskModal';
-import AddCard from './AddCard';
-import AddChildModal from './AddChildModal';
-import { fetcher, getRandomIcon } from '@/utils/helper';
+import AddCard from './cards/AddCard';
+import AddChildModal from './child/AddChildModal';
+import { assertInt, fetcher, getRandomIcon } from '@/utils/helper';
 import { apiGetTasksByParentId, apiInsertChild } from '@/lib/apiHelper';
+import { useData } from '@/app/context/dataContext';
 
 const ParentHome: React.FC<{id : number}> = ({id}) => {
-        
     const [isTasksModalOpen, setIsTasksModalOpen] = useState(false);
     const [isAddChildModalOpen, setIsAddChildModalOpen] = useState(false);
-    const [children, setChildren] = useState<Child[]>([]);
-    const [openedChildTasksId, setOpenedChildTasksId] = useState<number>(0);
+    const [openedChild, setOpenedChild] = useState<any>();
     const [childPendingTasks, setChildPendingTasks] = useState<Task[]>();
-    const [fetched, setFetched] = useState(false);
+    const [children, setChildren] = useState<any>([]);
 
-    const { data: childrenDB, error, mutate } = useSWR<Child[]>('/api/main/home', (url) => fetcher(url, id), {
-        revalidateOnFocus: true, 
-    });
+    const childrenContext = useData();
 
     useEffect(() => {
-        if (childrenDB) {
-            if (Array.isArray(childrenDB)) {
-                const childrenWithTasks = childrenDB.map(child => ({
-                    ...child,
-                    achieved_tasks: [],
-                    pending_tasks: [],
-                 }));
-
-            setChildren(childrenWithTasks);
-           }
-        }
-    }, [childrenDB]);
-    
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                let response;
-                if (!fetched) {
-                    response = await apiGetTasksByParentId(id);
-                    setFetched(true);
-                }
-    
-                if (response) {
-                    const tasks = response.tasks;
-    
-                    const updatedChildren = children.map(child => {
-                        // Filter task assignments for the current child
-                        const childAssignments = tasks
-                            .flatMap((task: any) =>
-                                task.taskAssignments.map((assignment: any) => ({
-                                    ...assignment,
-                                    taskDetails: {
-                                        id: task.id,
-                                        name: task.name,
-                                        points: task.points,
-                                        creatorId: task.creatorId,
-                                        creatorName: task.creatorName,
-                                        creationDate: task.creationDate,
-                                    }
-                                }))
-                            )
-                            .filter((assignment: any) => assignment.childId === child.id);
-    
-                        // Extract pending tasks from the task assignments
-                        const pendingTasks = childAssignments
-                            .filter((assignment: any) => !assignment.isCompleted && !assignment.isApproved)
-                            .map((assignment: any) => ({
-                                id: assignment.taskDetails.id,
-                                name: assignment.taskDetails.name,
-                                points: assignment.taskDetails.points,
-                                creatorId: assignment.taskDetails.creatorId,
-                                creatorName: assignment.taskDetails.creatorName,
-                                creationDate: assignment.taskDetails.creationDate,
-                                dueDate: assignment.dueDate,
-                            }));
-    
-                        // Extract achieved tasks from the task assignments
-                        const achievedTasks = childAssignments
-                            .filter((assignment: any) => assignment.isCompleted)
-                            .map((assignment: any) => ({
-                                id: assignment.taskDetails.id,
-                                name: assignment.taskDetails.name,
-                                points: assignment.taskDetails.points,
-                                creatorId: assignment.taskDetails.creatorId,
-                                creatorName: assignment.taskDetails.creatorName,
-                                creationDate: assignment.taskDetails.creationDate,
-                                dueDate: assignment.dueDate,
-                                completionDate: assignment.completionDate,
-                                approvalDate: assignment.approvalDate,
-                            }));
-    
-                        return {
-                            ...child,
-                            pending_tasks: pendingTasks,
-                            achieved_tasks: achievedTasks,
-                        };
-                    });
-    
-                    console.log("Updated children:", updatedChildren);
-    
-                    setChildren(updatedChildren);
-                }
-    
-            } catch (error) {
-                console.error("Error fetching tasks:", error);
-            }
-        };
-    
-        if (children.length > 0) {
-            fetchTasks();
-        }
-    }, [children, fetched]);
-    
+        setChildren(childrenContext.children);
+    },[childrenContext])
     
     const getChildPendingTasks = (id : number) : any=>  {
-        const child = children.find(child => child.id === id);
-        return child ? child.pending_tasks : [];  
+        const child = children.find((child: { id: number; }) => assertInt(child.id) === assertInt(id));
+        return child ? child.pendingTasks : [];  
     }
 
     const toggleTaskModal = (id : number) => {
-        setIsTasksModalOpen(!isTasksModalOpen);
-        setOpenedChildTasksId(id);
+        const child = children.find((child: { id: number; }) => assertInt(child.id) === assertInt(id));
+        console.log("child", child)
+        setOpenedChild(child);
 
+        setIsTasksModalOpen(!isTasksModalOpen);
         const pendingTasks = getChildPendingTasks(id)
         setChildPendingTasks(pendingTasks);
 
@@ -156,22 +64,23 @@ const ParentHome: React.FC<{id : number}> = ({id}) => {
         const child_id = result.id;
         child.id = child_id;
 
-        setChildren(prev => [...prev, child]); 
+        setChildren((prev: any) => [...prev, child]); 
 
     }
 
     return (
-    <div className="p-6">
+    <div className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {children.map((child, index) => (
+        {children.map((child : any, index : number) => (
             <div key={index} className="h-full w-full">
                 <ChildCard
+                    type='home'
                     id={child.id}
                     name={child.name}
                     age={child.age}
                     gender={child.gender}
-                    achievedTasks={child.achieved_tasks}
-                    pendingTasks={child.pending_tasks}
+                    achievedTasks={child.achievedTasks}
+                    pendingTasks={child.pendingTasks}
                     icon={child.icon}
                     callback={toggleTaskModal}
                 />
@@ -189,12 +98,11 @@ const ParentHome: React.FC<{id : number}> = ({id}) => {
          />
 
         <TaskModal
-            parent_id={id}
             fetchedPendingTasks={childPendingTasks}
-            child_id={openedChildTasksId}
+            child={openedChild}
             isOpen={isTasksModalOpen}
             onClose={() => setIsTasksModalOpen(false)}
-            onUpdate={() => setFetched(false) }
+            onUpdate={() => childrenContext.triggerFetch() }
         />
     </div>
     );

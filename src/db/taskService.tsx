@@ -8,7 +8,6 @@ export const addTask = async (task: Task): Promise<number> => {
   console.log("task in addTasks", task);
 
   try {
-
         const taskData: any = {
             name: task.name,
             creatorId: typeof task.creatorId === "string" ? parseInt(task.creatorId, 10) : task.creatorId || undefined,
@@ -16,6 +15,7 @@ export const addTask = async (task: Task): Promise<number> => {
             creationDate: task.creationDate ? new Date(task.creationDate) : undefined,
             description: task.description || undefined,
             points: typeof task.points === "string" ? parseInt(task.points, 10) : task.points || undefined,
+            type: task.type,
         };
   
         console.log("taskData in addTask", taskData)
@@ -32,42 +32,53 @@ export const addTask = async (task: Task): Promise<number> => {
   }
 };
 
-
-export const assignTask = async (task: Task, childId : number): Promise<number> => {
-  console.log("task in assignTask", task);
-
+export const assignTask = async (task: Task, childId: number): Promise<any> => {
   try {
-    const taskData: any = {
-      name: task.name,
-      creatorId: assertInt(task.creatorId),
-      creatorName: task.creatorName || undefined,
-      creationDate: task.creationDate ? new Date(task.creationDate) : undefined,
-      description: task.description || undefined,
-      points: typeof task.points === "string" ? parseInt(task.points, 10) : task.points || undefined,
-    };
+    let taskId = task.id;
+    console.log("taskId in assignTask", taskId)
+    if (taskId) {
+      const existingTask = await prisma.task.findUnique({
+        where: { id: taskId }
+      });
 
-    console.log("taskData", taskData)    
-    const createdTask = await prisma.task.create({ data: taskData });
-    
+      if (!existingTask) {  
+        const taskData: any = {
+          name: task.name,
+          creatorId: assertInt(task.creatorId),
+          creatorName: task.creatorName || undefined,
+          creationDate: task.creationDate ? new Date(task.creationDate) : undefined,
+          description: task.description || undefined,
+          points: typeof task.points === "string" ? parseInt(task.points, 10) : task.points || undefined,
+          type: task.type,
+
+        };
+        const createdTask = await prisma.task.create({ data: taskData });
+        taskId = createdTask.id;
+    }
+     
+    // Create the task assignment
     const taskAssignmentData: any = {
-      taskId : createdTask.id,
-      childId : childId,
+      taskId: taskId,
+      childId: childId,
       dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
-      assignedBy : task.assignedBy || undefined,
-      assignedByName : task.assignedByName || undefined,
+      assignedBy: task.assignedBy || undefined,
+      assignmentDate: new Date(),
+      assignedByName: task.assignedByName || undefined,
+      routineTime: task.routineTime,
     };
 
     const createdAssignment = await prisma.taskAssignment.create({ data: taskAssignmentData });
-      
-    return createdTask.id;
-          
-  } catch (error) {
-      console.error('Error adding tasks:', error);
-      throw new Error('Failed to add tasks');
-  } finally {
-      await prisma.$disconnect();
+
+    return taskId;
   }
-}
+  else return null;
+  } catch (error) {
+    console.error('Error assinging task:', error);
+    throw new Error('Failed to assign task');
+  } finally {
+    await prisma.$disconnect();
+  }
+};
 
 
 export const unAssignTask = async (taskId: number, childId : number): Promise<void> => {
@@ -117,8 +128,6 @@ export const updateTaskById = async (taskId: number, updates: Partial<any>): Pro
       creatorName,
       creationDate: creationDate instanceof Date ? creationDate : undefined
     };
-
-    console.log("taskId in updateTaskById", taskId);
     
     // Update the Task record
     await prisma.task.update({
@@ -180,8 +189,13 @@ export const updateTaskById = async (taskId: number, updates: Partial<any>): Pro
 };
 
 
-export const updateTaskAssignmentById = async (taskId: number, updates: Partial<any>): Promise<void> => {
+export const updateTaskAssignmentById = async (taskId: number, childId : number, updates: Partial<any>): Promise<void> => {
   try {
+    console.log("in updateTaskAssignmentById")
+    console.log("taskId", taskId)
+    console.log("childId", childId)
+    console.log("updates", updates)
+
     // Handle possible data type conversions
     let {
       dueDate,
@@ -197,7 +211,8 @@ export const updateTaskAssignmentById = async (taskId: number, updates: Partial<
       createdForComment,
       creatorComment,
       creatorCommentDate,
-      attachedFiles
+      attachedFiles,
+      routineExceptions,
     } = updates;
 
     // Convert date strings to Date objects
@@ -207,12 +222,17 @@ export const updateTaskAssignmentById = async (taskId: number, updates: Partial<
     approvalDate = approvalDate ? new Date(approvalDate) : undefined;
 
     // Convert IDs from strings to numbers if necessary
-    approvedBy = typeof approvedBy === "string" ? parseInt(approvedBy, 10) : approvedBy;
-    assignedBy = typeof assignedBy === "string" ? parseInt(assignedBy, 10) : assignedBy;
+    approvedBy = assertInt(approvedBy);
+    assignedBy = assertInt(assignedBy);
 
     // Update the TaskAssignment record
     await prisma.taskAssignment.update({
-      where: { taskId: taskId }, // Assuming taskId is unique and correctly represents a task assignment
+      where: {
+        taskId_childId: {
+          taskId: taskId,
+          childId: childId
+        }
+      },
       data: {
         dueDate,
         assignmentDate,
@@ -227,7 +247,8 @@ export const updateTaskAssignmentById = async (taskId: number, updates: Partial<
         createdForComment,
         creatorComment,
         creatorCommentDate,
-        attachedFiles
+        attachedFiles,
+        routineExceptions,
       }
     });
 
@@ -273,14 +294,12 @@ export const deleteTaskById = async (taskId: number): Promise<void> => {
 export const getTasksByChildId = async (childId: number): Promise<any> => {
     try {
 
-      console.log("childId in getTasksByChildId", childId)
-        // Query TaskAssignment to get tasks for the given childId
-        const tasks = await prisma.taskAssignment.findMany({
-            where: { childId: childId },
-            include: { task: true }, 
-        });
+      const tasks = await prisma.taskAssignment.findMany({
+          where: { childId: childId },
+          include: { task: true }, 
+      });
 
-        return tasks;
+      return tasks;
     } catch (error) {
         console.error('Error fetching tasks by childId:', error);
         throw new Error('Failed to fetch tasks by childId');

@@ -9,6 +9,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import MainLoading from '@/app/components/main/MainLoading';
 import LoadingSkeleton from '@/app/components/LoadingSceleton';
+import { DataProvider } from '@/app/context/dataContext';
 
 interface PageProps {
   params: {
@@ -21,7 +22,9 @@ const Page = ({ params }: PageProps) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [Component, setComponent] = useState<React.LazyExoticComponent<React.FC<any>> | null>(null);
-  let userType, userIdString, userId, username, user;
+  let type, userIdString, id, name, email, user;
+
+  let test = false;
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -32,14 +35,13 @@ const Page = ({ params }: PageProps) => {
 
 
   if(session){
-    userType = sessionStorage.getItem("userType");
+    type = sessionStorage.getItem("userType");
     userIdString = sessionStorage.getItem("userId");
-    username = session?.user?.name;
-    userId = userIdString ? parseInt(userIdString, 10) : null;
-    user = {userType, userId, username}
+    name = session?.user?.name;
+    id = userIdString ? parseInt(userIdString, 10) : null;
+    email = session.user.email || sessionStorage.getItem("userEmail");
+    user = {type, id, name, email}
   }
-
-  const firstName = session?.user?.name?.split(' ')[0];
 
   useEffect(() => {
     switch (slug) {
@@ -53,10 +55,16 @@ const Page = ({ params }: PageProps) => {
         setComponent(() => lazy(() => import('@/app/components/main/tasks/Tasks')));
         break;
       case 'rewards':
-        setComponent(() => lazy(() => import('@/app/components/main/Rewards')));
+        setComponent(() => lazy(() => import('@/app/components/main/rewards/Rewards')));
         break;
       case 'settings':
         setComponent(() => lazy(() => import('@/app/components/main/Settings')));
+        break;
+      case 'routines':
+        setComponent(() => lazy(() => import('@/app/components/main/routines/Routines')));
+        break;
+      case 'success':
+        setComponent(() => lazy(() => import('@/app/components/payment/Success')));
         break;
       default:
         setComponent(() => lazy(() => import('@/app/components/main/Home')));
@@ -71,22 +79,24 @@ const Page = ({ params }: PageProps) => {
 
   return (
     <>
-      {session ? (
+     {session ? (
+      <DataProvider user={user}>
         <div className="flex flex-col min-h-screen bg-light-background dark:bg-dark-background">
-          <Navbar firstName={firstName} user={user} />
+           <Navbar user={user} />
           <div className="flex flex-1">
             <SideMenu user={user} />
             <main className="flex-1 p-1">
               {MainContainer ? (
-                 <Suspense fallback={<MainLoading numCards={6} />}>
-                    <MainContainer user={user} />
-                </Suspense>
+                   <Suspense fallback={<MainLoading numCards={6} />}>
+                     <MainContainer user={user} />
+                   </Suspense>
               ) : (
                 <></>
               )}
             </main>
           </div>
         </div>
+      </DataProvider>
       ) : (
         <Loading />
       )}

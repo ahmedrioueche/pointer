@@ -5,18 +5,19 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { signIn } from 'next-auth/react';
 import LoadingButton from '@/app/components/LoadingButton';
+import { useTheme } from '@/app/context/ThemeContext';
 
 interface SignupDetails {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
 }
 
 const Signup: React.FC = () => {
     const initialDetails: SignupDetails = {
-        first_name: '',
-        last_name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
     };
@@ -24,19 +25,10 @@ const Signup: React.FC = () => {
     const [signupDetails, setSignupDetails] = useState<SignupDetails>(initialDetails);
     const [buttonText, setButtonText] = useState('Sign Up');
     const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+    const {isDarkMode, toggleDarkMode } = useTheme();
     const [isPrimaryLoading, setIsPrimaryLoading] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const router = useRouter(); 
-    
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            const isDark = savedTheme === 'dark';
-            setIsDarkMode(isDark);
-            document.documentElement.classList.toggle('dark', isDark);
-        }
-    }, []);
 
     const onInputChange = (category: keyof SignupDetails, value: string) => {
         setSignupDetails({
@@ -49,7 +41,7 @@ const Signup: React.FC = () => {
         e.preventDefault();
         setIsPrimaryLoading(true);
         // Validate input
-        if (!signupDetails.first_name || !signupDetails.last_name || !signupDetails.email || !signupDetails.password) {
+        if (!signupDetails.firstName || !signupDetails.lastName || !signupDetails.email || !signupDetails.password) {
             setIsPrimaryLoading(false);
             setStatus({ success: false, message: 'Please fill in all required fields.' });
             return;
@@ -113,19 +105,12 @@ const Signup: React.FC = () => {
         setIsGoogleLoading(false);
     };
 
-    const toggleTheme = () => {
-        const newTheme = !isDarkMode ? 'dark' : 'light';
-        setIsDarkMode(!isDarkMode);
-        document.documentElement.classList.toggle('dark', !isDarkMode);
-        localStorage.setItem('theme', newTheme);
-    };
-
     return (
         <section className={`py-16 flex items-center justify-center min-h-screen dark:bg-dark-background bg-light-background`}>
             <div className="container mx-auto flex flex-col items-center">
                 <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix">
                     <button 
-                        onClick={toggleTheme} 
+                        onClick={toggleDarkMode} 
                         className="absolute top-4 right-4 text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
                     >
                         {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}
@@ -144,16 +129,16 @@ const Signup: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input
                                 type="text"
-                                value={signupDetails.first_name}
+                                value={signupDetails.firstName}
                                 placeholder="First Name"
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('first_name', e.target.value)}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('firstName', e.target.value)}
                                 className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
                             />
                             <input
                                 type="text"
-                                value={signupDetails.last_name}
+                                value={signupDetails.lastName}
                                 placeholder="Last Name"
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('last_name', e.target.value)}
+                                onChange={(e: ChangeEvent<HTMLInputElement>) => onInputChange('lastName', e.target.value)}
                                 className={`w-full bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-6 py-4 text-light-text dark:text-dark-text placeholder-gray-400 focus:outline-none focus:border-light-primary dark:focus:border-dark-primary focus:ring-0`}
                             />
                         </div>

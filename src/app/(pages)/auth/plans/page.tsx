@@ -8,9 +8,11 @@ import Loading from '@/app/components/Loading';
 import { pricingOptions } from '@/data/text';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { apiUpdateParent } from '@/lib/apiHelper';
+import { payments } from '@/data/values';
+import { useTheme } from '@/app/context/ThemeContext';
 
 const Plans: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const {isDarkMode, toggleDarkMode } = useTheme();
   const [loadingCardIndex, setLoadingCardIndex] = useState<number | null>(null);
   const [parentId, setParentId] = useState<number | null>(null);
   const router = useRouter();
@@ -22,14 +24,6 @@ const Plans: React.FC = () => {
     }
   }, [status, router]);
   
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        const isDark = savedTheme === 'dark';
-        setIsDarkMode(isDark);
-        document.documentElement.classList.toggle('dark', isDark);
-    }
-  }, []);
 
   useEffect(()=> {
     const parentIdString = sessionStorage.getItem("userId");
@@ -37,45 +31,34 @@ const Plans: React.FC = () => {
     const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
     console.log("parentId", parentId);
     setParentId(parentId);
-})
+  })
 
-  const handleClick = async (price: string, index: number) => {
+  const handleClick = async (subscriptionType: string, index: number) => {
     setLoadingCardIndex(index); 
-    await updateParentPlan(price);
 
-     if (price === "$0") {
+    const type = subscriptionType.toLocaleLowerCase();
+    const result = await updateParentPlan(type);
+
+     if (type === "free") {
        router.push('/main/home');
+
      } else {
-       router.push('/auth/payment');
+        const amount = type === 'monthly' ? payments.monthlyPlanPaymentInDollars : payments.yearlyPlanPaymentInDollars; 
+        router.push(`/payment/stripe?plan=${type}&amount=${amount}`); 
+      
      }
   };
 
-  const toggleTheme = () => {
-    const newTheme = !isDarkMode ? 'dark' : 'light';
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark', !isDarkMode);
-    localStorage.setItem('theme', newTheme);
-  };
+  const updateParentPlan = async (subscriptionType: string) => {
+    let isFreeTrial = false;
 
-  const getSubscriptionType = (price: string) => {
-    switch (price) {
-      case "$0":
-        return "free";
-      case "$19":
-        return "standard";
-      case "$199":
-        return "premium";
-      default:
-        return null;
-    }
-  };
+    if (subscriptionType === "free")
+      isFreeTrial = true;
 
-  const updateParentPlan = async (price: string) => {
-    const subscriptionType = getSubscriptionType(price);
-
-    const result = await apiUpdateParent(parentId, {subscription_type : subscriptionType} )
+    const result = await apiUpdateParent(parentId, {subscriptionType : subscriptionType, isFreeTrial : isFreeTrial} )
 
     console.log("result", result);
+    return result;
   };
 
   return (
@@ -88,21 +71,21 @@ const Plans: React.FC = () => {
                 Choose Your Plan
               </h2>
               <button
-                onClick={toggleTheme}
+                onClick={toggleDarkMode}
                 className="text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
               >
                 {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}
               </button>
             </div>
             <p className={`text-lg text-center mb-6 font-stix text-light-text dark:text-dark-text`}>
-              Select the plan that best fits your needs. All plans come with a 14-day free trial!
+              Select the plan that best fits your needs!
             </p>
             <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center gap-8">
               {pricingOptions.map((option, index) => (
                 <PricingCard
                   key={index}
                   {...option}
-                  onClick={() => handleClick(option.price, index)}
+                  onClick={() => handleClick(option.title, index)}
                   isLoading={loadingCardIndex === index}
                 />
               ))}

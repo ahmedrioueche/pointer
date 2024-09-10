@@ -55,10 +55,10 @@ const Footer = () => {
       </div>
       <div className="mt-4 text-center md:text-left">
         <ul className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-sm">
-          {["Home", "How It Works", "Features", "Contact"].map((item, index) => (
+          {["Home", "Credits"].map((item, index) => (
             <li key={index}>
               <Link
-                href={`/${item.toLowerCase()}`}
+                href={item === "Home" ? '/' : `/home/${item.toLowerCase()}`}
                 className="text-light-text font-stix dark:text-dark-text hover:text-light-primary dark:hover:text-dark-primary transition-colors duration-300"
               >
                 {item}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import LoadingButton from '@/app/components/LoadingButton';
+import { useTheme } from '@/app/context/ThemeContext';
 
 interface LoginDetails {
     identifier: string;
@@ -20,19 +21,10 @@ const Login: React.FC = () => {
     const [loginDetails, setLoginDetails] = useState<LoginDetails>(initialDetails);
     const [buttonText, setButtonText] = useState('Log In');
     const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+    const {isDarkMode, toggleDarkMode } = useTheme();
     const [isPrimaryLoading, setIsPrimaryLoading] = useState(false);
     const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const router = useRouter(); 
-
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            const isDark = savedTheme === 'dark';
-            setIsDarkMode(isDark);
-            document.documentElement.classList.toggle('dark', isDark);
-        }
-    }, []);
 
     const onInputChange = (category: keyof LoginDetails, value: string) => {
         setLoginDetails({
@@ -51,8 +43,7 @@ const Login: React.FC = () => {
             return;
         }
 
-        try {
-              
+        try {         
             const signInResult = await signIn('credentials', {
                 redirect: false,
                 identifier: loginDetails.identifier,
@@ -86,19 +77,12 @@ const Login: React.FC = () => {
         setIsGoogleLoading(false);
     };
 
-    const toggleTheme = () => {
-        const newTheme = !isDarkMode ? 'dark' : 'light';
-        setIsDarkMode(!isDarkMode);
-        document.documentElement.classList.toggle('dark', !isDarkMode);
-        localStorage.setItem('theme', newTheme);
-    };
-
     return (
         <section className={`py-16 flex items-center justify-center min-h-screen dark:bg-dark-background bg-light-background`}>
             <div className="container mx-auto flex flex-col items-center">
                 <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix">
                     <button 
-                        onClick={toggleTheme} 
+                        onClick={toggleDarkMode} 
                         className="absolute top-4 right-4 text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
                     >
                         {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}

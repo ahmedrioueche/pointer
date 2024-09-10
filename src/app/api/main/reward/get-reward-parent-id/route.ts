@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
     try {
       let { id } = await request.json();
-      console.log("id in get-reward-parent-id POST", id)
 
       if (!id) {
         return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
@@ -18,7 +17,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ rewards: rewards, status: 200 });
 
     } catch (error) {
-        console.error('Error fetching children:', error);
+        console.error('Error fetching rewards:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
   } 

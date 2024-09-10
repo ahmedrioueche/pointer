@@ -11,10 +11,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
      }
 
-     console.log("taskId", taskId)
-     console.log("childId", childId)
-
-
       taskId = assertInt(taskId);
       childId = assertInt(childId);
 

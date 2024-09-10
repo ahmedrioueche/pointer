@@ -21,12 +21,12 @@ const authHandler = NextAuth({
               }
 
               let user = await authenticateUser(credentials.identifier, credentials.password);
-
+              console.log("user in nextauth", user);
               if (user) {
                 return {
                   id: user.id,
-                  identifier: user.identifier,
-                  name: user.name,
+                  email: user.identifier,
+                  name: user.username || user.firstName,
                   userType: user.userType, 
                 };
               } else {

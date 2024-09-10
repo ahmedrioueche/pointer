@@ -1,22 +1,26 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ParentHome from './ParentHome';
-import ChildHome from './ChildHome';
+import ChildHome from './tasks/ChildTasks';
+import ChildHomeTest from './child/ChildHome';
 
 interface HomeProps {
   user: {
-    userType: string;
-    userId: number;
+    type: string;
+    id: number;
+    name: string;
   };
 }
 
 const Home: React.FC<HomeProps> = ({ user }) => {
-
-  if(user.userType === "parent"){
-    return <ParentHome id={user.userId}/>
+  if (user.type === 'parent') {
+    return (
+        <ParentHome id={user.id} />
+    );
+  } else {
+    return <ChildHomeTest user={user} />;
   }
-  else return <ChildHome user={user}/>
-}
+};
 
 export default Home;

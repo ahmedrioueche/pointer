@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const addReward = async (reward: Reward): Promise<number> => {
-  console.log("rewards in addTasks", reward);
 
   try {
         const rewardData: any = {
@@ -55,9 +54,7 @@ export const getRewardsByParentId = async (parentId: number): Promise<any> => {
       const rewards = await prisma.reward.findMany({
           where: { creatorId: parentId },
       });
-  
-      console.log("rewards in getRewardsByParentId", rewards)
-      
+        
       return rewards;
   
     } catch (error) {
@@ -77,7 +74,6 @@ export const updateRewardById = async (rewardId: number, updates: Partial<any>):
       let creatorId = updates.creatorId;
       creatorId = typeof creatorId === "string"? parseInt(creatorId, 10) : creatorId;
   
-      console.log("rewardId in updateTaskById", rewardId);
       // Update the Task record
       await prisma.reward.update({
         where: { id: rewardId }, 
@@ -110,8 +106,6 @@ export const deleteRewardById = async (rewardId: number): Promise<void> => {
 
 export const getRewardsByChildId = async (childId: number): Promise<any> => {
   try {
-
-    console.log("childId in getRewardsByChildId", childId)
 
     const rewards = await prisma.rewardClaim.findMany({
         where: { childId: childId },
@@ -154,20 +148,50 @@ export const claimReward = async (rewardId: number, childId: number): Promise<nu
 };
 
 
+export const unClaimReward = async (rewardId: number, childId: number): Promise<number> => {
+  try {
+
+      const claim = await prisma.rewardClaim.findFirst({ 
+        where: { 
+          rewardId: rewardId,
+          childId: childId,
+        }, 
+      });
+
+      await prisma.rewardClaim.delete({
+        where :{
+          id : claim?.id
+        }
+      })
+
+      await prisma.reward.update({
+        where: { id: rewardId },
+        data: { isClaimed: false },
+      });
+
+      return 0;
+
+  } catch (error) {
+    console.error('Error claiming reward:', error);
+    throw new Error('Failed to claim reward');
+  } finally {
+    await prisma.$disconnect();
+  }
+};
+
+
+
 export const updateRewardClaimById = async (rewardId: number, updates: Partial<any>): Promise<void> => {
   try {
-    console.log("rewardId in updateRewardClaimByRewardId", rewardId);
-
-    // Fetch the reward claim associated with the rewardId
+    
     const rewardClaim = await prisma.rewardClaim.findFirst({
-      where: { rewardId: rewardId }, // Assuming `rewardId` is a foreign key in `rewardClaim`
+      where: { rewardId: rewardId }, 
     });
 
     if (!rewardClaim) {
       throw new Error('Reward claim not found for the given rewardId');
     }
 
-    // Update the Reward Claim record
     await prisma.rewardClaim.update({
       where: { id: rewardClaim.id }, // Use the fetched rewardClaim ID
       data: { ...updates },
@@ -182,4 +206,20 @@ export const updateRewardClaimById = async (rewardId: number, updates: Partial<a
 };
 
 
+export const getRewardData = async (id: number): Promise<any> => {
+  try {
 
+    const rewardDta = await prisma.rewardClaim.findMany({
+        where: { rewardId: id },
+        include: {child : true},
+    });
+
+    return rewardDta;
+    
+  } catch (error) {
+      console.error('Error fetching rewards by childId:', error);
+      throw new Error('Failed to fetch rewards by childId');
+  } finally {
+      await prisma.$disconnect();
+  }
+};

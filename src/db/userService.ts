@@ -19,8 +19,8 @@ export async function authenticateUser(identifier: string, password: string): Pr
                 id: true,
                 email: true,
                 username: true,
-                first_name: true,
-                last_name: true,
+                firstName: true,
+                lastName: true,
                 password: true,
             }
         });
@@ -28,7 +28,7 @@ export async function authenticateUser(identifier: string, password: string): Pr
         if(parent){
             const isMatch = await bcrypt.compare(password, parent.password);
             if(isMatch)
-                return { ...parent, userType: 'parent' };
+                return { ...parent, identifier: parent.email, userType: 'parent' };
         }
     
         child = await prisma.child.findFirst({
@@ -52,14 +52,14 @@ export async function authenticateUser(identifier: string, password: string): Pr
             console.log("child", child)
           //  const isMatch = child.password? await bcrypt.compare(password, child.password) : null;
             //if(isMatch){
-                return { ...child, userType: 'child' };
+                return { ...child, identifier: child.username, userType: 'child' };
             //}
         }
         
         return null;
 
     } catch (error) {
-        console.error('Error retrieving user from the database:', error);
+        console.error('Error athenticating user:', error);
         return null;
     }
 }

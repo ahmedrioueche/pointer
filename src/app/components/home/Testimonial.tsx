@@ -1,81 +1,80 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
+import clsx from 'clsx';
+import { useTheme } from '@/app/context/ThemeContext';
+import { testimonials } from '@/data/text';
 
 interface TestimonialProps {
   quote: string;
   author: string;
   role: string;
+  index: number; // We will use this to determine the direction
 }
 
-const TestimonialCard: React.FC<TestimonialProps> = ({ quote, author, role }) => (
-  <div className="flex flex-col p-6 bg-dark-background dark:bg-light-background rounded-lg shadow-md mb-0 md:mb-0 transition-transform transform hover:scale-105 hover:shadow-lg">
-    <div className="flex items-start text-light-primary dark:text-dark-primary mb-4">
-      <FaQuoteLeft className="text-3xl" />
-      <p className="ml-2 text-dark-text dark:text-light-text font-stix">{quote}</p>
-      <FaQuoteRight className="text-3xl ml-2" />
-    </div>
-    <h3 className="text-lg font-semibold font-satisfy mt-4 text-dark-text dark:text-light-text">{author}</h3>
-    <p className="text-light-secondary dark:text-dark-secondary">{role}</p>
-  </div>
-);
-
-const Testimonial: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+const TestimonialCard: React.FC<TestimonialProps> = ({ quote, author, role, index }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    setIsDarkMode(savedTheme === "dark");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => {
+      if (cardRef.current) {
+        observer.unobserve(cardRef.current);
+      }
+    };
   }, []);
 
-  const testimonials = [
-    {
-      quote: "This app has revolutionized the way I manage tasks with my kids. They are more responsible and motivated!",
-      author: "Jane Doe",
-      role: "Parent",
-    },
-    {
-      quote: "The point system is genius. My kids love earning rewards for their hard work.",
-      author: "John Smith",
-      role: "Father of two",
-    },
-    {
-      quote: "An excellent tool for teaching kids responsibility while making it fun.",
-      author: "Emily Johnson",
-      role: "Teacher",
-    },
-    {
-      quote: "The best parenting tool I’ve come across. It’s so easy to use and incredibly effective.",
-      author: "Michael Brown",
-      role: "Father",
-    },
-    {
-      quote: "I’ve noticed a big improvement in my children's behavior since we started using this app.",
-      author: "Laura Wilson",
-      role: "Mother of three",
-    },
-    {
-      quote: "It’s rewarding for both parents and children. Highly recommend it!",
-      author: "Chris Miller",
-      role: "Parent",
-    },
-  ];
+  return (
+    <div
+      ref={cardRef}
+      className={clsx(
+        "flex flex-col p-6 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-800 dark:to-purple-800 rounded-lg shadow-md transition-transform",
+        isVisible ? "animate-slide-in-left" : "opacity-0"
+      )}
+    >
+      <div className="flex items-start text-white mb-4">
+        <FaQuoteLeft className="text-3xl" />
+        <p className="ml-2 text-white font-stix">{quote}</p>
+        <FaQuoteRight className="text-3xl ml-2" />
+      </div>
+      <h3 className="text-lg font-semibold font-satisfy mt-4 text-white">{author}</h3>
+      <p className="text-white font-stix">{role}</p>
+    </div>
+  );
+};
+
+const Testimonial: React.FC = () => {
+  const { isDarkMode } = useTheme();
 
   return (
     <section className="py-16 bg-light-background dark:bg-dark-background mb-0">
-    <div className="container mx-auto px-4">
-      <h2 className="text-3xl font-bold font-satisfy mb-12 text-center text-light-primary dark:text-dark-text">
-        What People Are Saying
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {testimonials.map((testimonial, index) => (
-          <TestimonialCard key={index} {...testimonial} />
-        ))}
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl font-bold font-satisfy mb-12 text-center text-light-primary dark:text-dark-text">
+          What People Are Saying
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <TestimonialCard key={index} {...testimonial} index={index} />
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-  
+    </section>
   );
 };
 

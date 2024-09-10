@@ -1,4 +1,3 @@
-import pool from './db';
 import { PrismaClient } from '@prisma/client';
 import { Child } from '@/lib/interface';
 import { assertInt, generateRandomUsernamePassword, getRandomIcon } from '@/utils/helper';
@@ -8,7 +7,6 @@ const prisma = new PrismaClient();
 export const insertChild = async (child: Child): Promise<any> => {
   try {
 
-    console.log("child in insertChild", child);
     const [username, password] = generateRandomUsernamePassword(child.name);
 
     let parentId = assertInt(child.parent_id);
@@ -45,7 +43,7 @@ export const getChildrenByParentId = async (parentId: number): Promise<Child[]> 
       where: { parent_id: parentId },
     });
 
-    return children as Child[]; // Ensure it matches the Child type
+    return children as Child[]; 
   } catch (error) {
     console.error('Error fetching children by parent ID:', error);
     throw new Error('Failed to fetch children');
@@ -76,18 +74,18 @@ export const getChildById = async (id: number): Promise<any> => {
 
   export const updateChild = async (id: number, data: Partial<Child>): Promise<any> => {
     try {
-
+      const updateData = {
+        name: data.name,
+        age: data.age,
+        gender: data.gender,
+        icon: data.icon,
+        email: data.email,
+        password: data.password,
+      }
       const updatedChild = await prisma.child.update({
         where: { id },  
-        data: {        
-          name: data.name,
-          age: data.age,
-          gender: data.gender,
-          has_device: data.has_device,
-          uses_shared_device: data.uses_shared_device || null,
-          username: data.username,
-          email: data.email? data.email : null,
-          password: data.password,
+        data: {    
+          ...updateData
         },
       });
   

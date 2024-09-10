@@ -1,4 +1,4 @@
-import { Reward, Task } from "./interface";
+import { Notif, Reward, Task } from "./interface";
 
 interface ContactFormData {
     firstName: string;
@@ -49,7 +49,29 @@ interface ContactFormData {
       return { status: 'error', message: 'An error occurred' };
     }
   };
+
+  export const apiGetParentById = async (parentId: Number): Promise<any> => {
+    try {
+      const response = await fetch('/api/main/parent/get-parent-id', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ parentId }),
+      });
   
+      if (!response.ok) {
+        throw new Error('Failed to fetch parent');
+      }
+  
+      const responseData = await response.json();
+      
+      return responseData;
+  
+    } catch (error) {
+      console.error('Update failed:', error);
+      
+      return { status: 'error', message: 'An error occurred' };
+    }
+  };
   
   
   export const apiInsertChild = async (child : any): Promise<any> => {
@@ -89,7 +111,7 @@ interface ContactFormData {
         throw new Error('Failed to update parent');
       }
   
-      const responseData: ApiResponse = await response.json();
+      const responseData = await response.json();
       
       return responseData;
   
@@ -101,6 +123,7 @@ interface ContactFormData {
     }
   };
   
+
   export const apiAddTask = async (task : Task) => {
     const response = await fetch("/api/main/task/add-task", {
       method: 'POST',
@@ -142,11 +165,11 @@ interface ContactFormData {
     return response;
   }
 
-  export const apiUpdateTaskAssignment = async (id : number | undefined, update: any) => {
+  export const apiUpdateTaskAssignment = async (id : number | undefined, childId : number, update: any) => {
     const response = await fetch("/api/main/task/update-task-ass", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, update }),
+      body: JSON.stringify({ id, childId, update }),
     })
     
     return response;
@@ -255,7 +278,17 @@ interface ContactFormData {
     
     return response.json();
   }
-
+  
+  export const apiUnClaimReward = async (rewardId : number, childId : number) => {
+    const response = await fetch("/api/main/reward/unclaim-reward", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rewardId, childId }),
+    })
+    
+    return response.json();
+  }
+  
   export const apiUpdateRewardClaim = async (id : number | undefined, update: any) => {
     const response = await fetch("/api/main/reward/update-reward-claim", {
       method: 'POST',
@@ -266,6 +299,106 @@ interface ContactFormData {
     return response;
   }
 
+  export const apiGetRewardData = async (id : number) => {
+    const response = await fetch("/api/main/reward/get-reward-data", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    })
+    
+    return response.json();
+  }
 
-
+export const apiSendNotification = async (senderId : number, receiverId : number | undefined, receiverType : string,  notif : Notif) => {
+  const response = await fetch("/api/main/notif/send-notif", {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ senderId,  receiverId, receiverType, notif}),
+  })
   
+  return response.json();
+}
+
+export const apiMarkNotifRead = async (notifIds: any) => {
+  console.log("notifIds in apiMarkNotifRead", notifIds)
+  const response = await fetch("/api/main/notif/mark-read", {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ notifIds }),
+  })
+  
+  return response.json();
+}
+
+
+export const apiUpdateSettings = async (parentId: Number | undefined, settings: any): Promise<ApiResponse> => {
+  try {
+    const response = await fetch('/api/main/setting/update-setting', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ parentId, settings }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update settings');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Update failed:', error);
+    
+    // Return a default error response
+    return { status: 'error', message: 'An error occurred' };
+  }
+};
+
+
+export const apiGetSettingsByParentId = async (parentId: Number | undefined): Promise<any> => {
+  try {
+    const response = await fetch('/api/main/setting/get-setting-parent-id', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ parentId }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to get settings');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('get settings failed:', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+};
+
+export const apiSendEmail = async (email: string, subject: string, content: string): Promise<any> => {
+  try {
+    const response = await fetch('/api/main/email/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, subject, content }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send email');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+};
+

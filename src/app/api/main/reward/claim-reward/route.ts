@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ result: result, status: 200 });
 
     } catch (error) {
-        console.error('Error fetching children:', error);
+        console.error('Error claiming reward:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
   } 

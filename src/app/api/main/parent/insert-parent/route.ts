@@ -15,11 +15,11 @@ export async function POST(request: Request) {
         const hashedPassword = await bcrypt.hash(id, 10);
 
         const parent = {
-            first_name: firstName,
-            last_name:lastName,
+            firstName: firstName,
+            lastName:lastName,
             email: email,
             password: hashedPassword,
-            is_verified: true,
+            isVerified: true,
         }
 
         const result = await insertParent(parent);

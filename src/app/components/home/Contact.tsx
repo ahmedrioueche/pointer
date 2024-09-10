@@ -2,6 +2,9 @@
 
 import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
 import { sendContactForm } from '../../../lib/apiHelper'; // Adjust the import path as necessary
+import Image from 'next/image'; // Assuming you're using Next.js for image optimization
+import { useTheme } from '@/app/context/ThemeContext';
+import { motion, useInView } from 'framer-motion';
 
 interface FormDetails {
     firstName: string;
@@ -23,24 +26,26 @@ const ContactForm: React.FC = () => {
     const [formDetails, setFormDetails] = useState<FormDetails>(formInitialDetails);
     const [buttonText, setButtonText] = useState('Send');
     const [status, setStatus] = useState<{ success: boolean; message: string } | null>(null);
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+    const { isDarkMode, toggleDarkMode } = useTheme();
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        setIsDarkMode(savedTheme === 'dark');
+    // Refs and inView hooks for animations
+    const imageRef = useRef<HTMLDivElement>(null);
+    const imageInView = useInView(imageRef, { once: false });
 
+    const formRef = useRef<HTMLDivElement>(null);
+    const formInView = useInView(formRef, { once: false });
+
+    useEffect(() => {
         const adjustTextareaHeight = () => {
             if (textareaRef.current) {
-                // Reset the height to auto to calculate the new height
                 textareaRef.current.style.height = 'auto';
-                // Set the height based on scroll height
                 textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
             }
         };
 
-        adjustTextareaHeight(); // Initial adjustment
-        window.addEventListener('resize', adjustTextareaHeight); // Adjust on window resize
+        adjustTextareaHeight();
+        window.addEventListener('resize', adjustTextareaHeight);
         return () => window.removeEventListener('resize', adjustTextareaHeight);
     }, [formDetails.message]);
 
@@ -69,10 +74,45 @@ const ContactForm: React.FC = () => {
         setFormDetails(formInitialDetails);
     };
 
+    // Animation variants
+    const imageVariants = {
+        hidden: { opacity: 0, x: -100 }, // Image starts from the left
+        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    };
+
+    const formVariants = {
+        hidden: { opacity: 0, x: 100 }, // Form starts from the right
+        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    };
+
     return (
         <section id="contact" className={`py-16 dark:bg-dark-background bg-light-background flex items-center justify-center min-h-screen`}>
-            <div className="container mx-auto flex flex-col items-center">
-                <div className="md:w-1/2 flex flex-col items-center px-6 md:px-12">
+            <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-6">
+                {/* Left Section with Image */}
+                <motion.div
+                    ref={imageRef}
+                    initial="hidden"
+                    animate={imageInView ? "visible" : "hidden"}
+                    variants={imageVariants}
+                    className="hidden md:block md:w-1/2 mr-5"
+                >
+                    <Image
+                        src="/images/contact.svg" // Path to your SVG image
+                        alt="Contact Us"
+                        width={500} // Adjust width as needed
+                        height={500} // Adjust height as needed
+                        className="mx-auto"
+                    />
+                </motion.div>
+
+                {/* Right Section with Contact Form */}
+                <motion.div
+                    ref={formRef}
+                    initial="hidden"
+                    animate={formInView ? "visible" : "hidden"}
+                    variants={formVariants}
+                    className="md:w-1/2 flex flex-col items-center"
+                >
                     <h2 className={`text-4xl font-bold font-satisfy mb-8 dark:text-dark-text text-light-primary`}>
                         Contact Us
                     </h2>
@@ -83,28 +123,28 @@ const ContactForm: React.FC = () => {
                                 value={formDetails.firstName}
                                 placeholder="First Name"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('firstName', e.target.value)}
-                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
+                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:outline-none focus:border-light-primary"
                             />
                             <input
                                 type="text"
                                 value={formDetails.lastName}
                                 placeholder="Last Name"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('lastName', e.target.value)}
-                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
+                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:outline-none focus:border-light-primary"
                             />
                             <input
                                 type="email"
                                 value={formDetails.email}
                                 placeholder="Email"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('email', e.target.value)}
-                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
+                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:outline-none focus:border-light-primary"
                             />
                             <input
                                 type="tel"
                                 value={formDetails.phone}
                                 placeholder="Phone Number"
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => onFormUpdate('phone', e.target.value)}
-                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background"
+                                className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-4 text-light-text dark:text-dark-text focus:outline-none focus:border-light-primary"
                             />
                         </div>
                         <textarea
@@ -117,7 +157,7 @@ const ContactForm: React.FC = () => {
                                     textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
                                 }
                             }}
-                            className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-3 text-light-text dark:text-dark-text focus:text-dark-text dark:focus:text-light-text placeholder-gray-400 focus:outline-none focus:border-light-primary focus:ring-0 focus:bg-dark-background dark:focus:bg-light-background resize-none overflow-y-hidden"
+                            className="w-full font-stix bg-gray-100 dark:bg-gray-700 border border-gray-700 rounded-lg px-6 py-3 text-light-text dark:text-dark-text focus:outline-none focus:border-light-primary resize-none overflow-y-hidden"
                             rows={5}
                             ref={textareaRef}
                         />
@@ -133,7 +173,7 @@ const ContactForm: React.FC = () => {
                             </div>
                         )}
                     </form>
-                </div>
+                </motion.div>
             </div>
         </section>
     );

@@ -1,29 +1,66 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useTheme } from '@/app/context/ThemeContext';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaCoins, FaTasks, FaGift } from 'react-icons/fa';
+import clsx from 'clsx';
 
 interface FeatureProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  delay: number;
 }
 
-const Feature: React.FC<FeatureProps> = ({ icon, title, description }) => (
-  <div className="flex flex-col items-center p-6 bg-dark-background dark:bg-light-background rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
-    <div className="text-4xl text-light-primary dark:text-dark-primary mb-4">{icon}</div>
-    <h3 className="text-lg font-stix font-semibold mb-2 text-dark-text dark:text-light-text">{title}</h3>
-    <p className="text-light-secondary font-stix dark:text-dark-secondary text-center">{description}</p>
-  </div>
-);
-
-const FeaturesSection: React.FC = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+const Feature: React.FC<FeatureProps> = ({ icon, title, description, delay }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const featureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    setIsDarkMode(savedTheme === "dark");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false); // Reset visibility when the card goes out of view to trigger animation again
+          }
+        });
+      },
+      { threshold: 0.1 } // Trigger when 10% of the element is in view
+    );
+
+    if (featureRef.current) {
+      observer.observe(featureRef.current);
+    }
+
+    return () => {
+      if (featureRef.current) {
+        observer.unobserve(featureRef.current);
+      }
+    };
   }, []);
+
+  return (
+    <div
+      ref={featureRef}
+      className={clsx(
+        "flex flex-col items-center p-6 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-800 dark:to-purple-800 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg",
+        isVisible ? "flip-in" : "opacity-0"
+      )}
+      style={{
+        transitionDelay: `${delay}s`, // Stagger the delay for the animation
+      }}
+    >
+      <div className="text-4xl text-white mb-4">{icon}</div>
+      <h3 className="text-lg font-stix font-semibold mb-2 text-white">{title}</h3>
+      <p className="text-white text-center font-stix">{description}</p>
+    </div>
+  );
+};
+
+const FeaturesSection: React.FC = () => {
+  const { isDarkMode } = useTheme();
 
   const features = [
     {
@@ -44,14 +81,14 @@ const FeaturesSection: React.FC = () => {
   ];
 
   return (
-    <section id="features" className={`py-16 bg-light-background dark:bg-dark-background`}>
+    <section id="features" className="py-16 bg-light-background dark:bg-dark-background">
       <div className="container mx-auto px-4">
-        <h2 className={`text-3xl font-bold text-center mb-12 font-satisfy text-light-primary dark:text-dark-text`}>
+        <h2 className="text-3xl font-bold text-center mb-12 font-satisfy text-light-primary dark:text-dark-text">
           Key Features
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Feature key={index} {...feature} />
+            <Feature key={index} {...feature} delay={index * 0.2} />
           ))}
         </div>
       </div>

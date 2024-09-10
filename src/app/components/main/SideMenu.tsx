@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { FaTasks, FaCoins, FaGift, FaChartBar, FaUser, FaArrowLeft, FaArrowRight, FaHome, FaLightbulb, FaDice, FaTrophy } from 'react-icons/fa';
+import { FaTasks, FaCoins, FaGift, FaChartBar, FaUser, FaArrowLeft, FaArrowRight, FaHome, FaLightbulb, FaDice, FaTrophy, FaBook, FaQuestionCircle, FaClock, FaCalendarAlt } from 'react-icons/fa';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -13,7 +13,7 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
 
     useEffect(() => {
 
-        setUserType(user.user.userType);
+        setUserType(user.user.type);
 
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
@@ -57,7 +57,8 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
                         {!isCollapsed && <span>Home</span>}
                     </Link>
                 </li>
-                <li>
+                {userType !== "child" && (
+                    <li>
                     <Link
                         href="/main/dashboard"
                         className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
@@ -69,21 +70,24 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
                         <FaChartBar className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
                         {!isCollapsed && <span>Dashboard</span>}
                     </Link>
-                </li>
-                <li>
-                    <Link
-                        href="/main/rewards"
-                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
-                            pathname === '/main/rewards' 
-                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
-                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
-                        }`}
-                    >
-                        <FaGift className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                        {!isCollapsed && <span>Rewards</span>}
-                    </Link>
-                </li>
-                {userType != "child" && (
+                    </li>
+                )}
+                {userType !== "child" && (
+                    <li>
+                        <Link
+                            href="/main/routines"
+                            className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                                pathname === '/main/routines' 
+                                ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                                : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                            }`}
+                        >
+                            <FaCalendarAlt className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                            {!isCollapsed && <span>Routines</span>}
+                        </Link>
+                    </li>
+                )}
+              
                  <li>
                     <Link
                         href="/main/tasks"
@@ -97,8 +101,34 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
                         {!isCollapsed && <span>Tasks</span>}
                     </Link>
                  </li>
-                )}
-              
+                
+               <li>
+                    <Link
+                        href="/main/rewards"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/rewards' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
+                    >
+                        <FaGift className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                        {!isCollapsed && <span>Rewards</span>}
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href="/main/homework"
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                            pathname === '/main/homework' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
+                    >
+                        <FaBook className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                        {!isCollapsed && <span>Homework</span>}
+                    </Link>
+                </li>
+          
                 <li>
                     <Link
                         href="/main/competitions"
@@ -113,7 +143,6 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
                     </Link>
                 </li>
              
-                
                 <li>
                     <Link
                         href="/main/quizzes"
@@ -140,7 +169,22 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
                         {!isCollapsed && <span>Games</span>}
                     </Link>
                 </li>
-
+             
+                <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
+                <li>
+                    <Link
+                        href="/main/help"
+                        className={`flex items-center px-3 rounded-lg transition-colors ${
+                            pathname === '/main/help' 
+                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
+                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
+                        }`}
+                    >
+                        <FaQuestionCircle className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                        {!isCollapsed && <span>Help</span>}
+                    </Link>
+                </li>
+            
             </ul>
         </aside>
     );

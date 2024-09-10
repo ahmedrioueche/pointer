@@ -28,9 +28,9 @@ function LoadingPage() {
         const userId = session.user.id;
         console.log("userId", userId);
         
-        //in loggin with child creds userType is defined, in case of loggin in with google (only for parent), 
-        //so we set userType manually
-        userType? sessionStorage.setItem("userType", userType) : sessionStorage.setItem("userType", "parent");
+        //in loggin with child creds userType is defined. In case of loggin in with google (only for parent), 
+        //we set userType manually
+        userType? sessionStorage.setItem("userType", userType) : null;
         //in loggin with child creds userId is defined, in case of loggin in with google we dont want the gooogle id, 
         //so we get the parent id from db later
         (userId && userType != "parent") ? sessionStorage.setItem("userId", userId) : null;
@@ -46,45 +46,57 @@ function LoadingPage() {
                     },
                     body: JSON.stringify({ email: session?.user.email }),
                 });
-
-
+                
                 const parent = await response.json();
                 console.log("parent", parent);
 
-                if (parent) {
+                if (parent && !parent.error) {
                     
                     sessionStorage.setItem("userEmail", parent.email);
                     sessionStorage.setItem("userId", parent.id);
+                    sessionStorage.setItem("userType", 'parent');
+                    sessionStorage.setItem("username", parent.username || parent.firstName);
 
-                    if (parent.is_verified === null) {
+                    if (parent.isVerified === null) {
                         router.push('/auth/verify');
                         return;
                     }
 
-                    if (parent.children_count === null || parent.children_count === 0) {
+                    if (parent.childrencount === null || parent.childrenCount === 0) {
                         router.push('/auth/confirm');
                         return;
                     }
 
-                    if (parent.subscription_type === null) {
+                    if (parent.subscriptionType === null) {
                         router.push('/auth/plans');
                         return;
                     }
 
                     router.push('/main/home');
-                    
+                    return;
+
                 } else {
                     const result: any = await apiInsertDB(session?.user, "", "/api/main/parent/insert-parent");
 
-                    console.log("result in else", result)
-
                     const parentId = result.parentId;
+                    if(parentId === undefined || parentId === "undefined"){
+                        //failed, try again 
+                        const result: any = await apiInsertDB(session?.user, "", "/api/main/parent/insert-parent");
+                        const parentId = result.parentId;
+                        if(parentId === undefined || parentId === "undefined"){
+                            //something is wrong!
+                            router.push("/auth/error");
+                            return;
+                        }
+                    }
+
                     const email = result.email;
 
                     sessionStorage.setItem("userEmail", email);
                     sessionStorage.setItem("userId", parentId);
 
                     router.push('/auth/confirm');
+                    return;
                 }
             } catch (error) {
                 console.error('Error fetching parent data:', error);
@@ -96,16 +108,7 @@ function LoadingPage() {
             fetchParentData();
         else 
             router.push('/main/home')
-
-        const userIdLast = sessionStorage.getItem("userId")
-        const emailLast = sessionStorage.getItem("userEmail");
-        const userTypeLast = sessionStorage.getItem("userType")
-
-        console.log("userIdLast",userIdLast)
-        console.log("emailLast",emailLast)
-        console.log("userTypeLast",userTypeLast)
-
-
+        
     }, [status, session, router, hasFetched]);
 
     return <Loading />;

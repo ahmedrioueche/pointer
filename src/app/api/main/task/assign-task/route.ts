@@ -5,7 +5,6 @@ export async function POST(request: Request) {
     try {
 
       let { task, childId } = await request.json();
-      console.log("task in assign-task", task)
 
       if (!task || !childId) {
         return NextResponse.json({ error: 'Invalid input' }, { status: 400 });

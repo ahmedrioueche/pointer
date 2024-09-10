@@ -1,15 +1,14 @@
 "use client";
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
-import { FaSun, FaMoon, FaSpinner } from 'react-icons/fa';
+import { FaSun, FaMoon } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import CustomSelect from '@/app/components/CustomSelect';
-import { apiInsertDB } from '@/lib/dbHelper';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/components/Loading';
 import { apiInsertChild, apiUpdateParent } from '@/lib/apiHelper';
 import LoadingButton from '@/app/components/LoadingButton';
-import { generateRandomUsernamePassword } from '@/utils/helper';
 import { Child } from '@/lib/interface';
+import { useTheme } from '@/app/context/ThemeContext';
 
 const Confirm: React.FC = () => {
     const router = useRouter();
@@ -17,7 +16,7 @@ const Confirm: React.FC = () => {
     const [parentId, setParentId] = useState<any>(0);
     const [childrenCount, setChildrenCount] = useState('');
     const [children, setChildren] = useState<Child[]>([]);
-    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+    const {isDarkMode, toggleDarkMode } = useTheme();
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [resStatus, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [age, setAge] = useState('');
@@ -30,29 +29,12 @@ const Confirm: React.FC = () => {
         }
       }, [status, router]);
 
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            const isDark = savedTheme === 'dark';
-            setIsDarkMode(isDark);
-            document.documentElement.classList.toggle('dark', isDark);
-        }
-    }, []);
-
-    const toggleTheme = () => {
-        const newTheme = !isDarkMode ? 'dark' : 'light';
-        setIsDarkMode(!isDarkMode);
-        document.documentElement.classList.toggle('dark', !isDarkMode);
-        localStorage.setItem('theme', newTheme);
-    };
 
     useEffect(()=> {
-        if (typeof window !== 'undefined') {
-            const parentIdString = sessionStorage.getItem("userId");
-            console.log("parentIdString", parentIdString);
-            const parentId = parentIdString ? parseInt(parentIdString, 10) : undefined;
-            setParentId(parentId);
-        }
+        const parentIdString = sessionStorage.getItem("userId");
+        console.log("parentIdString", parentIdString);
+        const parentId = parentIdString ? parseInt(parentIdString, 10) : undefined;
+        setParentId(parentId);
     })
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -119,7 +101,7 @@ const Confirm: React.FC = () => {
             const parentData = {
                 age: age,
                 gender: gender,
-                children_count: childrenCount,
+                childrenCount: childrenCount,
             }
 
            try{
@@ -171,7 +153,7 @@ const Confirm: React.FC = () => {
                 <div className="container mx-auto flex flex-col items-center overflow-hidden">
                     <div className="relative md:w-1/2 flex flex-col items-center bg-white dark:bg-dark-background rounded-lg shadow-lg p-8 font-stix overflow-hidden">
                         <button
-                            onClick={toggleTheme}
+                            onClick={toggleDarkMode}
                             className="absolute top-4 right-4 text-xl p-2 rounded-md bg-light-background dark:bg-dark-background focus:outline-none hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
                         >
                             {isDarkMode ? <FaSun className="text-dark-text" /> : <FaMoon className="text-light-text" />}

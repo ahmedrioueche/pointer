@@ -1,13 +1,10 @@
 import { getRewardsByChildId } from '@/db/rewardService'; // Import the service function
 import { NextResponse } from 'next/server';
 
-// API route handler
 export async function POST(request: Request) {
     try {
-      // Parse the rewards from the request body
       let { id } = await request.json();
-      console.log("id in get-reward POST", id)
-      // Validate input 
+
       if (!id) {
         return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
       }

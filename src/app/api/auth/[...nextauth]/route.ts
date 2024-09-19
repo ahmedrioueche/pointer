@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { authenticateUser } from "@/db/userService"
+import { authenticateUser } from "@/services/userService"
 import CredentialsProvider from 'next-auth/providers/credentials'; 
 
 const authHandler = NextAuth({
@@ -21,7 +21,6 @@ const authHandler = NextAuth({
               }
 
               let user = await authenticateUser(credentials.identifier, credentials.password);
-              console.log("user in nextauth", user);
               if (user) {
                 return {
                   id: user.id,

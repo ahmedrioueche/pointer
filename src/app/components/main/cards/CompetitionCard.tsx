@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { FaMedal, FaTrophy, FaCalendar, FaCalendarDay, FaInfoCircle, FaComment } from 'react-icons/fa';
-import { formatDateTime, capitalizeFirstLetter } from '@/lib/formater';
+import { formatDateTime, capitalizeFirstLetter } from '@/utils/formater';
 
 export interface CompetitionCardProps {
   title: string;

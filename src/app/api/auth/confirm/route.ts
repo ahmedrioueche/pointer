@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { insertChild } from '@/db/childService';
+import { insertChild } from '@/services/childService';
 
 async function handlePost(req: Request) {
     try {

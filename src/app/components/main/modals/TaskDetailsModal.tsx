@@ -1,7 +1,7 @@
 import { FaTimes } from 'react-icons/fa';
-import { TaskCard } from './TaskCard';
+import { TaskCard } from '../tasks/TaskCard';
 import { apiDeleteTask, apiUpdateTask, apiUpdateTaskAssignment } from '@/lib/apiHelper';
-import { Task } from '@/lib/interface';
+import { Task } from '@/types/interface';
 
 interface TaskDetailsModalProps {
   isOpen: boolean;
@@ -19,10 +19,10 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({ isOpen, task, child
   if (!isOpen) return null;
   
   const dayToExclude = clickedTimeSlot.split('-')[1];
-  const taskAssignment = task.taskAssignments.filter((assignment : any) => assignment.childId === child.id );
-  const routineExceptions = taskAssignment[0].routineExceptions || ''; 
+  const routineExceptions = task.routineExceptions || ''; 
+  console.log("task:", task);
 
-  const handleRemove = async (dayToExclude: string) => {
+  const handleExcludeTask = async (dayToExclude: string) => {
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']; 
   
     const currentExceptions = routineExceptions ? routineExceptions.split(',').map((day : any) => day.trim()) : [];
@@ -30,7 +30,7 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({ isOpen, task, child
     if (!currentExceptions.includes(dayToExclude)) {
       const updatedRoutineExceptions = [...currentExceptions, dayToExclude].join(',');
   
-      const response = await apiUpdateTaskAssignment(task.id, child.id, {
+      const response = await apiUpdateTaskAssignment(task.taskId, child.id, {
         routineExceptions: updatedRoutineExceptions,
         dayToExclude,
       });
@@ -64,7 +64,7 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({ isOpen, task, child
           {...task}
           onClose={onClose}
           onModify={handleModify}
-          onRemove={() => handleRemove(dayToExclude)}
+          onRemove={() => handleExcludeTask(dayToExclude)}
         />
       </div>
     </div>

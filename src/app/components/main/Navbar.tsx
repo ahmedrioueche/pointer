@@ -1,12 +1,12 @@
 "user client"
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaMoon, FaSun, FaBars, FaTimes, FaSignOutAlt, FaBell, FaCog, FaChartBar, FaTasks, FaCoins, FaGift, FaUser, FaHome, FaClock, FaArrowDown, FaArrowUp, FaLightbulb, FaDice, FaArrowRight, FaTrophy, FaSpinner, FaRegHeart, FaCalendarAlt } from "react-icons/fa";
 import { signOut } from "next-auth/react";
 import DropdownNotifications from "./DropDownNotif";
 import PlansModal from "./modals/PlansModal";
 import { apiGetChildData, apiGetParentById } from "@/lib/apiHelper";
-import { Child } from "@/lib/interface";
+import { Child } from "@/types/interface";
 import { useRouter } from 'next/navigation';
 import Header from "./Header";
 import PayModal from "./modals/PayModal";
@@ -49,9 +49,8 @@ const DashboardNavbar: React.FC<{user : any }> = ( {user } ) => {
       try {
         const data = await apiGetParentById(user.id);
         
-        console.log("data", data)
-
         setParentData(data);
+
       } catch (err) {
         console.error("Error fetching parent data:", err);
       }
@@ -63,13 +62,14 @@ const DashboardNavbar: React.FC<{user : any }> = ( {user } ) => {
     if(userType === "parent")
       fetchParentData();
 
-    }, [userType]);
+    }, [userType, user.id]);
 
 
   const onOpenNotifDropDown = () => {
     isMenuOpen? setIsMenuOpen(false) : null;
   }
-  const getRemainingDays = () => {
+  
+  const getRemainingDays = useCallback(() => {
     if (parentData) {
       const currentDate = new Date();
       const createdAtDate = new Date(parentData.createdAt);
@@ -91,49 +91,49 @@ const DashboardNavbar: React.FC<{user : any }> = ( {user } ) => {
       return remainingDays;
     }
     return 30; 
-  };
+  }, [parentData, setRemainingMilliseconds]);
+  
 
   const handleRemainingDays = (remainingDays : number) => {
     setIsFreeTrial(true);
     setRemainingDays(remainingDays);
   }
   
-  const checkUserData = () => {
-    console.log("parent", parentData)
-  //check if user is in a free trial
-    //if yes, check remainingDays 
-      //if remainingDays < 0, display "please pay"
-      //else display remainingDays
-    //if no, check subscription end date
-      //if no payment, or payment duration passed, display "please pay"
-      console.log("parentData.isFreeTrial", parentData.isFreeTrial)
-      if(parentData.isFreeTrial){
-        const remainingDays : number = getRemainingDays();
-        if(remainingDays > 0){
-          handleRemainingDays(remainingDays);
+  useEffect(() => {
+    const checkUserData = () => {
+      console.log("parent", parentData)
+    //check if user is in a free trial
+      //if yes, check remainingDays 
+        //if remainingDays < 0, display "please pay"
+        //else display remainingDays
+      //if no, check subscription end date
+        //if no payment, or payment duration passed, display "please pay"
+        console.log("parentData.isFreeTrial", parentData.isFreeTrial)
+        if(parentData.isFreeTrial){
+          const remainingDays : number = getRemainingDays();
+          if(remainingDays > 0){
+            handleRemainingDays(remainingDays);
+            return;
+          }
+          
+          setIsPayModalOpen(true);
           return;
         }
+  
+        if((!parentData.subscriptionEndDate || (new Date(parentData.subscriptionEndDate).getTime() - new Date().getTime()) <= 0))
+          setIsPayModalOpen(true);
+  
+        setIsChecked(true);
         
-        setIsPayModalOpen(true);
-        return;
-      }
-
-      if((!parentData.subscriptionEndDate || (new Date(parentData.subscriptionEndDate).getTime() - new Date().getTime()) <= 0))
-        setIsPayModalOpen(true);
-
-      setIsChecked(true);
-      
-      //test
-     //setIsPayModalOpen(true);
-  }
-
-  useEffect(() => {
+        //test
+       //setIsPayModalOpen(true);
+    }
 
     if(parentData && !isChecked){
       checkUserData();
     }
   
-  }, [parentData]);
+  }, [parentData, isChecked, getRemainingDays]);
 
 
   const toggleMenu = () => {

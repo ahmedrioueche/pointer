@@ -1,4 +1,4 @@
-import { Reward } from '@/lib/interface';
+import { Reward } from '@/types/interface';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 

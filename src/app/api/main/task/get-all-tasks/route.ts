@@ -1,4 +1,4 @@
-import { getPendingTasks } from '../../../../../db/taskService'; // Import the service function
+import { getPendingTasks } from '../../../../../services/taskService'; // Import the service function
 import { NextResponse } from 'next/server';
 
 // API route handler

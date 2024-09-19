@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaHourglassStart } from 'react-icons/fa';
 import { TaskCard } from './TaskCard';
-import {  Task } from '@/lib/interface';
+import {  Task } from '@/types/interface';
 import { bgColors } from '@/data/style';
 import { getRandomBgColor } from '@/utils/helper';
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaClipboardList, FaTimes, FaCalendarDay, FaDollarSign, FaCheck } from 'react-icons/fa';
+import { FaClipboardList, FaTimes, FaCalendarDay, FaDollarSign, FaCheck, FaSpinner } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { pricingOptions } from '@/data/text'; 
@@ -14,6 +14,7 @@ interface PlansModalProps {
 const PlansModal: React.FC<PlansModalProps> = ({ parentData, remainingMilliseconds, isOpen, onClose }) => {
   const [showPlans, setShowPlans] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const [isLoading, setIsLoading] = useState<string | null>(null); // New loading state
   const router = useRouter();
 
   useEffect(() => {
@@ -46,6 +47,7 @@ const PlansModal: React.FC<PlansModalProps> = ({ parentData, remainingMillisecon
   };
 
   const handlePlanClick = (type: string, amount: string) => {
+    setIsLoading(type);
     router.push(`/payment/stripe?plan=${type}&amount=${amount}`);
   };
 
@@ -133,7 +135,7 @@ const PlansModal: React.FC<PlansModalProps> = ({ parentData, remainingMillisecon
                       className="mt-4 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-full transition-colors duration-300"
                       onClick={() => handlePlanClick(plan.title.toLowerCase(), plan.price)}
                     >
-                      Choose {plan.title}
+                      { isLoading === plan.title.toLowerCase() ? <FaSpinner className='animate-s'/> : `Choose ${plan.title}`}
                     </button>
                   </div>
                 ))}

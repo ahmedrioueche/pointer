@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { TaskCard } from './TaskCard';
-import { Notif, Task } from '@/lib/interface';
+import { Notif, Task } from '@/types/interface';
 import { CreateTask } from './CreateTask';
 import { fetcher, generateUniqueId } from '@/utils/helper';
 import useSWR from 'swr';

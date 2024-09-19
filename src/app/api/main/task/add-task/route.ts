@@ -1,4 +1,4 @@
-import { addTask } from '@/db/taskService'; // Import the service function
+import { addTask } from '@/services/taskService'; // Import the service function
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {

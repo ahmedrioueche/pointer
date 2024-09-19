@@ -110,7 +110,7 @@ const AddChildModal: React.FC<AddChildModalProps> = ({ isOpen, onClose, onAddChi
          
         </form>
         <div className="col-span-1 flex justify-center mt-6">
-         <button className="w-full bg-light-primary text-white px-4 py-3 rounded-md hover:bg-accent hover:text-light-text dark:hover:text-light-text font-satisfy transition duration-300 dark:hover:bg-dark-accent hover:bg-light-accent  max-w-[90vw]"
+         <button className="w-full bg-light-primary text-white px-4 py-3 rounded-md hover:bg-accent font-satisfy transition duration-300 dark:hover:bg-dark-accent hover:bg-light-accent  max-w-[90vw]"
             onClick={handleAddChild}
           >
             Save Changes

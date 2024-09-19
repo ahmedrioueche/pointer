@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getParentByEmail } from '@/db/parentService';
+import { getParentByEmail } from '@/services/parentService';
 
 export async function POST(request: Request) {
     try {

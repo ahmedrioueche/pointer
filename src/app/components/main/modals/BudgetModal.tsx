@@ -5,6 +5,7 @@ import ChildCard from '../child/ChildCard'; // Assuming you have this component
 import { useData } from '@/app/context/dataContext';
 import ChildCardHori from '../child/ChildCardHori';
 import { apiGetSettingsByParentId, apiUpdateChild, apiUpdateSettings } from '@/lib/apiHelper';
+import { assertPositive } from '@/utils/helper';
 
 interface BudgetModalProps {
   user: any;
@@ -14,14 +15,17 @@ interface BudgetModalProps {
 
 const BudgetModal: React.FC<BudgetModalProps> = ({user, isOpen, onClose }) => {
   const [pointsPerCurrency, setPointsPerCurrency] = useState<number>(1);
+  const [currentPoints, setCurrentPoints] = useState(0);
+  const [budget, setBudget] = useState(0);
+  const [currentBudget, setCurrentBudget] = useState(0);
+  const [pointsRemaining, setPointsRemaining] = useState(0);
+  const [currencySymbol, setCurrencySymbol] = useState('');
   const [children, setChildren] = useState<any>();
+  const [currentChildData, setCurrentChildData] = useState<any>([]);
   const childrenContext = useData();
   const userId = user.id;
   const userType = user.type;
 
-  useEffect(() => {
-    setChildren(childrenContext.children);
-  }, [childrenContext]);
 
   useEffect(() => {
     const getSettings = async (userId : number) => {
@@ -34,6 +38,19 @@ const BudgetModal: React.FC<BudgetModalProps> = ({user, isOpen, onClose }) => {
 
   }, [userId])
 
+  useEffect(() => {
+    setChildren(childrenContext.children);
+  }, [childrenContext]);
+
+  useEffect(() => {
+    if(children && children.length > 0){
+      const childData = children.filter((child : any) => child.id === userId)
+      setCurrentChildData(childData.length > 0 ? childData[0] : null);
+    }
+    
+  }, [children, userId])
+  
+
   const handleSetBudget = async (id : any, budget : any) => { 
     const response = await apiUpdateChild(id, {budget : budget});
     console.log("response", response);
@@ -45,11 +62,29 @@ const BudgetModal: React.FC<BudgetModalProps> = ({user, isOpen, onClose }) => {
     onClose? onClose() : null;
   }
 
+  useEffect(() => {
+    if(user.type === "child" && currentChildData){
+
+        const currentPoints = currentChildData.currentPoints;
+        setCurrentPoints(currentPoints);
+
+        const budget = currentChildData.budget;
+        setBudget(assertPositive(budget));
+
+        const currentBudget = currentChildData.currentPoints / pointsPerCurrency;
+        setCurrentBudget(assertPositive(currentBudget > budget? budget : currentBudget));
+
+        const pointsRemaining = (budget - currentBudget) * pointsPerCurrency;
+        setPointsRemaining(assertPositive(pointsRemaining));
+    }
+
+}, [currentChildData, pointsPerCurrency, user.type])
+
   const childData = {
-    currentPoints: 150,
-    maxBudget: 200,
-    currentBudget: 50,
-    pointsNeeded: 200 - 150, // Points needed to reach max budget
+    currentPoints: currentPoints,
+    maxBudget: budget,
+    currentBudget: currentBudget,
+    pointsNeeded: pointsRemaining,
   };
 
   return (
@@ -125,9 +160,9 @@ const BudgetModal: React.FC<BudgetModalProps> = ({user, isOpen, onClose }) => {
         </p>
         <div className="flex flex-col items-center justify-center space-y-4 mb-7">
           <div className="text-light-text dark:text-dark-text">
-            <p> Current Points: {childData.currentPoints}</p>
-            <p  className='mt-2'>Max Budget: ${childData.maxBudget}</p>
+            <p>Max Budget: ${childData.maxBudget}</p>
             <p className='mt-2'>Current Budget: ${childData.currentBudget}</p>
+            <p className='mt-2'> Current Points: {childData.currentPoints}</p>
             <p className='mt-2'>Points Needed to Max Budget: {childData.pointsNeeded}</p>
           </div>
         </div>

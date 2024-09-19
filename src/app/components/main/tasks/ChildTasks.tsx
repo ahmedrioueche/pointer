@@ -1,5 +1,5 @@
 import { apiSendNotification, apiUpdateTaskAssignment } from '@/lib/apiHelper';
-import { Notif, Task } from '@/lib/interface';
+import { Notif, Task } from '@/types/interface';
 import React, { useEffect, useState } from 'react';
 import { TaskCard } from './TaskCard';
 import { motion } from 'framer-motion';
@@ -19,31 +19,19 @@ const ChildHome: React.FC<{ user: any }> = ({ user }) => {
   const [children, setChildren] = useState<any>([]);
   const [currentChildData, setCurrentChildData] = useState<any>([]);
 
-  const { data: tasksDB, error, mutate } = useSWR<any>(`/api/main/task/get-task-child-id`, (url) => fetcher(url, user.userId), {
-    revalidateOnFocus: true, 
-  });
-
-  let userId : number;
+  let userId: number | undefined = undefined;
   if(user){
     userId = user.id;
   }
 
-  const childrenContext = useData();
-  
-  useEffect(() => {
-      setChildren(childrenContext.children);
-  },[childrenContext])
+  const { data: tasksDB, error, mutate } = useSWR<any>(`/api/main/task/get-task-child-id`, (url) => fetcher(url, userId), {
+    revalidateOnFocus: true, 
+  });
 
-  useEffect(() => {
-    if(children && children.length > 0){
-      const childData = children.filter((child : any) => child.id === userId)
-      setCurrentChildData(childData.length > 0 ? childData[0] : null);
-    }
-   
-  }, [children])
-
+  //structure tasks
   useEffect(() => {
     if (tasksDB && tasksDB.tasks) {
+      console.log("tasksDB.tasks", tasksDB.tasks)
       const structuredTasks = tasksDB.tasks.map((task: any) => ({
         id: task.task.id,
         name: task.task.name,
@@ -72,11 +60,25 @@ const ChildHome: React.FC<{ user: any }> = ({ user }) => {
     }
   }, [tasksDB]);
 
+  //get current child's data
+  const childrenContext = useData();
+
+  useEffect(() => {
+      setChildren(childrenContext.children);
+  },[childrenContext])
+
+  useEffect(() => {
+    if(children && children.length > 0){
+      const childData = children.filter((child : any) => child.id === userId)
+      setCurrentChildData(childData.length > 0 ? childData[0] : null);
+    }
+    
+  }, [children, userId])
   
   const handleAchievement = async (index : number) => {
     const achievedTask = tasks[index];
-    const response = await apiUpdateTaskAssignment(achievedTask.id, userId, {isCompleted: true, completionDate: new Date().toISOString()})
-    if(!response.ok){
+    const response = userId? await apiUpdateTaskAssignment(achievedTask.id, userId, {isCompleted: true, completionDate: new Date().toISOString()}) : null;
+    if(!response?.ok){
       setStatus({success : "Error", message : "Could not perform action, something went wrong!"});
       setShowAlert(true);  
     }
@@ -91,14 +93,14 @@ const ChildHome: React.FC<{ user: any }> = ({ user }) => {
 
     console.log("currentChildData", currentChildData);
     
-    const notifResponse = await apiSendNotification(currentChildData.name, currentChildData.parent_id , "parent" , notification);
+    const notifResponse = await apiSendNotification(currentChildData.id, currentChildData.parent_id , "parent" , notification);
     console.log("apiSendNotification response", notifResponse)
   }
 
   const handleAchievementUndo = async (index : number) => {
     const achievedTask = tasks[index];
-    const response = await apiUpdateTaskAssignment(achievedTask.id, userId, {isCompleted: false, completionDate: null})
-    if(!response.ok){
+    const response = userId? await apiUpdateTaskAssignment(achievedTask.id, userId, {isCompleted: false, completionDate: null}) : null;
+    if(!response?.ok){
       setStatus({success : "Error", message : "Could not perform action, something went wrong!"});
       setShowAlert(true);  
     }
@@ -106,8 +108,8 @@ const ChildHome: React.FC<{ user: any }> = ({ user }) => {
 
   const handleChildComment = async (index: number, comment: { text: string, maker: string, date: string } | null) => {
     const taskToUpdate = tasks[index];
-    const response = await apiUpdateTaskAssignment(taskToUpdate.id, userId, {createdForComment: comment?.text, createdForommentDate: comment?.date })
-    if(!response.ok){
+    const response = userId? await apiUpdateTaskAssignment(taskToUpdate.id, userId, {createdForComment: comment?.text, createdForommentDate: comment?.date }) : null;
+    if(!response?.ok){
       setStatus({success : "Error", message : "Could not perform action, something went wrong!"});
       setShowAlert(true);  
     }
@@ -122,7 +124,7 @@ const ChildHome: React.FC<{ user: any }> = ({ user }) => {
 
     console.log("currentChildData", currentChildData);
     
-    const notifResponse = await apiSendNotification(currentChildData.name, currentChildData.parent_id , "parent" , notification);
+    const notifResponse = await apiSendNotification(currentChildData.id, currentChildData.parent_id , "parent" , notification);
     console.log("apiSendNotification response", notifResponse)
   }
 

@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Child } from '@/lib/interface';
+import { Child } from '@/types/interface';
 import { assertInt, generateRandomUsernamePassword, getRandomIcon } from '@/utils/helper';
 
 const prisma = new PrismaClient();
@@ -81,7 +81,18 @@ export const getChildById = async (id: number): Promise<any> => {
         icon: data.icon,
         email: data.email,
         password: data.password,
+        budget:data.budget,
+        totalPoints: data.totalPoints,
+        currentPoints: data.currentPoints,
+        rewardsEarned: data.rewardsEarned,
+        level: data.level,
+        competence: data.competence,
+        tasksCompleted: data.tasksCompleted,
+        tasksAssigned: data.tasksAssigned,
+        quizzesTotalPoints: data.quizzesTotalPoints,
+        quizzesCorrectAnswersCount: data.quizzesCorrectAnswersCount,
       }
+
       const updatedChild = await prisma.child.update({
         where: { id },  
         data: {    

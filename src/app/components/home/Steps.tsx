@@ -18,29 +18,29 @@ const StepCard: React.FC<StepProps> = ({ icon, title, description, delay }) => {
   const stepRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentStepRef = stepRef.current; // Store the ref value
+  
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible(true);
-          } else {
-            setIsVisible(false);
           }
         });
       },
       { threshold: 0.1 }
     );
-
-    if (stepRef.current) {
-      observer.observe(stepRef.current);
+  
+    if (currentStepRef) {
+      observer.observe(currentStepRef);
     }
-
+  
     return () => {
-      if (stepRef.current) {
-        observer.unobserve(stepRef.current);
+      if (currentStepRef) {
+        observer.unobserve(currentStepRef); 
       }
     };
-  }, []);
+  }, []); 
 
   return (
     <div
@@ -60,13 +60,13 @@ const StepCard: React.FC<StepProps> = ({ icon, title, description, delay }) => {
   );
 };
 
-const Steps: React.FC = () => {
-  const { isDarkMode } = useTheme();
-  
+const Steps: React.FC = () => {  
   const [textVisible, setTextVisible] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentTextRef = textRef.current; // Store the ref value
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -78,16 +78,16 @@ const Steps: React.FC = () => {
       { threshold: 0.1 }
     );
 
-    if (textRef.current) {
-      observer.observe(textRef.current);
+    if (currentTextRef) {
+      observer.observe(currentTextRef);
     }
 
     return () => {
-      if (textRef.current) {
-        observer.unobserve(textRef.current);
+      if (currentTextRef) {
+        observer.unobserve(currentTextRef);
       }
     };
-  }, []);
+  }, []); 
 
   const steps = [
     {

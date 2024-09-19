@@ -26,13 +26,13 @@ const Loading: React.FC = () => {
                     <div className="flex items-center justify-center mb-8">
                         <AiOutlineLoading3Quarters
                             className={`text-7xl animate-spin ${
-                                isDarkMode ? 'text-blue-400' : 'text-blue-600'
+                                isDarkMode ? 'text-dark-primary' : 'text-light-primary'
                             }`}
                         />
                     </div>
                     <h2
                         className={`text-3xl font-extrabold mb-6 ${
-                            isDarkMode ? 'bg-gradient-to-r from-purple-400 to-blue-400' : 'bg-gradient-to-r from-blue-500 to-purple-500'
+                            isDarkMode ? 'bg-gradient-to-r from-dark-primary to-dark-accent' : 'bg-gradient-to-r from-light-primary to-light-accent'
                         } text-transparent bg-clip-text`}
                     >
                         Loading...

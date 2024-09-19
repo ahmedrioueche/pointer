@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getNotificationsById } from '../../../../../db/notifService';
+import { getNotificationsById } from '../../../../../services/notifService';
 import { assertInt } from '@/utils/helper';
 
 export async function POST(request: Request) {
@@ -18,6 +18,6 @@ export async function POST(request: Request) {
 
     } catch (error) {
         console.error('Error in loading route:', error);
-        return NextResponse.json({ error: 'Failed to fetch parent data' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to get notification' }, { status: 500 });
     }
 }

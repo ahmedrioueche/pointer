@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from '@/lib/formater';
+import { capitalizeFirstLetter } from '@/utils/formater';
 import React from 'react';
 import { FaCalendarAlt, FaEdit, FaMedal, FaStar, FaTasks } from 'react-icons/fa';
 

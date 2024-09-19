@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sendNotification } from '../../../../../db/notifService';
+import { sendNotification } from '../../../../../services/notifService';
 
 export async function POST(request: Request) {
     try {
@@ -15,6 +15,6 @@ export async function POST(request: Request) {
 
     } catch (error) {
         console.error('Error in loading route:', error);
-        return NextResponse.json({ error: 'Failed to fetch parent data' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to send notification' }, { status: 500 });
     }
 }

@@ -7,12 +7,12 @@ import { motion } from 'framer-motion'; // For animation
 import { useEffect, useState, useRef, useCallback } from 'react';
 import BudgetModal from './modals/BudgetModal';
 import { useData } from '@/app/context/dataContext';
-import { Child } from '@/lib/interface';
-import { apiGetSettingsByParentId } from '@/lib/apiHelper';
-import { getCurrencySymbol } from '@/utils/helper';
+import { Child } from '@/types/interface';
+import { apiGetSettingsByParentId, apiPromptGemini } from '@/lib/apiHelper';
+import { assertPositive, getCurrencySymbol } from '@/utils/helper';
 
 const Header = ({ user, childData, isBudgetModalOpen}: any) => {
-    const [showSearch, setShowSearch] = useState(false);
+    const [showQuote, setShowQuote] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -25,20 +25,23 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
     const [pointsPerCurrency, setPointsPerCurrency] = useState(0);
     const [currencySymbol, setCurrencySymbol] = useState('');
     const [currentChildData, setCurrentChildData] = useState<any>();
+    const [quoteOfTheDay, setQuoteOfTheDay] = useState<string>();
+    const [quoteSource, setQuoteSource] = useState<string>();
+
     const dropdownRef = useRef<HTMLDivElement>(null);
     const pointsDropdownRef = useRef<HTMLDivElement>(null);
     const budgetDropDownRef = useRef<HTMLDivElement>(null);
+    const [isQuotePrompted, setIsQuotePrompted] = useState(false);
 
     const childrenContext = useData();
     
     useEffect(() => {
         if(user.type === "child"){
-            const childData = childrenContext.children.filter((child:any) => child.id === user.userId);
+            const childData = childrenContext.children.filter((child:any) => child.id === user.id);
             setCurrentChildData(childData.length > 0? childData[0] : null);
         }
-    }, [childrenContext])
+    }, [childrenContext, user.type, user.id])
 
-    console.log("user", user)
   useEffect(() => {
     const getSettings = async (userId : number) => {
       const response = await apiGetSettingsByParentId(userId);
@@ -50,32 +53,85 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
         if(symbol)
           setCurrencySymbol(symbol);
       }
-      
     } 
 
     if(user.type === "child")
-        getSettings(user.userId);
-
-  }, [user.id])
+        getSettings(user.id);
+  }, [user.id, user.type])
 
     useEffect(() => {
         if(user.type === "child" && currentChildData){
             const budget = currentChildData.budget;
-            setBudget(budget);
+            setBudget(assertPositive(budget));
     
             const currentBudget = currentChildData.currentPoints / pointsPerCurrency;
-            setCurrentBudget(childData.currentPoints / pointsPerCurrency);
+            setCurrentBudget(assertPositive(currentBudget < budget ? currentBudget : budget));
     
-            const pointRemaining = (budget - currentBudget) * pointsPerCurrency;
-            setPointsRemaining(pointRemaining);
+            const pointsRemaining = (budget - currentBudget) * pointsPerCurrency;
+            setPointsRemaining(assertPositive(pointsRemaining));
         }
     
-    }, [currentChildData, pointsPerCurrency])
+    }, [currentChildData, pointsPerCurrency, user.type])
 
 
     useEffect(() => {
+        const getQuoteOfTheDay = async () => {
+            let prompt;
+            if(user.type === "child"){
+                prompt = `Give a quote or an advice of the day to a child of age ${currentChildData.age}
+                it should be something wise, educational or funny.
+                Don't give an introduction or a conclusion, your response should be structered in this way:
+                -Quote: "quote..."
+                -Source: "source.." if a source exists.`
+            }
+            else {
+                prompt = `Give a quote or an advice of the day to a grown person,
+                it should be something wise and educational about raising children if possible, or
+                something general.
+                Don't give an introduction or a conclusion, your response should be structered in this way:
+                -Quote: "quote..."
+                -Source: "source.." if a source exists.
+                `
+            }
+              
+            const response = await apiPromptGemini(prompt);
+            const { quote, source } = extractQuote(response);
+      
+            if (quote) {
+              setQuoteOfTheDay(quote);
+              setIsQuotePrompted(true);
+            }
+            if(source){
+               setQuoteSource(source);
+            }
+        }
+        if(!quoteOfTheDay && !isQuotePrompted )
+            getQuoteOfTheDay();
+    }, [currentChildData, quoteOfTheDay, user.type])
+
+    function extractQuote(response : any) {
+        // Split the response by lines to get the quote and source parts
+        const lines = response.split("\n");
+        
+        // Extract the quote (assuming it's always in the first line)
+        const quoteLine = lines.find((line: any)=> line.startsWith("-Quote:"));
+        
+        // Extract the source if it exists (assuming it's in the second line)
+        const sourceLine = lines.find((line: any) => line.startsWith("-Source:"));
+        
+        // Remove "-Quote:" and trim whitespace to get the actual quote
+        const quote = quoteLine ? quoteLine.replace("-Quote:", "").trim() : null;
+        
+        // Remove "-Source:" and trim whitespace to get the actual source
+        const source = sourceLine ? sourceLine.replace("-Source:", "").trim() : null;
+      
+        return { quote, source };
+    }
+      
+    
+    useEffect(() => {
         const handleResize = () => {
-            setIsSmallScreen(window.innerWidth <= 990);
+            setIsSmallScreen(window.innerWidth <= 768);
         };
 
         window.addEventListener('resize', handleResize);
@@ -112,7 +168,7 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
 
     const handleShowSearch = () => {
         if (window.innerWidth > 768)
-            setShowSearch(prev => !prev);
+            setShowQuote(prev => !prev);
         else
             setShowDropdown(prev => !prev);
     }
@@ -247,7 +303,6 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
                             </div>
                             <span className="font-bold">{pointsRemaining}</span>
                         </li>
-        
                     </ul>
                 </div>
                 )}
@@ -256,36 +311,25 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
             {user.type === "child" && (
                   <div className="relative flex items-center space-x-4 hidden md:flex">
                   <button
-                      className="flex items-center px-4 py-2 bg-pink-600 text-white text-lg font-medium hover:bg-pink-700 transition-all duration-300 rounded-lg shadow-md"
+                      className="flex items-center px-6 py-2 bg-pink-600 text-white text-lg font-medium hover:bg-pink-700 transition-all duration-300 rounded-lg shadow-md"
                       onClick={() => setShowPointsDropdown(prev => !prev)}
                   >
                       <FaRegHeart className="text-2xl mr-2" />
-                      <span className="hidden text-sm md:inline"> 
+                      <span className="hidden text-sm md:inline md:text-base"> 
                         {!isSmallScreen && ( <span>Points</span>)}
                         <span> {childData?.currentPoints? childData?.currentPoints : null}</span>
                        </span>
-                      <HiOutlineChevronDown className="ml-2 text-lg" />
                   </button>
                   {showPointsDropDown && (
-                  <div 
-                      className="absolute right-0 top-full mt-2 w-60 bg-light-background  dark:bg-dark-background border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50"
-                      ref={pointsDropdownRef}>                        
-                          <ul>
-                              <li className="px-4 py-2 text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent  cursor-pointer transition-colors duration-200">Redeem Points</li>
-                              <li className="px-4 py-2 text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent  cursor-pointer transition-colors duration-200">View History</li>
-                              <li className="px-4 py-2 text-light-text dark:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent cursor-pointer transition-colors duration-200">Settings</li>
-                          </ul>
-                  </div>
+                       <></>
                   )}
                   
               </div>
             )}
           
-
-            {/* Search Bar (center) */}
-            {showSearch && (
+            {showQuote && quoteOfTheDay && (
                     <Transition
-                        show={showSearch}
+                        show={showQuote}
                         enter="transition-opacity duration-800"
                         enterFrom="opacity-0 scale-95"
                         enterTo="opacity-100 scale-100"
@@ -294,26 +338,17 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
                         leaveTo="opacity-0 scale-95"
                     >
                         <div 
-                            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-light-primary dark:bg-dark-primary text-black rounded-lg shadow-lg p-4 w-full max-w-4xl flex items-center"
+                            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-light-primary dark:bg-dark-primary text-black rounded-lg shadow-lg p-4 w-full max-w-5xl flex items-center hover:scale-110 transition duration-300"
                             onMouseEnter={() => setIsHovered(true)}
                             onMouseLeave={() => setIsHovered(false)}
                         >
-                        {isHovered? (
                             <HiX
                                 className={`text-xl mr-2 text-red-500 cursor-pointer transition-opacity duration-300 z-10`}
                                 onClick={() => {handleShowSearch()}}
-                            />
-                            ) : (
-                                <HiSearch
-                                className={`text-2xl mr-2 text-blue-600 transition-opacity duration-300`}
-                            />
-                            ) 
-                        }                    
-                            <input
-                                type="text"
-                                placeholder={`Looking for something, ${user.name}?`}
-                                className="bg-gray-100 text-gray-800 border outline-none border-gray-300 rounded-lg p-2 w-full"
-                            />
+                            />              
+                            <div className="text-sm font-normal font-satisfy text-dark-text">
+                                {`${quoteOfTheDay}  -${quoteSource}`}  
+                            </div>
                         </div>
                     </Transition>
                 )}

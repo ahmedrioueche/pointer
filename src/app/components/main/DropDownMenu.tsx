@@ -137,11 +137,11 @@ const Menu: FC<MenuProps> = ({
         </Link>
 
         <Link
-          href="/main/competitions"
+          href="/main/challenges"
           className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
           onClick={toggleMenu}
         >
-          <FaTrophy className="mr-3 text-lg" /> Competitions
+          <FaTrophy className="mr-3 text-lg" /> Challenges
         </Link>
 
         <Link
@@ -195,9 +195,9 @@ const Menu: FC<MenuProps> = ({
             )}
           </div>
         ) : (
-            <div className='flex flex-row'>
+            <div className='flex flex-row hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300'>
                 <div
-                    className="flex items-center justify-center w-6 h-6 ml-3 mt-1 rounded-full bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-bold text-xl cursor-pointer hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+                    className="flex items-center justify-center w-6 h-6 ml-3 mt-1 rounded-full bg-light-primary dark:bg-dark-primary text-light-background dark:text-dark-background font-bold text-xl cursor-pointer "
                     title={user.name}
                 >
                     {firstLetter}

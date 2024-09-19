@@ -1,201 +1,211 @@
-// components/Dashboard.tsx
+import React, { useEffect, useRef, useState } from 'react';
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { Wallet, ShoppingBag, BarChart2, Award, ChevronDown } from 'lucide-react';
+import ChildCardHori from './child/ChildCardHori';
+import { useData } from '@/app/context/dataContext';
 
-import React from 'react';
-import { RewardCard } from './rewards/RewardCard';
-import { CompetitionCard } from './cards/CompetitionCard';
-import { StatisticCard } from './cards/StatisticCard';
-import { FaStar, FaGift, FaTrophy, FaMedal, FaUsers, FaDollarSign, FaClock, FaChartLine, FaTasks, FaCheckCircle, FaTimesCircle, FaQuestionCircle, FaGamepad } from 'react-icons/fa';
+const lineData = [
+  { name: 'Jan', value: 400 },
+  { name: 'Feb', value: 300 },
+  { name: 'Mar', value: 600 },
+  { name: 'Apr', value: 400 },
+  { name: 'May', value: 500 },
+  { name: 'Jun', value: 700 },
+];
+
+const barData = [
+  { name: 'Math', value: 85 },
+  { name: 'Science', value: 70 },
+  { name: 'English', value: 90 },
+  { name: 'History', value: 75 },
+  { name: 'Art', value: 95 },
+];
+
+const pieData = [
+  { name: 'Tasks', value: 30 },
+  { name: 'Rewards', value: 25 },
+  { name: 'Homework', value: 35 },
+  { name: 'Competitions', value: 10 },
+];
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+const popularActivities = [
+  { name: 'Math Quiz', score: 95, change: 5 },
+  { name: 'Science Project', score: 88, change: -2 },
+  { name: 'Reading Challenge', score: 100, change: 10 },
+  { name: 'Sports Day', score: 92, change: 3 },
+];
 
 const Dashboard: React.FC = () => {
+  const [totalPoints, setTotalPoints] = useState(500);
+  const [tasksCompleted, setTasksCompleted] = useState(42);
+  const [rewardsEarned, setRewardsEarned] = useState(15);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [children, setChildren] = useState<any>();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const data = useData();
+  
+  useEffect(() => {
+    if(data){
+      setChildren(data.children);
+    }
+  }, [data])
+  
+
+  const handleChildClick = async (child : any) => {
+    console.log("child", child)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-2 shadow rounded">
+          <p className="label">{`${payload[0].name} : ${payload[0].value}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
-    <div className="min-h-screen bg-light-background font-stix dark:bg-dark-background text-light-text dark:text-dark-text">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className="p-4 bg-gray-100 dark:bg-gray-800 min-h-screen font-stix text-gray-800 dark:text-gray-200 transition-colors duration-200 relative">
+      {/* Floating Button */}
+      <div className="absolute ml-3 top-2 left-2 font-stix">
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition-colors duration-200 flex items-center"
+        >
+          Choose Child
+          <ChevronDown className="ml-2" size={20} />
+        </button>
 
-        {/* Statistics Container */}
-        <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-4">
-          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Statistics</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <StatisticCard
-              title="Total Points Earned"
-              figure="1,200"
-              icon={FaDollarSign}
-              bgColor="bg-gradient-to-r from-blue-400 to-blue-600"
-              description="Points earned by all children"
-            />
-            <StatisticCard
-              title="Total Rewards Claimed"
-              figure="35"
-              icon={FaGift}
-              bgColor="bg-gradient-to-r from-yellow-400 to-yellow-600"
-              description="Rewards claimed by children"
-            />
-            <StatisticCard
-              title="Total Competitions Held"
-              figure="10"
-              icon={FaTrophy}
-              bgColor="bg-gradient-to-r from-red-400 to-red-600"
-              description="Competitions organized"
-            />
-            <StatisticCard
-              title="Total Quizzes Completed"
-              figure="50"
-              icon={FaQuestionCircle}
-              bgColor="bg-gradient-to-r from-green-400 to-green-600"
-              description="Quizzes completed by children"
-            />
-            <StatisticCard
-              title="Active Games"
-              figure="7"
-              icon={FaGamepad}
-              bgColor="bg-gradient-to-r from-teal-400 to-teal-600"
-              description="Games currently in progress"
-            />
-            <StatisticCard
-              title="Total Tasks Assigned"
-              figure="150"
-              icon={FaTasks}
-              bgColor="bg-gradient-to-r from-purple-400 to-purple-600"
-              description="Tasks assigned to children"
-            />
+        {/* Dropdown - Now with ChildCarHori components */}
+        {isDropdownOpen && (
+          <div ref={dropdownRef} className="absolute mt-2 w-80 bg-white dark:bg-gray-700 rounded-md shadow-lg z-10">
+           {children.map((child : any) => (
+            <div key={child.id} onClick={() => handleChildClick(child)}>
+              <ChildCardHori 
+                name={child.name}
+                age={child.age} 
+                gender={child.gender} 
+                icon={child.icon}
+                callback={() => null} 
+              />
+            </div>
+          ))}    
+          </div>
+        )}
+      </div>
+
+      <div className="p-1 mt-10 bg-gray-100 dark:bg-gray-800 min-h-screen font-stix text-gray-800 dark:text-gray-200 transition-colors duration-200">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="bg-purple-600 dark:bg-purple-700 text-white p-6 rounded-lg shadow cursor-pointer transition-all hover:scale-105 hover:shadow-lg" onClick={() => setTotalPoints(prev => prev + 10)}>
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-3xl font-bold">{totalPoints}</p>
+              <p className="text-sm opacity-80">Total Points</p>
+            </div>
+            <Award className="w-10 h-10 opacity-80" />
           </div>
         </div>
-
-        {/* Pending Tasks Container */}
-        <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Pending Tasks</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <StatisticCard
-              title="Total Pending Tasks"
-              figure="12"
-              icon={FaTasks}
-              bgColor="bg-gradient-to-r from-yellow-400 to-yellow-600"
-              description="Tasks yet to be completed"
-            />
-            <StatisticCard
-              title="Overdue Tasks"
-              figure="3"
-              icon={FaTimesCircle}
-              bgColor="bg-gradient-to-r from-red-400 to-red-600"
-              description="Tasks past their due date"
-            />
+        <div className="bg-blue-500 dark:bg-blue-600 text-white p-6 rounded-lg shadow cursor-pointer transition-all hover:scale-105 hover:shadow-lg" onClick={() => setTasksCompleted(prev => prev + 1)}>
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-3xl font-bold">{tasksCompleted}</p>
+              <p className="text-sm opacity-80">Tasks Completed</p>
+            </div>
+            <ShoppingBag className="w-10 h-10 opacity-80" />
+          </div>
+          <div className="mt-4 h-16">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={lineData}>
+                <Line type="monotone" dataKey="value" stroke="#ffffff" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
-
-        {/* Finished Tasks Container */}
-        <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Finished Tasks</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <StatisticCard
-              title="Total Completed Tasks"
-              figure="45"
-              icon={FaCheckCircle}
-              bgColor="bg-gradient-to-r from-green-400 to-green-600"
-              description="Tasks completed successfully"
-            />
-            <StatisticCard
-              title="Tasks Completed Today"
-              figure="5"
-              icon={FaClock}
-              bgColor="bg-gradient-to-r from-teal-400 to-teal-600"
-              description="Tasks finished today"
-            />
+        <div className="bg-blue-700 dark:bg-blue-800 text-white p-6 rounded-lg shadow cursor-pointer transition-all hover:scale-105 hover:shadow-lg" onClick={() => setRewardsEarned(prev => prev + 1)}>
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-3xl font-bold">{rewardsEarned}</p>
+              <p className="text-sm opacity-80">Rewards Earned</p>
+            </div>
+            <Wallet className="w-10 h-10 opacity-80" />
           </div>
         </div>
-
-        {/* Competitions Container */}
-        <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Competitions</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <CompetitionCard
-              title="Annual Contest"
-              participants={50}
-              icon={FaTrophy}
-              bgColor="bg-gradient-to-r from-blue-400 to-blue-600"
-              start_date={new Date().toISOString()}
-              end_date={new Date(new Date().setDate(new Date().getDate() + 30)).toISOString()}
-              onShowDetails={() => alert('Show competition details')}
-            />
-            <CompetitionCard
-              title="Monthly Challenge"
-              participants={20}
-              icon={FaMedal}
-              bgColor="bg-gradient-to-r from-green-400 to-green-600"
-              start_date={new Date().toISOString()}
-              end_date={new Date(new Date().setDate(new Date().getDate() + 7)).toISOString()}
-              onShowDetails={() => alert('Show competition details')}
-            />
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow transition-colors duration-200">
+          <h2 className="text-xl font-bold mb-4">Subject Performance</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barData}>
+                <XAxis dataKey="name" stroke="currentColor" />
+                <YAxis stroke="currentColor" />
+                <Tooltip contentStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.8)', color: '#fff' }} />
+                <Bar dataKey="value" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
-
-        {/* Quizzes Container */}
-        <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Quizzes</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <StatisticCard
-              title="Upcoming Quizzes"
-              figure="3"
-              icon={FaQuestionCircle}
-              bgColor="bg-gradient-to-r from-purple-400 to-purple-600"
-              description="Quizzes scheduled in the next week"
-            />
-            <StatisticCard
-              title="Completed Quizzes"
-              figure="12"
-              icon={FaCheckCircle}
-              bgColor="bg-gradient-to-r from-green-400 to-green-600"
-              description="Quizzes finished by children"
-            />
+        
+        <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow transition-colors duration-200">
+          <h2 className="text-xl font-bold mb-4">Popular Activities</h2>
+          <div>
+            {popularActivities.map((activity, index) => (
+              <div key={index} className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-600 last:border-b-0">
+                <div>
+                  <p className="font-semibold">{activity.name}</p>
+                  <p className={`text-sm ${activity.change >= 0 ? 'text-green-500 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
+                    {activity.change >= 0 ? '+' : ''}{activity.change}% Change
+                  </p>
+                </div>
+                <p className="font-bold">{activity.score}/100</p>
+              </div>
+            ))}
           </div>
         </div>
+      </div>
 
-        {/* Games Container */}
-        <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-3xl font-semibold mb-6 font-satisfy">Games</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <StatisticCard
-              title="Active Games"
-              figure="5"
-              icon={FaGamepad}
-              bgColor="bg-gradient-to-r from-teal-400 to-teal-600"
-              description="Games currently being played"
-            />
-            <StatisticCard
-              title="Games Played Today"
-              figure="8"
-              icon={FaChartLine}
-              bgColor="bg-gradient-to-r from-orange-400 to-orange-600"
-              description="Games completed today"
-            />
-          </div>
+      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow transition-colors duration-200">
+        <h2 className="text-xl font-bold mb-4">Performance Distribution</h2>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip />} />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
-
-        {/* Rewards Container */}
-        <div className="p-8 rounded-lg shadow-md bg-white dark:bg-gray-800 col-span-1 md:col-span-2 lg:col-span-3">
-          <h2 className="text-xl font-semibold mb-6 font-stix">Rewards</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <RewardCard
-              type="reward_page"
-              name="Top Performer"
-              points={500}
-              icon={FaStar}
-              bgColor="bg-gradient-to-r from-yellow-400 to-yellow-600"
-              creationDate={new Date().toISOString()}
-              onModify={() => alert('Modify reward')}
-              onRemove={() => alert('Remove reward')}
-            />
-            <RewardCard
-              type="reward_page"
-              name="Employee of the Month"
-              points={1000}
-              icon={FaGift}
-              bgColor="bg-gradient-to-r from-pink-400 to-red-500"
-              creationDate={new Date().toISOString()}
-              onModify={() => alert('Modify reward')}
-              onRemove={() => alert('Remove reward')}
-            />
-          </div>
-        </div>
-
+      </div>
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ const Plans: React.FC = () => {
     const parentId = parentIdString ? parseInt(parentIdString, 10) : null;
     console.log("parentId", parentId);
     setParentId(parentId);
-  })
+  }, [])
 
   const handleClick = async (subscriptionType: string, index: number) => {
     setLoadingCardIndex(index); 

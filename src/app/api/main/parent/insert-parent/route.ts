@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getParentByEmail, insertParent } from '@/db/parentService';
+import { getParentByEmail, insertParent } from '@/services/parentService';
 import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {

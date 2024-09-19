@@ -55,6 +55,8 @@ model Child {
   tasksAssigned      Int?     @default(0) @map("tasks_assigned")
   tasksCompleted     Int?     @default(0) @map("tasks_completed")
   level              String?  @default("silver") @db.VarChar(50)
+  quizzesCorrectAnswersCount Int?  @default(0) @map("quizzes_correct_answers_count")
+  quizzesTotalPoints Int?          @default(0) @map("quizzes_total_points")
   created_at         DateTime @default(now()) @db.Timestamp(6)
   icon               String?
   
@@ -171,3 +173,30 @@ model Setting {
   pointsPerCurrency Int?      @map("points_per_currency")
   language          String?   @default("english")
 }
+
+model Challenge {
+  id          Int       @id @default(autoincrement()) @map("id")
+  parentId    Int          @map("parent_id")
+  name        String
+  description String?  
+  points      Int
+  assignedTo  String?      @map("assigned_to")             //string of children ids
+  image       String?   
+  time        DateTime? 
+  rewards     String?
+}
+
+model Quiz {
+  id          Int           @id @default(autoincrement()) @map("id")
+  topic       String?    
+  childId     Int?          @map("child_id")
+  parentId    Int?          @map("parent_id")
+  question    String?
+  options     String?  
+  correctAnswer String?     @map("correct_answer") 
+  points      Int?
+  isAnsweredCorrectly Boolean?   @map("is_answered_correctly")
+  childAnswer    String?         @map("child_answer")
+  creationDate DateTime?    @map("creation_date") 
+}
+

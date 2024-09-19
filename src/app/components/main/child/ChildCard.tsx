@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FaTasks, FaUser, FaChevronDown, FaSpinner, FaCalendarDay, FaCalendarCheck, FaClock, FaCalendarAlt } from 'react-icons/fa';
-import { Task } from "../../../../lib/interface";
-import { capitalizeFirstLetter, formatDateTime } from '@/lib/formater';
+import { Task } from "../../../../types/interface";
+import { capitalizeFirstLetter, formatDateTime } from '@/utils/formater';
 
 interface CardProps {
   id?: number;

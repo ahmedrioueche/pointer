@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { authenticateUser } from '@/db/userService'; // Adjust the import path as needed
+import { authenticateUser } from '@/services/userService'; // Adjust the import path as needed
 
 interface DBUser {
   id: string;

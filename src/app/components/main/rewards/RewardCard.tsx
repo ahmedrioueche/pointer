@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Reward, RewardCardProps } from "@/lib/interface";
+import { Reward, RewardCardProps } from "@/types/interface";
 import { FaCheck, FaEdit, FaTrashAlt, FaCalendar, FaCalendarDay, FaInfoCircle, FaComment, FaGift, FaHandPaper, FaUndo, FaTimesCircle, FaFileAlt, FaCalendarCheck, FaClipboardList } from "react-icons/fa";
-import { formatDateTime, capitalizeFirstLetter } from '@/lib/formater';
+import { formatDateTime, capitalizeFirstLetter } from '@/utils/formater';
 import { getRandomBgColor } from '@/utils/helper';
 import Alert from '../../Alert';
 import Confetti from 'react-confetti';
@@ -50,8 +50,8 @@ export const RewardCard: React.FC<RewardCardProps> = ({
 
   let userId: any, username : any;
   if(user){
-    userId = user.user.userId;
-    username = user.user.username;
+    userId = user.user.id;
+    username = user.user.name;
   }
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
     setTimeout(() => {
       fetchRewardClaims();
     }, 1500)
-  },[rewardClaimed])
+  },[rewardClaimed, id])
 
   useEffect(()=>{
     if(rewardData && rewardData.length > 0){
@@ -73,7 +73,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
       })
     }
 
-  },[rewardData])
+  },[rewardData, userId])
 
   useEffect(()=> {
     let bgColor = getRandomBgColor();
@@ -272,19 +272,19 @@ export const RewardCard: React.FC<RewardCardProps> = ({
             <>
               <button
                 onClick={onModify}
-                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
+                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700  hover:text-dark-text"
               >
                 <FaEdit size={16} />
               </button>
               <button
                 onClick={onCustomize}
-                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
+                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700  hover:text-dark-text"
               >
                 <FaClipboardList size={16} />
               </button>
               <button
                 onClick={onRemove}
-                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
+                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700  hover:text-dark-text"
               >
                 <FaTrashAlt size={16} />
               </button>
@@ -294,19 +294,19 @@ export const RewardCard: React.FC<RewardCardProps> = ({
             <>
               <button
                 onClick={handleApprove}
-                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
+                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700  hover:text-dark-text"
               >
                 <FaCheck size={16} />
               </button>
               <button
                 onClick={toggleRemarkInput}
-                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
+                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700  hover:text-dark-text"
               >
                 <FaComment size={16} />
               </button>
               <button
                 onClick={onShowDetails}
-                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
+                className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700  hover:text-dark-text"
               >
                 <FaInfoCircle size={16} />
               </button>
@@ -330,12 +330,12 @@ export const RewardCard: React.FC<RewardCardProps> = ({
               type="text"
               value={remark}
               onChange={handleRemarkChange}
-              className="flex-grow p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-accent dark:text-light-text font-satisfy"
+              className="flex-grow p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-accent dark:text-light-text hover:text-dark-text font-satisfy"
               placeholder="Add a remark..."
             />
             <button
               onClick={handleRemarkSubmit}
-              className="ml-1 p-2 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-light-text"
+              className="ml-1 p-2 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-light-text hover:text-dark-text"
             >
               <FaCheck size={16} />
             </button>
@@ -345,7 +345,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
         {type === "reward_to_claim" && (
         <button
           onClick={rewardClaimed ? handleRewardUnClaim : handleRewardClaim}
-          className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700"
+          className="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700 hover:text-dark-text"
         >
           <div className='flex flex-row items-center justify-center'>
             {rewardClaimed ? (
@@ -361,14 +361,14 @@ export const RewardCard: React.FC<RewardCardProps> = ({
         </button>
       )}
 
-          {showAlert && (
-            <Alert
-              title={status?.success}
-              message={status?.message}
-              bg={status?.bg} 
-              onClose={handleAlertClose}
-            />
-          )}
+      {showAlert && (
+        <Alert
+          title={status?.success}
+          message={status?.message}
+          bg={status?.bg} 
+          onClose={handleAlertClose}
+        />
+      )}
         </div>
       
       </div>

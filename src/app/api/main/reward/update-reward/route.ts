@@ -1,5 +1,5 @@
 import { assert } from 'console';
-import { updateRewardById } from '../../../../../db/rewardService'; // Import the service function
+import { updateRewardById } from '../../../../../services/rewardService'; // Import the service function
 import { NextResponse } from 'next/server';
 import { assertInt } from '@/utils/helper';
 

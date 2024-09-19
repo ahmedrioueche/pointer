@@ -1,4 +1,4 @@
-import { getRewardsByParentId } from '../../../../../db/rewardService'; // Import the service function
+import { getRewardsByParentId } from '../../../../../services/rewardService'; // Import the service function
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {

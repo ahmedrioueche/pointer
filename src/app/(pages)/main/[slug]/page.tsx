@@ -66,6 +66,12 @@ const Page = ({ params }: PageProps) => {
       case 'success':
         setComponent(() => lazy(() => import('@/app/components/payment/Success')));
         break;
+      case 'challenges':
+        setComponent(() => lazy(() => import('@/app/components/main/challenges/Challenges')));
+        break;
+      case 'quizzes':
+        setComponent(() => lazy(() => import('@/app/components/main/quizzes/Quizzes')));
+          break;
       default:
         setComponent(() => lazy(() => import('@/app/components/main/Home')));
         break;
@@ -81,15 +87,13 @@ const Page = ({ params }: PageProps) => {
     <>
      {session ? (
       <DataProvider user={user}>
-        <div className="flex flex-col min-h-screen bg-light-background dark:bg-dark-background">
+        <div className="flex flex-col min-h-screen  bg-light-background dark:bg-dark-background">
            <Navbar user={user} />
           <div className="flex flex-1">
             <SideMenu user={user} />
             <main className="flex-1 p-1">
               {MainContainer ? (
-                   <Suspense fallback={<MainLoading numCards={6} />}>
                      <MainContainer user={user} />
-                   </Suspense>
               ) : (
                 <></>
               )}

@@ -1,5 +1,5 @@
 import { assertInt } from '@/utils/helper';
-import { updateRewardClaimById } from '../../../../../db/rewardService'; // Import the service function
+import { updateRewardClaimById } from '../../../../../services/rewardService'; // Import the service function
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {

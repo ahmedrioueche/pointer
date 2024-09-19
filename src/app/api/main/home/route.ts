@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getChildrenByParentId } from '@/db/childService'; 
+import { getChildrenByParentId } from '@/services/childService'; 
 
 export async function POST(request: Request) {
     try {

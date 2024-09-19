@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { markRead } from '../../../../../db/notifService';
+import { markRead } from '../../../../../services/notifService';
 
 export async function POST(request: Request) {
     try {

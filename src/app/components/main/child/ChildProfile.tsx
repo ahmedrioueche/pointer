@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FaTasks, FaCheckCircle, FaUserShield, FaStar, FaGift, FaCalendarAlt, FaEye, FaEyeSlash, FaCopy, FaCheck, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { format, isValid } from 'date-fns';
 import ProfileCard from '../cards/ProfileCard';
@@ -7,13 +7,13 @@ import { TaskCard } from '../tasks/TaskCard';
 import { RewardCard } from '../rewards/RewardCard';
 import DetailsModal from '../modals/DetailsModal';
 import ProfileModal from '../modals/EditProfileModal';
-import { Child, Notif, Reward, Task } from '@/lib/interface';
+import { Child, Notif, Reward, Task } from '@/types/interface';
 import MainLoading from '../MainLoading';
 import { apiGetChildData, apiGetRewardsByChildId, apiGetTasksByChildId, apiSendNotification, apiUpdateChild, apiUpdateReward, apiUpdateRewardClaim, apiUpdateTask, apiUpdateTaskAssignment } from '@/lib/apiHelper';
 import { assertInt, getRandomBgColor } from '@/utils/helper';
 import TaskModal from '../tasks/TaskModal';
 import Alert from '../../Alert';
-import { capitalizeFirstLetter } from '@/lib/formater';
+import { capitalizeFirstLetter } from '@/utils/formater';
 import { useParams } from 'next/navigation';
 import { useData } from '@/app/context/dataContext';
 
@@ -54,11 +54,11 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
       const childData = childrenContext.children.filter((child:any) => child.id === assertInt(id) );
       setCurrentChildData(childData.length > 0? childData[0] : null);
   
-}, [childrenContext])
+}, [childrenContext, id])
 
   useEffect(() => {
     childrenContext.triggerFetch();
-  }, [id, profileUpdated, taskApproveSignal, taskUnapproveSignal, rewardApproveSignal, rewardUnapproveSignal]);
+  }, [id, profileUpdated, taskApproveSignal, taskUnapproveSignal, rewardApproveSignal, rewardUnapproveSignal, childrenContext]);
 
   useEffect(() => {
     const fetchCompletedTasks = async () => {
@@ -155,32 +155,38 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
   }, [childData]);
 
 
-  const handleTaskApprove = async (index : number) => {
-
+  const handleTaskApprove = useCallback(async (index: number) => {
     const taskToUpdate = completedTasks[index];
     setTaskToUpdate(taskToUpdate);
-
-    const response = await apiUpdateTaskAssignment(taskToUpdate.id, childId, {isApproved: true, approvalDate: new Date().toISOString(), approvedBy: id, approvedByName : "Parent"})
-    if(!response.ok){
-      setStatus({success : "Error", message : "Could not perform action, something went wrong!"});
-      setShowAlert(true);   
+  
+    const response = await apiUpdateTaskAssignment(taskToUpdate.id, childId, {
+      isApproved: true,
+      approvalDate: new Date().toISOString(),
+      approvedBy: id,
+      approvedByName: "Parent"
+    });
+  
+    if (!response.ok) {
+      setStatus({ success: "Error", message: "Could not perform action, something went wrong!" });
+      setShowAlert(true);
       return;
     }
-
-    //get the updated childData
+  
+    // Get the updated childData
     setTaskApproveSignal(true);
-
-     //send notification to child
-    const notification : Notif = {
+  
+    // Send notification to child
+    const notification: Notif = {
       title: "Parent has approved a completed task",
       content: `${taskToUpdate.name}, ${taskToUpdate.points} pts`,
       description: `${taskToUpdate.description}`,
       type: "task_approved",
-    }
-    
-    const notifResponse = await apiSendNotification(userId, childId, "child" , notification);
-    console.log("apiSendNotification response", notifResponse)
-  };
+    };
+  
+    const notifResponse = await apiSendNotification(userId, childId, "child", notification);
+    console.log("apiSendNotification response", notifResponse);
+  }, [completedTasks, childId, id, userId, setTaskToUpdate, setStatus, setShowAlert, setTaskApproveSignal]);
+  
 
   //making sure we get up to date child data before taking action on it
   useEffect(() => {
@@ -203,7 +209,7 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
     if(taskApproveSignal)
       updateChildData();
 
-  }, [childData])
+  }, [childData, childId, taskApproveSignal, taskToUpdate])
 
 
   const handleTaskUndo = async (index : number) => {
@@ -240,7 +246,7 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
     if(taskUnapproveSignal)
       updateChildData();
 
-  }, [childData])
+  }, [childData, childId, taskToUpdate, taskUnapproveSignal])
 
 
   const handleTaskAddComment = async (index: number, comment: { text: string, maker: string, date: string } | null) => {
@@ -299,7 +305,7 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
     if(rewardApproveSignal)
       updateChildData();
 
-  }, [childData])
+  }, [childData, childId, rewardApproveSignal])
 
   const handleRewardUndo = async (index : number) => {
     const rewardToUpdate = fetchedRewards[index];
@@ -326,7 +332,7 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
     if(rewardUnapproveSignal)
       updateChildData();
 
-  }, [childData])
+  }, [childData, childId, rewardApproveSignal, rewardUnapproveSignal])
 
   const handleRewardAddRemark = async (index: number, remark: { text: string, maker: string, date: string } | null) => {
     const rewardToUpdate = fetchedRewards[index];
@@ -470,8 +476,8 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
                 <DetailCard
                   title="Added On"
                   value={
-                    childData.createdAt
-                      ? format(new Date(childData.createdAt), 'PPP')
+                    childData.created_at
+                      ? format(new Date(childData.created_at), 'PPP')
                       : 'Unknown date'
                   }
                   icon={<FaCalendarAlt />}
@@ -513,7 +519,7 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
         ];
       });
     }
-  }, [childData, completedTasks, fetchedRewards]);
+  }, [childData]);
   
   useEffect(() => {
     if (completedTasks.length === 0) {
@@ -644,7 +650,6 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
   );
 };
 
-// DetailCard Component
 const DetailCard: React.FC<{ title: string; value: string | number; icon: React.ReactNode; bgColor: string }> = ({
   title,
   value,

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { insertChild } from '@/db/childService';
+import { insertChild } from '@/services/childService';
 
 // Handler function for POST requests
 async function handlePost(req: Request) {

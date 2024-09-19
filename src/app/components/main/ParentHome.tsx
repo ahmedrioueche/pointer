@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import ChildCard from './child/ChildCard'; 
-import { Child, Task } from "../../../lib/interface";
+import { Child, Task } from "../../../types/interface";
 import TaskModal from './tasks/TaskModal';
 import AddCard from './cards/AddCard';
-import AddChildModal from './child/AddChildModal';
+import AddChildModal from './modals/AddChildModal';
 import { assertInt, fetcher, getRandomIcon } from '@/utils/helper';
 import { apiGetTasksByParentId, apiInsertChild } from '@/lib/apiHelper';
 import { useData } from '@/app/context/dataContext';

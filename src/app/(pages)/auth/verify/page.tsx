@@ -1,11 +1,11 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Loading from '@/app/components/Loading';
 import LoadingButton from '@/app/components/LoadingButton';
-import { updateParent } from '@/db/parentService';
+import { updateParent } from '@/services/parentService';
 import { apiUpdateParent } from '@/lib/apiHelper';
 import { useTheme } from '@/app/context/ThemeContext';
 
@@ -16,7 +16,8 @@ const EmailVerification: React.FC = () => {
     const {isDarkMode, toggleDarkMode } = useTheme();
     const [resultStatus, setStatus] = useState<{ success: boolean; message: string } | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    let codeSent : boolean = false;
+    const codeSentRef = useRef(false);
+
     const router = useRouter();
     const { data: session, status } = useSession(); 
 
@@ -28,10 +29,10 @@ const EmailVerification: React.FC = () => {
       
     useEffect(()=> {
         const email = sessionStorage.getItem("userEmail");
-        if (!codeSent && email) {
+        if (!codeSentRef.current && email) {
             sendVerificationCode(email);
             setUserEmail(email);
-            codeSent = true;
+            codeSentRef.current = true;
         }
     }, [])
 

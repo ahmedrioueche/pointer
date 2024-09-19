@@ -1,4 +1,4 @@
-import { unAssignTask } from '@/db/taskService'; // Import the service function
+import { unAssignTask } from '@/services/taskService'; // Import the service function
 import { assertInt } from '@/utils/helper';
 import { NextResponse } from 'next/server';
 

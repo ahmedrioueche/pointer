@@ -1,4 +1,4 @@
-import { Notif, Reward, Task } from "./interface";
+import { Challenge, Notif, Quiz, Reward, Task } from "../types/interface";
 
 interface ContactFormData {
     firstName: string;
@@ -402,3 +402,166 @@ export const apiSendEmail = async (email: string, subject: string, content: stri
   }
 };
 
+export const apiCreateChallenge = async (challenge : Challenge) : Promise<any> => {
+  try {
+    const response = await fetch('/api/main/challenge/create-challenge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenge }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create challenge');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Failed to create challenge:', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+}
+
+
+export const apiDeleteChallenge = async (challengeId : number) : Promise<any> => {
+  try {
+    const response = await fetch('/api/main/challenge/delete-challenge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challengeId }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create challenge');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Failed to create challenge:', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+}
+
+export const apiUpdateChallenge = async (challengeId : number, challenge : Challenge) : Promise<any> => {
+  try {
+    const response = await fetch('/api/main/challenge/update-challenge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challengeId, challenge }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update challenge');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Failed to update challenge:', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+}
+
+export const apiPromptGemini = async (prompt : string) : Promise<any> => {
+  try {
+    const response = await fetch('/api/main/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({prompt}),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to prompt Gemini');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Failed to prompt Gemini:', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+}
+
+export const apiInsertQuizzes = async (quizzes : Quiz[]) : Promise<any> => {
+  try {
+    const response = await fetch('/api/main/quiz/insert-quizzes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quizzes }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to insert quizzes');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Failed to insert quizzes in api', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+}
+
+
+export const apiUpdateQuiz = async (quiz : Quiz) : Promise<any> => {
+  try {
+    const response = await fetch('/api/main/quiz/update-quiz', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quiz }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to insert quizzes');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Failed to insert quizzes in api', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+}
+
+
+export const apiGetChildQuizzes = async (childId : number) : Promise<any> => {
+  try {
+    const response = await fetch('/api/main/quiz/get-quizzes-child-id', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ childId }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to insert quizzes');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Failed to insert quizzes in api', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+}

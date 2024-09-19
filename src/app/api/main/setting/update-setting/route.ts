@@ -1,4 +1,4 @@
-import { updateSettings } from '@/db/settingService'; // Import the service function
+import { updateSettings } from '@/services/settingService'; // Import the service function
 import { assertInt } from '@/utils/helper';
 import { NextResponse } from 'next/server';
 

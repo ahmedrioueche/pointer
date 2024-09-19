@@ -1,15 +1,15 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { FaPlus, FaDollarSign, FaGlobeAmericas, FaXbox, FaPlaystation, FaLaptop, FaPhone, FaDog, FaEdit, FaTrashAlt, FaCheck, FaGift } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Child, Notif, Reward } from '@/lib/interface';
+import { Notif, Reward } from '@/types/interface';
 import { RewardCard } from './RewardCard';
 import { assertInt, fetcher, generateUniqueId } from '@/utils/helper';
 import { apiAddReward, apiClaimReward, apiDeleteReward, apiGetChildData, apiSendNotification, apiUnClaimReward, apiUpdateChild, apiUpdateReward } from '@/lib/apiHelper';
 import Alert from '../../Alert';
 import { useData } from '@/app/context/dataContext';
 import CustomizeModal from '../modals/CustomizeModal';
+import CreateReward from './CreateReward';
 
 const Rewards: React.FC = (user : any) => {
   const userId = user? user.user.id : undefined;
@@ -40,7 +40,7 @@ const Rewards: React.FC = (user : any) => {
       setCurrentChildData(childData.length > 0 ? childData[0] : null);
     }
     
-  }, [childrenContext, updateChildDataSignal]);
+  }, [childrenContext, updateChildDataSignal, children, userId, userType]);
 
   useEffect(() => {
     const parentId = currentChildData?.parent_id;
@@ -60,7 +60,7 @@ const Rewards: React.FC = (user : any) => {
     if (parentId || (!parentId && userId)) {
       fetchRewardData();
     }
-  }, [currentChildData, userId, updateChildDataSignal]);
+  }, [currentChildData, userId, userType, updateChildDataSignal]);
   
 
   const addReward = async (newReward: Reward) => {
@@ -261,86 +261,5 @@ const Rewards: React.FC = (user : any) => {
   );
 };
 
-interface CreateRewardProps {
-  onCreate: (reward: Reward) => void;
-  rewardToEdit?: Reward | null;
-}
-
-const CreateReward: React.FC<CreateRewardProps> = ({ onCreate, rewardToEdit }) => {
-  const [newRewardTitle, setNewRewardTitle] = useState<string>("");
-  const [newRewardPoints, setNewRewardPoints] = useState<number>(10);
-  const [newRewardDesc, setNewRewardDesc] = useState<string | undefined>();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    if (rewardToEdit) {
-      setNewRewardTitle(rewardToEdit.name);
-      setNewRewardPoints(rewardToEdit.points);
-    }
-  }, [rewardToEdit]);
-
-  const handleCreate = () => {
-    if (newRewardTitle.trim()) {
-      const newReward: Reward = {
-        name: newRewardTitle,
-        points: newRewardPoints,
-        description: newRewardDesc ? newRewardDesc : undefined, 
-        icon: rewardToEdit?.icon || FaGift, 
-      };
-      onCreate(newReward);
-      setNewRewardTitle("");
-      setNewRewardDesc("");
-      setNewRewardPoints(10);
-    }
-  };
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      const textarea = textareaRef.current;
-      textarea.style.height = 'auto'; 
-      textarea.style.height = `${textarea.scrollHeight}px`; 
-    }
-  }, [newRewardDesc]);
-
-  return (
-    <div className="bg-gradient-to-r transform transition-transform hover:scale-105 from-purple-600 to-blue-500 p-6 rounded-lg shadow-md text-light-text dark:text-dark-text">
-      <div className="flex items-center mb-4">
-        <FaPlus className="text-4xl mr-3 text-dark-text" />
-        <h2 className="text-xl font-stix text-dark-text">{rewardToEdit ? "Edit Reward" : "Create New Reward"}</h2>
-      </div>
-      <div className="mb-1">
-        <input
-          type="text"
-          value={newRewardTitle}
-          onChange={(e) => setNewRewardTitle(e.target.value)}
-          placeholder="Title"
-          className="w-full p-4 rounded-lg placeholder:text-dark-text shadow-md text-dark-text dark:placeholder-dark-text bg-purple-600 border border-purple-600 focus:border-light-background focus:outline-none transition-all duration-300 mb-3"
-        />
-        <textarea
-          ref={textareaRef}
-          value={newRewardDesc}
-          onChange={(e) => setNewRewardDesc(e.target.value)}
-          placeholder="Description"
-          className="w-full p-4 mb-2 overflow-hidden rounded-lg placeholder:text-dark-text shadow-md text-dark-text dark:placeholder-dark-text bg-purple-600 border border-purple-600 focus:border-light-background focus:outline-none transition-all duration-300 box-border resize-none"
-          style={{ minHeight: '4rem' }} 
-        />
-        <input
-          type="number"
-          value={newRewardPoints}
-          onChange={(e) => setNewRewardPoints(parseInt(e.target.value))}
-          placeholder="Points"
-          className="w-full p-4 rounded-lg placeholder:text-dark-text shadow-md text-dark-text dark:placeholder-dark-text bg-purple-600 border border-purple-600 focus:border-light-background focus:outline-none transition-all duration-300 mb-4 no-spinner"
-        />
-      </div>
-      <button
-        onClick={handleCreate}
-        className="w-full p-4 rounded-lg bg-primary text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 flex items-center justify-center"
-      >
-        <FaPlus size={20} className="inline mr-2" />
-        {rewardToEdit ? "Update Reward" : "Create Reward"}
-      </button>
-    </div>
-  );
-};
 
 export default Rewards;

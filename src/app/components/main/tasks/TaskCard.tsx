@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Task } from "@/lib/interface";
+import { Task } from "@/types/interface";
 import { FaCheck, FaEdit, FaTrashAlt, FaUserPlus, FaCalendar, FaCalendarDay, FaInfoCircle, FaComment, FaTasks, FaHandPointer, FaUserTie, FaCalendarCheck, FaFileAlt, FaPlus, FaTimes } from "react-icons/fa";
-import { formatDateTime, getRelativeDate, capitalizeFirstLetter } from '@/lib/formater';
+import { formatDateTime, getRelativeDate, capitalizeFirstLetter } from '@/utils/formater';
 import { getRandomBgColor } from '@/utils/helper';
 
 interface TaskCardProps extends Task {
@@ -198,7 +198,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     onTaskPageAssign? onTaskPageAssign() : null;
   }
 
-  const buttonStyle : any ="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700";
+  const buttonStyle : any ="p-3 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-gray-700 hover:text-white";
 
   return (
     <div
@@ -485,7 +485,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             />
             <button
               onClick={handleCommentSubmit}
-              className="ml-1 p-2 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-light-text"
+              className="ml-1 p-2 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-light-text hover:text-dark-text"
             >
               <FaCheck size={16} />
             </button>
@@ -502,7 +502,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
             />
             <button
               onClick={handleChildCommentSubmit}
-              className="ml-1 p-2 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-light-text"
+              className="ml-1 p-2 rounded-full bg-light-background hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 text-light-text hover:text-dark-text"  
             >
               <FaCheck size={16} />
             </button>

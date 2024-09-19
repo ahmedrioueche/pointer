@@ -23,6 +23,11 @@ body {
   overflow-x: hidden;
 }
 
+.scale-down {
+  transform: scale(0.85); 
+  transform-origin: top left; 
+}
+
 .task-menu::-webkit-scrollbar,
 .modal-content::-webkit-scrollbar {
   display: none;

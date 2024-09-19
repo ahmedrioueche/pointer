@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaUser, FaBirthdayCake, FaGenderless, FaImage, FaUserCircle, FaKey, FaTimes, FaEdit, FaSpinner } from 'react-icons/fa';
 import CustomSelect from '../../CustomSelect';
-import { Child } from '@/lib/interface';
+import { Child } from '@/types/interface';
 import { apiUpdateChild } from '@/lib/apiHelper';
 
 interface ProfileModalProps {
@@ -170,7 +170,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ child, isOpen, onClose }) =
         <div className="flex justify-center mt-6">
           <button
             type="submit"
-            className="flex flex-row items-center justify-center w-full bg-light-primary text-white px-4 py-3 rounded-md hover:bg-accent hover:text-light-text dark:hover:text-light-text font-satisfy transition duration-300 dark:hover:bg-dark-accent hover:bg-light-accent"
+            className="flex flex-row items-center justify-center w-full bg-light-primary text-white px-4 py-3 rounded-md hover:bg-accent font-satisfy transition duration-300 dark:hover:bg-dark-accent hover:bg-light-accent"
             onClick={handleSubmit}
           > 
              <FaEdit className="mr-2 mb-1" /> { isLoading?   <FaSpinner className="animate-spin" /> :  "Save Changes"}

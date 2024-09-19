@@ -2,8 +2,7 @@
 
 import React from 'react';
 import ParentHome from './ParentHome';
-import ChildHome from './tasks/ChildTasks';
-import ChildHomeTest from './child/ChildHome';
+import ChildHome from './child/ChildHome';
 
 interface HomeProps {
   user: {
@@ -19,7 +18,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
         <ParentHome id={user.id} />
     );
   } else {
-    return <ChildHomeTest user={user} />;
+    return <ChildHome user={user} />;
   }
 };
 

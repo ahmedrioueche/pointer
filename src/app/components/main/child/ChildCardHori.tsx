@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { FaPlus, FaSpinner } from 'react-icons/fa';
-import { Task } from '@/lib/interface';
+import { FaPlus, FaRocket, FaSpinner } from 'react-icons/fa';
+import { Task } from '@/types/interface';
 
 interface CardProps {
   id?: number;
@@ -12,7 +12,7 @@ interface CardProps {
   icon?: string;
   budget?: number;
   pendingTasks?: Task[];
-  type?: 'task_page' | 'budget_modal';
+  type?: 'task_page' | 'budget_modal' | 'challenge_card' | 'create_challenge' | 'quiz';
   callback: (id?: number, budget?: number) => void;
 }
 
@@ -31,6 +31,12 @@ const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, budget, icon, p
     callback(id);
   };
 
+  const hanldeAddChild = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    callback(id);
+  };
+
+  
   const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewBudget(Number(e.target.value));
   };
@@ -53,6 +59,12 @@ const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, budget, icon, p
     };
 }, []);
 
+  const handleSelectChild = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("id", id)
+    callback(id);
+  }
+
   const maleGradient = 'bg-gradient-to-br from-blue-300 to-blue-500';
   const femaleGradient = 'bg-gradient-to-br from-pink-300 to-pink-500';
 
@@ -69,7 +81,7 @@ const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, budget, icon, p
       {/* Profile Picture and Name/Age */}
       <div className="flex items-center">
         {/* Profile Picture */}
-        <div className="w-24 h-24 rounded-full overflow-hidden">
+        <div className={`${type === "quiz" ? "w-20 h-20" : 'w-24 h-24 '} rounded-full overflow-hidden`}>
           <Image
             src={icon || '/default-avatar.png'}
             alt={gender === 'male' ? 'Boy' : 'Girl'}
@@ -80,7 +92,7 @@ const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, budget, icon, p
         </div>
 
         {/* Name and Age */}
-        {(type === "task_page" || !isSmallScreen) && (
+        {(type === "task_page" || type === "challenge_card" || type === "create_challenge" || type === "quiz" || !isSmallScreen) && (
           <div className="ml-4">
             <h3 className="text-xl font-semibold font-satisfy">
               {name}, {age}
@@ -102,6 +114,26 @@ const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, budget, icon, p
           onClick={handleAssignTaskClick}
         >
           {isLoading ? <FaSpinner className="animate-spin" /> : <FaPlus />}
+        </button>
+      )}
+
+      {type === 'create_challenge' && (
+        <button
+          className={`absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-light-primary font-medium rounded-full shadow-md hover:text-white transition-colors duration-300
+            hover:bg-gradient-to-br ${gender === 'male' ? 'hover:from-blue-300 hover:to-blue-500' : 'hover:from-pink-300 hover:to-pink-500'}`}
+          onClick={hanldeAddChild}
+        >
+          {isLoading ? <FaSpinner className="animate-spin" /> : <FaPlus />}
+        </button>
+      )}
+
+      {type === 'quiz' && (
+        <button
+          className={`absolute right-4 top-1/2 transform -translate-y-1/2 p-2 bg-white text-light-primary font-medium rounded-full shadow-md hover:text-white transition-colors duration-300
+            hover:bg-gradient-to-br ${gender === 'male' ? 'hover:from-blue-300 hover:to-blue-500' : 'hover:from-pink-300 hover:to-pink-500'}`}
+           onClick={handleSelectChild}
+        >
+          {isLoading ? <FaSpinner className="animate-spin" /> : <FaRocket />}
         </button>
       )}
 

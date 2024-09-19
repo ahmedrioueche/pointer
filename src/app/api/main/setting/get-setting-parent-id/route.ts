@@ -1,4 +1,4 @@
-import { getSettingsByParentId } from '@/db/settingService'; 
+import { getSettingsByParentId } from '@/services/settingService'; 
 import { assertInt } from '@/utils/helper';
 import { NextResponse } from 'next/server';
 

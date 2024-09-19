@@ -1,4 +1,4 @@
-import { getTasksByParentId } from '@/db/taskService'; // Import the service function
+import { getTasksByParentId } from '@/services/taskService'; // Import the service function
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {

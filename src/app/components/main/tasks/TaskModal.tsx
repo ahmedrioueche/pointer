@@ -3,7 +3,7 @@ import { FaClipboardList, FaTimes } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { CreateTask } from './CreateTask';
 import { TaskCard } from './TaskCard';
-import { Child, Notif, Task } from '@/lib/interface';
+import { Child, Notif, Task } from '@/types/interface';
 import PendingTasks from './PendingTasks';
 import { generateUniqueId } from '@/utils/helper';
 import { apiAddTask as apiAddTask, apiAssignTask, apiDeleteTask, apiSendNotification, apiUnAssignTask, apiUpdateTask } from '@/lib/apiHelper';
@@ -39,7 +39,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
       setPendingTasks(fetchedPendingTasks);
     }
     setLoading(false);
-  }, [isOpen]);
+  }, [isOpen, fetchedPendingTasks]);
 
   if (loading) return <MainLoading numCards={3} />;
 

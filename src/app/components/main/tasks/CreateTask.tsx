@@ -1,5 +1,5 @@
-import { capitalizeFirstLetter } from "@/lib/formater";
-import { Task } from "@/lib/interface";
+import { capitalizeFirstLetter } from "@/utils/formater";
+import { Task } from "@/types/interface";
 import { useEffect, useRef, useState } from "react";
 import { FaCalendarAlt, FaClipboardList, FaEdit, FaPlus, FaUserPlus } from "react-icons/fa";
 import Alert from "../../Alert";
@@ -141,7 +141,7 @@ export const CreateTask: React.FC<CreateTaskProps> = ({ type, bgColor, routineTi
       </div>
       <button
         onClick={handleCreate}
-        className="w-full p-4 rounded-lg bg-primary text-dark-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300 flex items-center justify-center"
+        className="w-full p-4 rounded-lg bg-primary text-dark-text dark:text-dark-text hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center"
       >
         {type === "task_page" || type === "routine"
           ? taskToEdit

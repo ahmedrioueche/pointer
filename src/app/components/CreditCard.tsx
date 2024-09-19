@@ -16,30 +16,31 @@ const CreditCard: React.FC<CreditCardProps> = ({ title, description, author, lin
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentCardRef = cardRef.current; // Store the current ref value
+  
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (!hasAnimated) {
-              setIsVisible(true);
-              setHasAnimated(true); // Set animated flag
-            }
+          if (entry.isIntersecting && !hasAnimated) {
+            setIsVisible(true);
+            setHasAnimated(true);
           }
         });
       },
       { threshold: 0.1 }
     );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
+  
+    if (currentCardRef) {
+      observer.observe(currentCardRef);
     }
-
+  
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
+      if (currentCardRef) {
+        observer.unobserve(currentCardRef); 
       }
     };
   }, [hasAnimated]);
+  
 
   return (
     <div

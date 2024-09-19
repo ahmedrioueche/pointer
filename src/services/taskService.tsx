@@ -1,4 +1,4 @@
-import { Task } from '@/lib/interface';
+import { Task } from '@/types/interface';
 import { assertInt } from '@/utils/helper';
 import { PrismaClient } from '@prisma/client';
 

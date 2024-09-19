@@ -88,6 +88,9 @@ export interface Child {
   totalPoints?: number,
   currentPoints?: number,
   rewardsEarned?: number,
+  quizzesCorrectAnswersCount?: number;
+  quizzesTotalPoints?: number;
+  budget?: number;
   username?:string;
   email?: string;
   password?:string;
@@ -107,4 +110,30 @@ export interface Notif {
   createdAt?: Date;
   isRead?: boolean;
   icon?: string;
+}
+
+export interface Challenge {
+  id: number;
+  parentId: number;
+  name: string;
+  description?: string;
+  points: number;
+  assignedTo?: string;  
+  image?: string;
+  time?: Date;  
+  rewards?: string; 
+}
+
+export interface Quiz {
+  id: number;
+  topic?: string;
+  childId?: number; 
+  parentId?: number;
+  question?: string;
+  options?: string;
+  correctAnswer?: string;
+  points?:number;
+  isAnsweredCorrectly?: boolean,
+  childAnswer?: string;
+  creationDate?: Date;
 }

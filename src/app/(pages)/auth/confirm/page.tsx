@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import Loading from '@/app/components/Loading';
 import { apiInsertChild, apiUpdateParent } from '@/lib/apiHelper';
 import LoadingButton from '@/app/components/LoadingButton';
-import { Child } from '@/lib/interface';
+import { Child } from '@/types/interface';
 import { useTheme } from '@/app/context/ThemeContext';
 
 const Confirm: React.FC = () => {
@@ -35,7 +35,7 @@ const Confirm: React.FC = () => {
         console.log("parentIdString", parentIdString);
         const parentId = parentIdString ? parseInt(parentIdString, 10) : undefined;
         setParentId(parentId);
-    })
+    }, [])
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();

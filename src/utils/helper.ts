@@ -1,5 +1,5 @@
 import { bgColors } from "@/data/style";
-import { getChildById } from "@/db/childService";
+import { getChildById } from "@/services/childService";
 
 export function generateRandomUsernamePassword(name: string): [string, string] {
     const randomNumber = (): number => {
@@ -20,7 +20,7 @@ export function generateRandomUsernamePassword(name: string): [string, string] {
     const password: string = randomString(12); // Generates a random password with 12 characters
   
     return [username, password];
-  }
+}
   
 export const fetcher = (url: string, id: number | undefined | null) =>
   fetch(url, {
@@ -59,6 +59,10 @@ export const getRandomIcon = (gender: string, iconsCount: number) => {
 
 export const assertInt = (input : any) : number => {
   return typeof input === "string"? parseInt(input, 10) : input;
+}
+
+export const assertPositive = (number : number) : number => {
+  return number < 0 ? 0 : number;
 }
 
 export function getCurrencySymbol(currency : string) {

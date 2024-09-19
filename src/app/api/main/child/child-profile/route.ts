@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getChildById } from '@/db/childService'; // Adjust the import based on your actual file structure
+import { getChildById } from '@/services/childService'; // Adjust the import based on your actual file structure
 
 export async function POST(request: Request) {
     try {

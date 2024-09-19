@@ -18,6 +18,8 @@ const TestimonialCard: React.FC<TestimonialProps> = ({ quote, author, role, inde
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentCardRef = cardRef.current; // Store the current ref value
+  
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -28,17 +30,18 @@ const TestimonialCard: React.FC<TestimonialProps> = ({ quote, author, role, inde
       },
       { threshold: 0.1 }
     );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
+  
+    if (currentCardRef) {
+      observer.observe(currentCardRef);
     }
-
+  
     return () => {
-      if (cardRef.current) {
-        observer.unobserve(cardRef.current);
+      if (currentCardRef) {
+        observer.unobserve(currentCardRef); 
       }
     };
   }, []);
+  
 
   return (
     <div

@@ -1,4 +1,4 @@
-import { unClaimReward } from '@/db/rewardService'; 
+import { unClaimReward } from '@/services/rewardService'; 
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {

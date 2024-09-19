@@ -10,7 +10,7 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [userType, setUserType] = useState();
     const pathname = usePathname();
-
+    
     useEffect(() => {
 
         setUserType(user.user.type);
@@ -23,7 +23,7 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
         handleResize(); // Call it once to set the initial state
 
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [user.user.type]);
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
@@ -37,7 +37,7 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
         >
             <button 
                 onClick={toggleCollapse} 
-                className="absolute top-1/2 right-[0.7rem] transform translate-x-1/2 -translate-y-1/2 p-1 rounded-full bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
+                className="absolute top-[14rem] right-[0.4rem] transform translate-x-1/2 -translate-y-1/2 p-1 rounded-full bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
                 style={{ zIndex: 20 }}
             >
                 {isCollapsed ? <FaArrowRight size={20} /> : <FaArrowLeft size={20} />}
@@ -131,7 +131,7 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
           
                 <li>
                     <Link
-                        href="/main/competitions"
+                        href="/main/challenges"
                         className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
                             pathname === '/main/competitions' 
                             ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
@@ -139,7 +139,7 @@ const SideMenu: React.FC<{user : any}> = ( user : any ) => {
                         }`}
                     >
                         <FaTrophy className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                        {!isCollapsed && <span>Competitions</span>}
+                        {!isCollapsed && <span>Challenges</span>}
                     </Link>
                 </li>
              

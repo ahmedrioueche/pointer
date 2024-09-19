@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { updateParent } from '@/db/parentService';
+import { updateParent } from '@/services/parentService';
 import { assertInt } from '@/utils/helper';
 
 async function handlePost(req: Request) {

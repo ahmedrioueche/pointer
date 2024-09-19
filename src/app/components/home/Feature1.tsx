@@ -17,29 +17,32 @@ const Feature: React.FC<FeatureProps> = ({ icon, title, description, delay }) =>
   const featureRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentRef = featureRef.current; 
+  
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible(true);
           } else {
-            setIsVisible(false); // Reset visibility when the card goes out of view to trigger animation again
+            setIsVisible(false); 
           }
         });
       },
-      { threshold: 0.1 } // Trigger when 10% of the element is in view
+      { threshold: 0.1 } 
     );
-
-    if (featureRef.current) {
-      observer.observe(featureRef.current);
+  
+    if (currentRef) {
+      observer.observe(currentRef);
     }
-
+  
     return () => {
-      if (featureRef.current) {
-        observer.unobserve(featureRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef); 
       }
     };
   }, []);
+  
 
   return (
     <div

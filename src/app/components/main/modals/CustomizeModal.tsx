@@ -4,7 +4,7 @@ import { useData } from '@/app/context/dataContext';
 import ChildCardHori from '../child/ChildCardHori';
 import useSWR from 'swr';
 import { fetcher } from '@/utils/helper';
-import { Task } from '@/lib/interface';
+import { Task } from '@/types/interface';
 import { TaskCard } from '../tasks/TaskCard';
 import { motion } from 'framer-motion';
 

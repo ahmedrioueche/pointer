@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { FaBell, FaEnvelope } from "react-icons/fa";
-import { capitalizeFirstLetter, formatDateTime } from "@/lib/formater";
+import { capitalizeFirstLetter, formatDateTime } from "@/utils/formater";
 import useSWR from "swr";
 import { fetcher_2 } from "@/utils/helper";
 import { apiMarkNotifRead } from "@/lib/apiHelper";
-import { Notif } from "@/lib/interface";
+import { Notif } from "@/types/interface";
 import { useRouter } from 'next/navigation';
 
 const DropdownNotifications: React.FC<{ user: any, onClick: () => void, isMenuOpen: boolean }> = ({ user, onClick, isMenuOpen }) => {
@@ -14,7 +14,7 @@ const DropdownNotifications: React.FC<{ user: any, onClick: () => void, isMenuOp
   const [sortedNotifs, setSortedNotifs] = useState<any[]>([]);
   const router = useRouter();
 
-  const { data: notifications = [] } = useSWR<any>('/api/main/notif/get-notifs-id', (url) => fetcher_2(url, user.userId, user.userType), {
+  const { data: notifications = [] } = useSWR<any>('/api/main/notif/get-notifs-id', (url) => fetcher_2(url, user.id, user.type), {
     revalidateOnFocus: true,
   });
 
@@ -66,6 +66,7 @@ const DropdownNotifications: React.FC<{ user: any, onClick: () => void, isMenuOp
         router.push(`/main/child/${user.userId}`);
       case "reward_added": 
       case "reward_commented_by_parent":
+        console.log("push");
         router.push('/main/rewards');
         break;
       case "reward_approved":
@@ -106,7 +107,7 @@ const DropdownNotifications: React.FC<{ user: any, onClick: () => void, isMenuOp
       </button>
       {isDropdownOpen && (
         <div  ref={dropdownRef} 
-        className="absolute right-[-50px] mt-3 w-72 h-[24rem] bg-light-background dark:bg-dark-background border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 overflow-y-scroll scrollbar-hide">
+        className="absolute right-[-50px] mt-3 w-72 h-[32rem] bg-light-background dark:bg-dark-background border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg z-50 overflow-y-scroll scrollbar-hide">
         <div className="py-2">
             {sortedNotifs.length === 0 ? (
               <p className="text-center text-light-text dark:text-dark-text">No notifications</p>
@@ -114,7 +115,7 @@ const DropdownNotifications: React.FC<{ user: any, onClick: () => void, isMenuOp
               sortedNotifs.map((notif: any) => (
                 <div onClick={() => {handleNotifClick(notif)}}
                   key={notif.id}
-                  className="flex items-start p-3 border-b border-gray-200 dark:border-gray-700 hover:bg-light-accent dark:hover:bg-dark-accent text-light-text dark:text-dark-text hover:text-light-text dark:hover:text-light-text transition-colors duration-300 cursor-pointer"
+                  className="flex items-start p-3 border-b border-gray-200 dark:border-gray-700 hover:bg-light-accent dark:hover:bg-dark-accent text-light-text dark:text-dark-text hover:text-dark-text  transition-colors duration-300 cursor-pointer"
                 >
                   <div className="mr-3 text-xl text-light-primary dark:text-dark-primary">
                     {notif.icon ? notif.icon : <FaEnvelope />}
@@ -127,7 +128,7 @@ const DropdownNotifications: React.FC<{ user: any, onClick: () => void, isMenuOp
                       && notif.description !== "null" && notif.description.trim() !== '' 
                       && <p className="text-base">: {notif.description}</p>}
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 hover:dark:text-light-text">
+                    <p className="text-xs">
                       {capitalizeFirstLetter(formatDateTime(new Date(notif.createdAt)))}
                     </p>
                   </div>

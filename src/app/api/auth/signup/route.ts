@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { insertParent } from '@/db/parentService'; // Adjust the path as necessary
+import { insertParent } from '@/services/parentService'; // Adjust the path as necessary
 
 // Handler function for POST requests
 async function handlePost(req: Request) {

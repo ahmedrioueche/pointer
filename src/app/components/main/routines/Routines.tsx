@@ -35,7 +35,7 @@ const Routines: React.FC<{}> = () => {
                             gender={child.gender}
                             achievedTasks={child.achievedTasks}
                             pendingTasks={child.pendingTasks}
-                            icon={child.icon}
+                            icon={child.avatar}
                             callback={(id : any, type : string)=>{handleRoutineModalOpen(id, type)}}
                         />
                     </div>

@@ -93,7 +93,7 @@ const Page = ({ params }: PageProps) => {
             <SideMenu user={user} />
             <main className="flex-1 p-1">
               {MainContainer ? (
-                     <MainContainer user={user} />
+                <MainContainer user={user} />
               ) : (
                 <></>
               )}

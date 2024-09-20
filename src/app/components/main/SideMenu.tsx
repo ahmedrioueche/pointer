@@ -1,49 +1,46 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { FaTasks, FaCoins, FaGift, FaChartBar, FaUser, FaArrowLeft, FaArrowRight, FaHome, FaLightbulb, FaDice, FaTrophy, FaBook, FaQuestionCircle, FaClock, FaCalendarAlt } from 'react-icons/fa';
+import { FaTasks, FaGift, FaChartBar, FaUser, FaHome, FaCalendarAlt, FaDice, FaTrophy, FaBook, FaQuestionCircle, FaLightbulb } from 'react-icons/fa';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-const SideMenu: React.FC<{user : any}> = ( user : any ) => {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+const SideMenu: React.FC<{ user: any }> = ({ user }) => {
+    const [isCollapsed, setIsCollapsed] = useState(true); // Start with collapsed
     const [isMobile, setIsMobile] = useState<boolean>(false);
-    const [userType, setUserType] = useState();
+    const [userType, setUserType] = useState<string>();
     const pathname = usePathname();
-    
-    useEffect(() => {
 
-        setUserType(user.user.type);
+    useEffect(() => {
+        setUserType(user.type);
 
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
         };
 
         window.addEventListener('resize', handleResize);
-        handleResize(); // Call it once to set the initial state
+        handleResize(); 
 
         return () => window.removeEventListener('resize', handleResize);
-    }, [user.user.type]);
+    }, [user.type]);
 
-    const toggleCollapse = () => {
-        setIsCollapsed(!isCollapsed);
+    const handleMouseEnter = () => {
+        setIsCollapsed(false);
+    };
+
+    const handleMouseLeave = () => {
+        setIsCollapsed(true);
     };
 
     return (
         <aside
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             className={`relative top-0 left-0 transition-all duration-300 ease-in-out ${
                 isMobile ? 'hidden' : (isCollapsed ? 'w-20' : 'w-64')
             } bg-light-background dark:bg-dark-background p-4 shadow-md`}
         >
-            <button 
-                onClick={toggleCollapse} 
-                className="absolute top-[14rem] right-[0.4rem] transform translate-x-1/2 -translate-y-1/2 p-1 rounded-full bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-                style={{ zIndex: 20 }}
-            >
-                {isCollapsed ? <FaArrowRight size={20} /> : <FaArrowLeft size={20} />}
-            </button>
-
-            <ul className="space-y-4">
+        <ul className="space-y-4">
                 <li>
                     <Link
                         href="/main/home"

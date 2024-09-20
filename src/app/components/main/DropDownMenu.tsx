@@ -21,14 +21,10 @@ type User = {
   type: string;
 };
 
-type ChildData = {
-  icon?: string;
-};
-
 type MenuProps = {
   isMenuOpen: boolean;
   user: User;
-  childData?: ChildData;
+  childData?: any;
   isLoading?: boolean;
   remainingDays?: number;
   toggleMenu: () => void;
@@ -173,10 +169,10 @@ const Menu: FC<MenuProps> = ({
                 <FaSpinner className="animate-spin" />
                 <span className="ml-3">Profile</span>
               </div>
-            ) : childData?.icon ? (
+            ) : childData?.avatar ? (
               <div className="flex flex-row items-center">
                 <img
-                  src={childData.icon}
+                  src={childData.avatar}
                   alt={firstLetter}
                   className="rounded-full object-cover cursor-pointer h-7 w-7"
                 />

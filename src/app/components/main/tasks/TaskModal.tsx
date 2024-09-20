@@ -100,7 +100,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
     onUpdate? onUpdate() : null;
   };
 
-  const defaultBgColor = 'bg-gradient-to-br from-blue-500 to-blue-400';
+  const defaultBgColor = 'bg-gradient-to-br from-blue-400 to-blue-500';
  
   return (
     <div
@@ -110,7 +110,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
     >
       <div className={`bg-white rounded-lg shadow-lg p-4 ${defaultBgColor} ${type === "create_only"? `md:max-w-[50vw]` : 'max-w-[97vw]'} w-full h-full max-h-[98vh] overflow-y-auto task-menu`}>
         <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center text-light-text dark:text-dark-text">
+          <div className="flex items-center text-dark-text">
             <FaClipboardList className="text-3xl mr-3" />
             <h2 className="text-xl font-stix">Tasks</h2>
           </div>

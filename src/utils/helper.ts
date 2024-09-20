@@ -50,10 +50,9 @@ export const getRandomBgColor = () => {
 };
 
 export const getRandomIcon = (gender: string, iconsCount: number) => {
-
   let randomIndex = Math.floor(Math.random() * iconsCount) + 1;
   let type = gender === "male" ? "boy" : "girl";
-  let icon = `/icons/${type}_${randomIndex}.png`;
+  let icon = `/avatars/${type}_${randomIndex}.png`;
   return icon;
 }
 

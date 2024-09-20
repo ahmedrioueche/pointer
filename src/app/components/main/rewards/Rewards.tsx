@@ -221,7 +221,7 @@ const Rewards: React.FC = (user : any) => {
         )}
         <div className="lg:col-span-2">
           <div className={`grid grid-cols-1 md:grid-cols-2 ${userType === "child"? 'lg:grid-cols-3' : ''} gap-6`}>
-            {rewards.map((reward, index) => (
+            {rewards && rewards.length > 0 ? (rewards.map((reward, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -240,7 +240,9 @@ const Rewards: React.FC = (user : any) => {
                   onCustomize={() => setShowCustomizeModal(true)}
                 />
               </motion.div>
-            ))}
+            ))) : (
+              <div className='font-satisfy text-xl text-light-text dark:text-dark-text'>Rewards will appear here</div>
+            )}
           </div>
         </div>
         {showAlert && (

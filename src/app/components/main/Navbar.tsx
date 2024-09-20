@@ -259,7 +259,7 @@ const DashboardNavbar: React.FC<{user : any }> = ( {user } ) => {
                   onClick={handleProfileClick}>
 
                     {isLoading?  <FaSpinner className="animate-spin text-light-text dark:text-dark-text"/> : 
-                      childData?.icon? <img src={childData.icon} alt={`${firstLetter}`} className="w-10 h-10 mb-1 rounded-full object-cover cursor-pointer" />
+                      childData?.avatar? <img src={childData.avatar} alt={`${firstLetter}`} className="w-10 h-10 mb-1 rounded-full object-cover cursor-pointer" />
                       : <div>{firstLetter}</div>
                     }
                 </div>

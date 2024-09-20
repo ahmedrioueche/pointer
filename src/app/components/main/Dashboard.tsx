@@ -103,7 +103,7 @@ const Dashboard: React.FC = () => {
                 name={child.name}
                 age={child.age} 
                 gender={child.gender} 
-                icon={child.icon}
+                avatar={child.avatar}
                 callback={() => null} 
               />
             </div>

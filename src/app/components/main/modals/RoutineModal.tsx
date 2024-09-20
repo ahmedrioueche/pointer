@@ -221,7 +221,7 @@ const RoutineModal: React.FC<RoutineModalProps> = ({ type, user, isOpen, child, 
         {/* Header */}
         <div className="flex justify-between items-center p-3">
           <div className="flex items-center text-white">
-            {child?.icon ? <img src={child.icon} className='w-8 h-8 mr-3' alt="icon"/> : <FaCalendarAlt className="text-xl mr-3" />}
+            {child?.icon ? <img src={child.avatar} className='w-8 h-8 mr-3' alt="icon"/> : <FaCalendarAlt className="text-xl mr-3" />}
             <h2 className="md:text-xl font-bold font-stix sm:text-lg">Assign Routine for {child ? child.name : 'child'}</h2>
           </div>
           <button

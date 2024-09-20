@@ -16,6 +16,7 @@ import Alert from '../../Alert';
 import { capitalizeFirstLetter } from '@/utils/formater';
 import { useParams } from 'next/navigation';
 import { useData } from '@/app/context/dataContext';
+import EditAvatarModal from '../modals/EditAvatarModal';
 
 const ChildProfile: React.FC<{user: any}> = ({user}) => {
   const { id } = useParams<{ id: string }>();
@@ -47,7 +48,8 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
   const [updateDataSignal, setUpdateDataSignal] = useState(false);
   const [taskToUpdate, setTaskToUpdate] = useState<Task>()
   const [childData, setCurrentChildData] = useState<any>();
-
+  const [isEditAvatarModalOpen, setIsEditAvatarModalOpen] = useState(false);
+  const [avatar, setAvatar] = useState<string>()
   const childrenContext = useData();
 
   useEffect(() => {
@@ -225,6 +227,19 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
     setTaskUnapproveSignal(true);
   }
 
+  const handleOpenEditAvatarModal = () => {
+    if(user.type === "parent")
+      setIsEditAvatarModalOpen(true);
+  }
+
+  const updateAvatar = async (avatar: string) => {
+    console.log("avatar", avatar);
+    setAvatar(avatar);
+    const response = await apiUpdateChild(childData.id, {avatar : avatar})
+    console.log("response", response);
+
+  }
+
   //making sure we get up to date child data before taking action on it
   useEffect(() => {
     const updateChildData = async () => {
@@ -384,7 +399,6 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
     setIsTasksModalOpen(!isTasksModalOpen);
   };
 
-
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
@@ -531,15 +545,16 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
     }
   }, [completedTasks.length, fetchedRewards.length]);
   
+  
   if (!childData) {
     return <MainLoading numCards={6}/>;
   }
 
   return (
-    <div className="flex flex-col md:flex-row sm:p-2 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text rounded-lg shadow-lg" {...swipeHandlers}>
+    <div className="flex flex-col md:flex-row p-2 bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text rounded-lg shadow-lg" {...swipeHandlers}>
       <div className="flex flex-col items-center md:items-start md:w-1/2 lg:w-1/3 space-y-6 md:space-y-4 mb-6 md:mb-0">
         <div className="w-full max-w-3xl mb-2">
-          <ProfileCard name={childData.name} age={childData.age} gender={childData.gender} level={childData.level} icon={childData.icon} currentPoints={childData.currentPoints} onEditProfile={toggleProfileModal} onAssignTasks={toggleTaskModal} />
+          <ProfileCard user={user} name={childData.name} age={childData.age} gender={childData.gender} level={childData.level} icon={avatar || childData.avatar} currentPoints={childData.currentPoints} onEditProfile={toggleProfileModal} onAssignTasks={toggleTaskModal} onOpenEditAvatarModal={() => handleOpenEditAvatarModal()} />
         </div>
       <div className="flex flex-col space-y-4 w-full">
           <div className="relative">
@@ -636,6 +651,13 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
           isOpen={isTasksModalOpen}
           onClose={() => setIsTasksModalOpen(false)}
           onUpdate={() => null }
+       />
+
+       <EditAvatarModal
+          isOpen={isEditAvatarModalOpen}
+          child={childData}
+          onClose={() => setIsEditAvatarModalOpen(false)}
+          onUpdate={(avatar) => updateAvatar(avatar)}
        />
 
         {showAlert && (

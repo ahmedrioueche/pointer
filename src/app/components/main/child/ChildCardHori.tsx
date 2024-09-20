@@ -9,14 +9,14 @@ interface CardProps {
   name: string;
   age: number;
   gender: 'male' | 'female';
-  icon?: string;
+  avatar?: string;
   budget?: number;
   pendingTasks?: Task[];
   type?: 'task_page' | 'budget_modal' | 'challenge_card' | 'create_challenge' | 'quiz';
   callback: (id?: number, budget?: number) => void;
 }
 
-const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, budget, icon, pendingTasks = [], type, callback }) => {
+const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, budget, avatar, pendingTasks = [], type, callback }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [newBudget, setNewBudget] = useState<number>(0);
@@ -83,7 +83,7 @@ const ChildCard: React.FC<CardProps> = ({ id, name, age, gender, budget, icon, p
         {/* Profile Picture */}
         <div className={`${type === "quiz" ? "w-20 h-20" : 'w-24 h-24 '} rounded-full overflow-hidden`}>
           <Image
-            src={icon || '/default-avatar.png'}
+            src={avatar || '/default-avatar.png'}
             alt={gender === 'male' ? 'Boy' : 'Girl'}
             width={96}
             height={96}

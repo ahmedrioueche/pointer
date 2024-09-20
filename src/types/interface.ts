@@ -94,7 +94,7 @@ export interface Child {
   username?:string;
   email?: string;
   password?:string;
-  icon?: string;
+  avatar?: string;
 }
 
 export interface Notif {
@@ -102,7 +102,8 @@ export interface Notif {
   title: string;
   content?: string;
   type?: "task_approved" | "task_completed" | "task_assigned" | "task_commented_by_parent" | "task_commented_by_child"
-         |  "reward_added" | "reward_claimed" | "reward_approved" | "reward_commented_by_parent" | "reward_commented_by_child";
+         |  "reward_added" | "reward_claimed" | "reward_approved" | "reward_commented_by_parent" | "reward_commented_by_child"
+         | "challenge_added";
   description?: string;
   senderId?: number;
   receiverId?: number;

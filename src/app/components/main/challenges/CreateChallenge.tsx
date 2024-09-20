@@ -51,11 +51,11 @@ const CreateChallenge: React.FC<CreateChallengeProps> = ({user, onCreate, childr
       id: Date.now(),
       parentId: user.id,
       name: challengeName,
-      description: description || '', // Default to empty string if undefined
+      description: description || '', 
       points: points,
-      assignedTo: assignedTo || '', // Default to empty string if undefined
-      rewards: rewards || '', // Default to empty array if undefined
-      time: time || undefined, // Default to 0 if undefined
+      assignedTo: assignedTo || '', 
+      rewards: rewards || '', 
+      time: time || undefined, 
     };
   
     // Call the onCreate function with the new challenge
@@ -86,7 +86,6 @@ const CreateChallenge: React.FC<CreateChallengeProps> = ({user, onCreate, childr
   };
 
   const handleRemoveChild = (childId: string) => {
-    console.log("handleRemoveChild", childId )
     setAssignedTo((prev : any) => {
       const updatedIds = prev? prev
         .split(',')
@@ -121,7 +120,7 @@ const CreateChallenge: React.FC<CreateChallengeProps> = ({user, onCreate, childr
 
   const handleAddReward = (reward: any) => {
     // Format the new reward
-    const newReward = `${reward.name}: ${reward.description}`;
+    const newReward = reward.description? `${reward.name}: ${reward.description}` : `${reward.name}`;
   
     // Update the rewards state with the new reward, separated by commas
     setRewards((prevRewards) => {
@@ -173,9 +172,9 @@ const CreateChallenge: React.FC<CreateChallengeProps> = ({user, onCreate, childr
       {!isCollapsed && (
         <>
         {/* Form */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         {/* Challenge Name */}
-        <div className="relative col-span-1">
+         <div className="relative col-span-1">
             <label className="block md:text-lg text-base font-semibold text-gray-200 mb-2">
               <FaClipboard className="inline mr-2" /> {titles.challengeName}
             </label>
@@ -268,8 +267,6 @@ const CreateChallenge: React.FC<CreateChallengeProps> = ({user, onCreate, childr
               />
             </div>
 
-        
-
         {/* Assign To Children */}
         <div className="relative col-span-1 md:col-span-2">
             <label className="block md:text-lg text-base  font-semibold text-gray-200 mb-2">
@@ -283,7 +280,7 @@ const CreateChallenge: React.FC<CreateChallengeProps> = ({user, onCreate, childr
                   name={child.name} 
                   age={child.age} 
                   gender={child.gender} 
-                  icon={child.icon}
+                  avatar={child.avatar}
                   callback={() => handleSelectChild(child.id)} 
                 />
             ))}
@@ -326,12 +323,11 @@ const CreateChallenge: React.FC<CreateChallengeProps> = ({user, onCreate, childr
         </div>
       </div>
 
-        <AddRewardModal
-            onCreate={(reward) => handleAddReward(reward)}
-            onClose={() => setIsModalOpen(false)}
-            isOpen={isModalOpen}  
-        />
-         
+      <AddRewardModal
+          onCreate={(reward) => handleAddReward(reward)}
+          onClose={() => setIsModalOpen(false)}
+          isOpen={isModalOpen}  
+      />
         </>
       )}
 

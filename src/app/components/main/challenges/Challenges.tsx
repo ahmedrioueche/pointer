@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { FaTrophy, FaUserCircle } from 'react-icons/fa'; 
 import CreateChallenge from './CreateChallenge';
 import ChallengeCard from './ChallengeCard';
-import { Challenge, Child } from '@/types/interface';
+import { Challenge, Child, Notif } from '@/types/interface';
 import { useData } from '@/app/context/dataContext';
-import { apiCreateChallenge, apiUpdateChallenge } from '@/lib/apiHelper';
+import { apiCreateChallenge, apiSendNotification, apiUpdateChallenge } from '@/lib/apiHelper';
 import Alert from '../../Alert';
 import useSWR from 'swr';
 import { fetcher } from '@/utils/helper';
@@ -43,7 +43,6 @@ const ChallengesPage: React.FC<ChallengesPageProps> = ({ user }) => {
   );
 
   useEffect(() => {
-    console.log("challengesDB", challengesDB);
     if (challengesDB) {
       // Sort challenges by time, newest first
       const sortedChallenges = challengesDB.challenges.sort((a : any, b : any) => 
@@ -60,7 +59,7 @@ const ChallengesPage: React.FC<ChallengesPageProps> = ({ user }) => {
   }, [data]);
 
   const handleCreateChallenge = async (newChallenge: Challenge) => {
-
+    console.log("newChallenge", newChallenge)
     const response = await apiCreateChallenge(newChallenge);
     console.log("response", response);
     setIsAlertOpen(true);
@@ -69,14 +68,54 @@ const ChallengesPage: React.FC<ChallengesPageProps> = ({ user }) => {
     }
     else {
       setStatus({success : "Error!", message: "Challenge has not been created, please try again"})
-
     }
     setChallenges(prev => [...prev, newChallenge]);
 
     setTimeout(() => {
       setIsAlertOpen(false);
     }, 3000)
+
+    //send notification
+    const notification : Notif = {
+      title: 'Parent just challenged you!',
+      content: `${newChallenge.name}`,
+      description: `${newChallenge.description}, ${newChallenge.points}`,
+      type: "challenge_added",
+    }
+
+    sendNotif(newChallenge, notification);
+
+
   };
+
+  const sendNotif = async (challenge : Challenge, notification : Notif) => {
+    const challengeChildrenIds = challenge.assignedTo
+    ?.split(',')
+    .map(id => parseInt(id, 10))
+    .filter(id => !isNaN(id)); // Filter out NaN values if the string contains non-numeric values
+    
+    // Check if challengeChildrenIds is defined and has elements
+    if (challengeChildrenIds && challengeChildrenIds.length > 0) {
+      // Use Promise.all to handle asynchronous operations
+      Promise.all(
+        challengeChildrenIds.map(async (childId: number) => {
+          try {
+            const notifResponse = await apiSendNotification(user.id, childId, "child", notification);
+            console.log("notifResponse", notifResponse);
+          } catch (error) {
+            console.error(`Error sending notification to child ${childId}:`, error);
+          }
+        })
+      ).then(() => {
+        console.log('All notifications sent');
+      }).catch(error => {
+        console.error('Error sending some notifications:', error);
+      });
+    } else {
+      console.log('No challenge children IDs to process');
+    }
+    
+  }
 
   const handleChallengeCardEdit = (challenge : Challenge) =>{
     setChallengeToEdit(challenge);
@@ -111,11 +150,27 @@ const ChallengesPage: React.FC<ChallengesPageProps> = ({ user }) => {
           {user.type === "parent" && <CreateChallenge user={user} onCreate={handleCreateChallenge} childrenData={childrenData}/>}
           <div className="flex flex-col">
             <ChallengeFetcher user={user} setChallenges={setChallenges}/>
-            {challenges && challenges.length > 0 && challenges.map((challenge) => (
-              <div key={challenge.id}>
-                <ChallengeCard user={user} challenge={challenge} childrenData={childrenData} onEdit={(challenge : Challenge) => handleChallengeCardEdit(challenge)}/>
-              </div>
-            ))}
+            {
+            (challenges && challenges.length > 0) ? (
+              challenges.map((challenge) => (
+                <div key={challenge.id}>
+                  <ChallengeCard 
+                    user={user} 
+                    challenge={challenge} 
+                    childrenData={childrenData} 
+                    onEdit={(challenge: Challenge) => handleChallengeCardEdit(challenge)} 
+                  />
+                </div>
+              ))
+            ) : (
+              user.type === "parent" && (
+                <div className='font-satisfy text-xl text-light-text dark:text-dark-text'>
+                  Challenges will appear here
+                </div>
+              )
+            )
+          }
+
           </div>
         </div>
 

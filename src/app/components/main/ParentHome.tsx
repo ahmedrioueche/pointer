@@ -81,7 +81,7 @@ const ParentHome: React.FC<{id : number}> = ({id}) => {
                     gender={child.gender}
                     achievedTasks={child.achievedTasks}
                     pendingTasks={child.pendingTasks}
-                    icon={child.icon}
+                    icon={child.avatar}
                     callback={toggleTaskModal}
                 />
             </div>

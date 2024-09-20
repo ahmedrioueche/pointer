@@ -1,202 +1,203 @@
-// This is the Prisma schema file.
-// Read more about it in the Prisma documentation: https://pris.ly/d/schema
-
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")  
+}
+
 model Parent {
-  id                      Int       @id @default(autoincrement())
-  firstName              String?    @db.VarChar(255)                  @map("first_name")
-  lastName               String?    @db.VarChar(255)                  @map("last_name")
-  email                   String    @unique @db.VarChar(255)       
-  username                String?   @unique @db.VarChar(255)
-  password                String    @db.VarChar(255)
-  isVerified             Boolean?                                    @map("is_verified")
-  isFreeTrial            Boolean?                                    @map("is_free_trial")
-  age                     Int?
-  gender                  String?
-  childrenCount          Int?                                        @map("children_count")                                    
-  subscriptionType       String?                                     @map("subscription_type")
-  subscriptionStartDate DateTime?        @map("subscription_start_date")
-  subscriptionEndDate   DateTime?        @map("subscription_end_date")
-  isSubscriptionActive  Boolean?         @map("is_subscription_active")
-  paymentMethod          String?         @map("payment_method")
-  lastPaymentDate       DateTime?        @map("last_payment_date")
-  subscriptionPrice      Float?          @map("subscription_price")
-  createdAt               DateTime?   @map("created_at")
-  
-  tasks                 Task[]
-  sentNotifications     Notification[] @relation("ParentSentNotifications")
-  receivedNotifications Notification[] @relation("ParentReceivedNotifications")
+  id                       Int       @id @default(autoincrement())
+  first_name               String?
+  last_name                String?
+  email                    String    @unique
+  username                 String?   @unique
+  password                 String
+  is_verified              Boolean?
+  is_free_trial            Boolean?
+  age                      Int?
+  gender                   String?
+  children_count           Int?
+  subscription_type        String?
+  subscription_start_date  DateTime?
+  subscription_end_date    DateTime?
+  is_subscription_active   Boolean?
+  payment_method           String?
+  last_payment_date        DateTime?
+  subscription_price       Float?
+  created_at               DateTime  @default(now())
+  children                 Child[]
+  taskAssignments          TaskAssignment[] @relation("AssignedByParent")
+  notificationsSent        Notification[]   @relation("ParentSender")
+  notificationsReceived    Notification[]   @relation("ParentReceiver")
+  settings                 Setting?
+
+  @@map("parent")  // Optional, to map to lower case "parent" if needed
 }
 
 model Child {
-  id                 Int      @id @default(autoincrement())
-  parent_id          Int?
-  name               String   @db.VarChar(255)
-  age                Int
-  gender             String   @db.VarChar(10)
-  has_device         Boolean?
-  uses_shared_device Boolean?
-  username           String?  @unique @db.VarChar(255)
-  email              String?  @unique
-  password           String?  @db.VarChar(255)
-  competence         String?  @default("beginner") @db.VarChar(50)
-  budget             Int?     @default(0)
-  currentPoints      Int?     @default(0) @map("current_points")
-  totalPoints        Int?     @default(0) @map("total_points")
-  rewardsEarned      Int?     @default(0) @map("rewards_earned")
-  tasksAssigned      Int?     @default(0) @map("tasks_assigned")
-  tasksCompleted     Int?     @default(0) @map("tasks_completed")
-  level              String?  @default("silver") @db.VarChar(50)
-  quizzesCorrectAnswersCount Int?  @default(0) @map("quizzes_correct_answers_count")
-  quizzesTotalPoints Int?          @default(0) @map("quizzes_total_points")
-  created_at         DateTime @default(now()) @db.Timestamp(6)
-  icon               String?
-  
-  // Relations
-  taskAssignments       TaskAssignment[] @relation("ChildAssignments")
-  rewardClaimRecords    RewardClaim[]    @relation("ChildRewardClaims")
-  sentNotifications     Notification[]   @relation("ChildSentNotifications")
-  receivedNotifications Notification[]   @relation("ChildReceivedNotifications")
+  id                       Int       @id @default(autoincrement())
+  parent_id                Int?      @relation(fields: [parent_id], references: [id], onDelete: SetNull)
+  name                     String
+  age                      Int
+  gender                   String?
+  has_device               Boolean?
+  uses_shared_device       Boolean?
+  username                 String?   @unique
+  email                    String?   @unique
+  password                 String?
+  competence               String    @default("beginner")
+  budget                   Int       @default(0)
+  current_points           Int       @default(0)
+  total_points             Int       @default(0)
+  rewards_earned           Int       @default(0)
+  tasks_assigned           Int       @default(0)
+  tasks_completed          Int       @default(0)
+  level                    String    @default("silver")
+  quizzes_correct_answers_count Int  @default(0)
+  quizzes_total_points      Int      @default(0)
+  created_at               DateTime  @default(now())
+  avatar                   String?
+  tasks                    TaskAssignment[] @relation("AssignedToChild")
+  notificationsSent        Notification[]   @relation("ChildSender")
+  notificationsReceived    Notification[]   @relation("ChildReceiver")
+  quizzes                  Quiz[]
+
+  @@map("child")  // Optional, to map to lower case "child" if needed
 }
 
 model Task {
-  id           Int       @id @default(autoincrement())
-  name         String
-  description  String?
-  points       Int?
-  creatorId    Int       @map("creator_id")
-  creator      Parent    @relation(fields: [creatorId], references: [id])
-  creatorName  String?   @map("creator_name")
-  creationDate DateTime? @map("creation_date")
-  type         String?
-  taskAssignments TaskAssignment[] @relation("TaskAssignments")
+  id             Int       @id @default(autoincrement())
+  name           String
+  description    String?
+  points         Int?
+  creator_id     Int?      @relation(fields: [creator_id], references: [id], onDelete: Cascade)
+  creator_name   String?
+  creation_date  DateTime?
+  type           String?
+  assignments    TaskAssignment[]
+
+  @@map("task")  // Optional, to map to lower case "task" if needed
 }
 
 model TaskAssignment {
-  id                 Int       @id @default(autoincrement())
-  task               Task      @relation("TaskAssignments", fields: [taskId], references: [id])
-  taskId             Int       @map("task_id")
-  child              Child     @relation("ChildAssignments", fields: [childId], references: [id])
-  childId            Int       @map("child_id")
-  assignedBy         Int?      @map("assigned_by")
-  assignedByName     String?   @map("assigned_by_name")
-  assignmentDate     DateTime? @map("assignment_date")
-  dueDate            DateTime? @map("due_date")
-  routineTime        String?   @map("routine_time")
-  routineExceptions  String?   @map("routine_exceptions")
-  isCompleted        Boolean?  @map("is_completed")
-  isApproved         Boolean?  @map("is_approved")
-  completionDate     DateTime? @map("completion_date")
-  approvalDate       DateTime? @map("approval_date")
-  approvedBy         Int?      @map("approved_by")
-  approvedByName     String?   @map("approved_by_name")
-  creatorComment     String?   @map("creator_comment")
-  creatorCommentDate DateTime? @map("creator_comment_date")
-  createdForComment  String?   @map("createdFor_comment")
-  attachedFiles      String?   @map("attached_files")
+  id               Int       @id @default(autoincrement())
+  task_id          Int       @relation(fields: [task_id], references: [id], onDelete: Cascade)
+  child_id         Int       @relation(fields: [child_id], references: [id], onDelete: Cascade)
+  assigned_by      Int?
+  assigned_by_name String?
+  assignment_date  DateTime?
+  due_date         DateTime?
+  routine_time     String?
+  routine_exceptions String?
+  is_completed     Boolean?
+  is_approved      Boolean?
+  completion_date  DateTime?
+  approval_date    DateTime?
+  approved_by      Int?
+  approved_by_name String?
+  creator_comment  String?
+  creator_comment_date DateTime?
+  createdFor_comment String?
+  attached_files   String?
 
-  @@unique([taskId, childId])
-  @@map("task_assignment")
+  @@unique([task_id, child_id])
+  @@map("task_assignment")  // Optional, to map to lower case "task_assignment" if needed
 }
 
 model Reward {
-  id            Int       @id @default(autoincrement()) @map("id")
-  name          String    @map("name")
-  points        Int       @map("points")
-  icon          String?   @map("icon")
-  creationDate  DateTime? @map("creation_date") @db.DateTime
-  creatorId     Int?      @map("creator_id")
-  creatorName   String?   @map("creator_name")
-  isClaimed     Boolean?  @map("is_claimed")
-  description   String?
-  attachedFiles String?   @map("attached_files")
+  id               Int       @id @default(autoincrement())
+  name             String
+  points           Int?
+  icon             String?
+  creation_date    DateTime?
+  creator_id       Int?
+  creator_name     String?
+  is_claimed       Boolean?
+  description      String?
+  attached_files   String?
+  claims           RewardClaim[]
 
-  // Relations
-  rewardClaims RewardClaim[]
+  @@map("reward")  // Optional, to map to lower case "reward" if needed
 }
 
 model RewardClaim {
-  id                 Int       @id @default(autoincrement()) @map("id")
-  rewardId           Int       @map("reward_id")
-  childId            Int       @map("child_id")
-  childName          String?   @map("child_name")
-  claimedAt          DateTime? @map("claimed_at") @db.DateTime
-  isApproved         Boolean?  @map("is_approved")
-  approvedBy         Int?      @map("approved_by")
-  approvedByName     String?   @map("approved_by_name")
-  approvedAt         DateTime? @map("approved_at") @db.DateTime
-  claimComment       String?   @map("claim_comment")
-  approveComment     String?   @map("approve_comment")
-  approveCommentDate DateTime? @map("approve_comment_date")
+  id                Int       @id @default(autoincrement())
+  reward_id         Int       @relation(fields: [reward_id], references: [id], onDelete: Cascade)
+  child_id          Int       @relation(fields: [child_id], references: [id], onDelete: Cascade)
+  child_name        String?
+  claimed_at        DateTime?
+  is_approved       Boolean?
+  approved_by       Int?
+  approved_by_name  String?
+  approved_at       DateTime?
+  claim_comment     String?
+  approve_comment   String?
+  approve_comment_date DateTime?
 
-  // Relations
-  reward Reward @relation(fields: [rewardId], references: [id])
-  child  Child  @relation("ChildRewardClaims", fields: [childId], references: [id])
-
-  @@map("reward_claim")
+  @@map("reward_claim")  // Optional, to map to lower case "reward_claim" if needed
 }
 
 model Notification {
-  id           Int      @id @default(autoincrement())
-  title        String?
-  content      String
-  type         String?
-  description  String?
-  createdAt    DateTime @default(now()) @db.Timestamp(6)  @map("created_at")
-  isRead       Boolean?                                   @map("is_read")
-  senderId     Int                                        @map("sender_id")
-  senderName   String?                                    @map("sender_name")
-  receiverId   Int                                        @map("receiver_id")
-  receiverName String?                                    @map("receiver_name")
-  receiverType String?                                    @map("receiver_type")
-  icon         String?                   
+  id                Int       @id @default(autoincrement())
+  title             String
+  content           String
+  type              String?
+  description       String?
+  created_at        DateTime  @default(now())
+  is_read           Boolean?
+  sender_id         Int?
+  sender_name       String?
+  receiver_id       Int?
+  receiver_name     String?
+  receiver_type     String?
+  icon              String?
+  
+  parent_sender_id  Int?      @relation("ParentSender", fields: [parent_sender_id], references: [id], onDelete: SetNull)
+  parent_receiver_id Int?     @relation("ParentReceiver", fields: [parent_receiver_id], references: [id], onDelete: SetNull)
+  child_sender_id   Int?      @relation("ChildSender", fields: [child_sender_id], references: [id], onDelete: SetNull)
+  child_receiver_id Int?      @relation("ChildReceiver", fields: [child_receiver_id], references: [id], onDelete: SetNull)
 
-  // Relations
-  parentSender   Parent? @relation("ParentSentNotifications", fields: [senderId], references: [id], map: "Notification_parentSender_fkey")
-  parentReceiver Parent? @relation("ParentReceivedNotifications", fields: [receiverId], references: [id], map: "Notification_parentReceiver_fkey")
-  childSender    Child?  @relation("ChildSentNotifications", fields: [senderId], references: [id], map: "Notification_childSender_fkey")
-  childReceiver  Child?  @relation("ChildReceivedNotifications", fields: [receiverId], references: [id], map: "Notification_childReceiver_fkey")
+  @@map("notification")  // Optional, to map to lower case "notification" if needed
 }
 
 model Setting {
-  id                Int       @id @default(autoincrement()) @map("id")
-  parentId          Int?      @unique @map("parent_id")
-  currency          String?   @default("dollar")
-  pointsPerCurrency Int?      @map("points_per_currency")
-  language          String?   @default("english")
+  id                Int       @id @default(autoincrement())
+  parent_id         Int       @relation(fields: [parent_id], references: [id], onDelete: Cascade)
+  currency          String    @default("dollar")
+  points_per_currency Int?
+  language          String    @default("english")
+
+  @@map("setting")  // Optional, to map to lower case "setting" if needed
 }
 
 model Challenge {
-  id          Int       @id @default(autoincrement()) @map("id")
-  parentId    Int          @map("parent_id")
-  name        String
-  description String?  
-  points      Int
-  assignedTo  String?      @map("assigned_to")             //string of children ids
-  image       String?   
-  time        DateTime? 
-  rewards     String?
+  id                Int       @id @default(autoincrement())
+  parent_id         Int       @relation(fields: [parent_id], references: [id], onDelete: Cascade)
+  name              String
+  description       String?
+  points            Int?
+  assigned_to       String?
+  image             String?
+  time              DateTime?
+  rewards           String?
+
+  @@map("challenge")  // Optional, to map to lower case "challenge" if needed
 }
 
 model Quiz {
-  id          Int           @id @default(autoincrement()) @map("id")
-  topic       String?    
-  childId     Int?          @map("child_id")
-  parentId    Int?          @map("parent_id")
-  question    String?
-  options     String?  
-  correctAnswer String?     @map("correct_answer") 
-  points      Int?
-  isAnsweredCorrectly Boolean?   @map("is_answered_correctly")
-  childAnswer    String?         @map("child_answer")
-  creationDate DateTime?    @map("creation_date") 
-}
+  id                Int       @id @default(autoincrement())
+  topic             String
+  child_id          Int?      @relation(fields: [child_id], references: [id], onDelete: SetNull)
+  parent_id         Int?      @relation(fields: [parent_id], references: [id], onDelete: SetNull)
+  question          String
+  options           String
+  correct_answer    String
+  points            Int?
+  is_answered_correctly Boolean?
+  child_answer      String?
+  creation_date     DateTime
 
+  @@map("quiz")  // Optional, to map to lower case "quiz" if needed
+}

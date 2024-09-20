@@ -59,7 +59,7 @@ const KidsModal: React.FC<KidsModalProps> = ({ isOpen, onAssignTask, onClose, ch
               name={child.name}
               age={child.age}
               gender={child.gender}
-              icon={child.icon}
+              avatar={child.avatar}
               pendingTasks={child.pendingTasks}
               callback={handleAssignTask}
             />

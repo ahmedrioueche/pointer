@@ -202,7 +202,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
   return (
     <div
-      className={`relative p-6 rounded-lg cursor-pointer font-stix shadow-md bg-gradient-to-r from-purple-400 to-blue-800 ${bgColor} text-dark-text dark:text-dark-text flex flex-col h-full transform transition-transform hover:scale-105`}
+      className={`relative p-6 rounded-lg cursor-pointer font-stix shadow-md bg-gradient-to-r from-purple-400 to-blue-800 ${cardType !== "task_pending" ? bgColor : 'bg-gradient-to-r from-purple-400 to-indigo-400'} text-dark-text dark:text-dark-text flex flex-col h-full transform transition-transform hover:scale-105`}
     >
       <div className="flex items-start space-x-4">
         <div className="text-4xl flex-shrink-0">

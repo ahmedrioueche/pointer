@@ -43,7 +43,7 @@ export async function authenticateUser(identifier: string, password: string): Pr
                 email: true,
                 username: true,
                 name: true,
-                icon: true,
+                avatar: true,
                 password: true,
             }
         });

@@ -97,7 +97,7 @@
                     name={child.name}
                     age={child.age}
                     gender={child.gender}
-                    icon={child.icon}
+                    avatar={child.avatar}
                     type="challenge_card"  
                     callback={() => console.log(`Child selected: ${child.name}`)}
                   />

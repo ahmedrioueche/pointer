@@ -56,7 +56,7 @@ const QuizForm: React.FC<QuizFormProps> = ({childrenData, isLoading, onSelect, s
               name={child.name} 
               age={child.age} 
               gender={child.gender} 
-              icon={child.icon}
+              avatar={child.avatar}
               callback={(id : any) => handleSelect(id)} 
             />
             {(!isLoading && showButtons && childSelectedId && childSelectedId === child.id) && (

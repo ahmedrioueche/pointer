@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Child } from '@/types/interface';
-import { assertInt, generateRandomUsernamePassword, getRandomIcon } from '@/utils/helper';
+import { assertInt, generateRandomUsernamePassword, getRandomIcon as getRandomAvatar } from '@/utils/helper';
+import { CHILDREN_AVATAR_COUNT } from '@/data/values';
 
 const prisma = new PrismaClient();
 
@@ -20,7 +21,7 @@ export const insertChild = async (child: Child): Promise<any> => {
         gender: child.gender,
         has_device: child.has_device? child.has_device : null,
         uses_shared_device: child.uses_shared_device? child.uses_shared_device : null,
-        icon: child.icon? child.icon : getRandomIcon(child.gender, 6),
+        avatar: child.avatar? child.avatar : getRandomAvatar(child.gender, CHILDREN_AVATAR_COUNT),
         username: username,
         password: password,
       },
@@ -78,7 +79,7 @@ export const getChildById = async (id: number): Promise<any> => {
         name: data.name,
         age: data.age,
         gender: data.gender,
-        icon: data.icon,
+        avatar: data.avatar,
         email: data.email,
         password: data.password,
         budget:data.budget,

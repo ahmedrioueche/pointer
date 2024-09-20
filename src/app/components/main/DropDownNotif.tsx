@@ -64,6 +64,7 @@ const DropdownNotifications: React.FC<{ user: any, onClick: () => void, isMenuOp
         break;
       case "task_approved":
         router.push(`/main/child/${user.userId}`);
+        break;
       case "reward_added": 
       case "reward_commented_by_parent":
         console.log("push");
@@ -71,6 +72,10 @@ const DropdownNotifications: React.FC<{ user: any, onClick: () => void, isMenuOp
         break;
       case "reward_approved":
         router.push(`/main/child/${user.userId}`);
+        break;
+      case "challenge_added": 
+        router.push("/main/challenges")
+        break;
     }
   }
 

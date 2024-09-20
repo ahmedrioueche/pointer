@@ -190,7 +190,7 @@ const EditChallengeModal: React.FC<EditChallengeModalProps> = ({ user, challenge
                       name={child.name}
                       age={child.age}
                       gender={child.gender}
-                      icon={child.icon}
+                      avatar={child.avatar}
                       callback={() => handleSelectChild(String(child.id))}
                     />
                   ))}

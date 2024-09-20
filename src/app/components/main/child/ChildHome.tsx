@@ -148,7 +148,7 @@ const ChildHome: React.FC<ChildHomeProps> = ({ user }) => {
       {/* Header */}
       <div className="flex justify-between items-center py-3">
         <div className="flex items-center text-white">
-          {child?.icon ? <img src={child.icon} className='w-8 h-8 mr-3' /> : <FaCalendarAlt className="text-xl mr-3" />}
+          {child?.icon ? <img src={child.avatar} className='w-8 h-8 mr-3' /> : <FaCalendarAlt className="text-xl mr-3" />}
           <h2 className="md:text-xl text-lg font-bold font-stix">Your Routine</h2>
         </div>
         {!isSmallScreen && window.innerWidth > 768 && (

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { FaClipboardList, FaTimes } from 'react-icons/fa';
-import { useData } from '@/app/context/dataContext';
-import ChildCardHori from '../child/ChildCardHori';
 import useSWR from 'swr';
 import { fetcher } from '@/utils/helper';
 import { Task } from '@/types/interface';

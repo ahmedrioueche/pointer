@@ -124,7 +124,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ child, isOpen, onClose }) =
                     if (e.target.files && e.target.files[0]) {
                       const reader = new FileReader();
                       reader.onload = (event) => {
-                        handeChildChange('icon', event.target?.result as string);
+                        handeChildChange('avatar', event.target?.result as string);
                       };
                       reader.readAsDataURL(e.target.files[0]);
                     }

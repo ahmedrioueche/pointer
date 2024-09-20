@@ -1,10 +1,9 @@
 "use client";
 import React, { useEffect, useState, useCallback } from 'react';
-import { apiGetChildQuizzes, apiInsertQuizzes, apiPromptGemini, apiUpdateChild, apiUpdateQuiz } from '@/lib/apiHelper';
+import { apiGetChildQuizzes, apiInsertQuizzes, apiPromptGemini, apiSendNotification, apiUpdateChild, apiUpdateQuiz } from '@/lib/apiHelper';
 import QuizCard from './QuizCard';
 import QuizForm from './QuizForm';
-import { Child, Quiz } from '@/types/interface';
-import ChildCardHori from '../child/ChildCardHori';
+import { Child, Notif, Quiz } from '@/types/interface';
 import { useData } from '@/app/context/dataContext';
 import AddQuizzesCard from './AddQuizzes';
 import { assertInt } from '@/utils/helper';
@@ -183,6 +182,17 @@ const Quizzes: React.FC<{user : any}> = ({user}) => {
     }, 3000)
 
     handleClear();
+
+    //send notification
+    const notification : Notif = {
+      title: 'Parent just assigned quizzes to you!',
+      content: `${quizzes.length} quizzes`,
+      description: `${quizzes[0].topic}`,
+      type: "challenge_added",
+    }      
+
+    const notifResponse = await apiSendNotification(user.id, quizzes[0].childId, "child", notification);
+
   }
 
   const saveUpdatedQuiz = async (quizToUpdate: Quiz) => {
@@ -343,7 +353,7 @@ const Quizzes: React.FC<{user : any}> = ({user}) => {
       ) : (
         <div className="p-2 px-0 font-stix">
         {/* Floating horizontal selector */}
-        <div className="bg-gradient-to-r from-blue-800 via-blue-900 to-blue-600 rounded-xl shadow-lg p-4 flex justify-between items-center mb-4 transform transition-transform duration-300 hover:scale-105">
+        <div className="bg-gradient-to-r from-blue-800 via-blue-900 to-blue-600 rounded-xl shadow-lg p-4 flex justify-between items-center mb-4 ">
           <div className="flex justify-center space-x-4">
             <button onClick={() => setFilter(prev => ({...prev, type: "new" }))} className={`${filter.type === "new"? 'bg-indigo-400' : 'bg-indigo-600'} hover:bg-indigo-400 text-white px-4 py-2 rounded-full shadow-md transition-transform transform hover:scale-105 md:text-lg text-base`}>
               New Quizzes
@@ -352,7 +362,7 @@ const Quizzes: React.FC<{user : any}> = ({user}) => {
               Already Answered
             </button>
             <select
-              className="bg-indigo-600 hover:bg-indigo-400 outline-none text-white cursor-pointer py-2 px-4 rounded-full shadow-md transition-transform transform hover:scale-105 md:text-lg text-base"
+              className="bg-indigo-600 hover:bg-indigo-400 outline-none text-white cursor-pointer py-2 px-4 rounded-full shadow- md:text-lg text-base"
               value={topicFilter}
               onChange={(e) => handleFilterChange(e)}
             >

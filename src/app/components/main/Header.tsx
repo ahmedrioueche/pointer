@@ -7,7 +7,6 @@ import { motion } from 'framer-motion'; // For animation
 import { useEffect, useState, useRef, useCallback } from 'react';
 import BudgetModal from './modals/BudgetModal';
 import { useData } from '@/app/context/dataContext';
-import { Child } from '@/types/interface';
 import { apiGetSettingsByParentId, apiPromptGemini } from '@/lib/apiHelper';
 import { assertPositive, getCurrencySymbol } from '@/utils/helper';
 
@@ -27,11 +26,12 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
     const [currentChildData, setCurrentChildData] = useState<any>();
     const [quoteOfTheDay, setQuoteOfTheDay] = useState<string>();
     const [quoteSource, setQuoteSource] = useState<string>();
+    const [isQuotePrompted, setIsQuotePrompted] = useState(false);
+    const [isQuoteExpired, setIsQuoteExpired] = useState(true);
 
     const dropdownRef = useRef<HTMLDivElement>(null);
     const pointsDropdownRef = useRef<HTMLDivElement>(null);
     const budgetDropDownRef = useRef<HTMLDivElement>(null);
-    const [isQuotePrompted, setIsQuotePrompted] = useState(false);
 
     const childrenContext = useData();
     
@@ -42,22 +42,22 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
         }
     }, [childrenContext, user.type, user.id])
 
-  useEffect(() => {
-    const getSettings = async (userId : number) => {
-      const response = await apiGetSettingsByParentId(userId);
-      const settings = response.response;
-      if(settings){
-        setPointsPerCurrency(settings.pointsPerCurrency)
+    useEffect(() => {
+        const getSettings = async (userId : number) => {
+        const response = await apiGetSettingsByParentId(userId);
+        const settings = response.response;
+        if(settings){
+            setPointsPerCurrency(settings.pointsPerCurrency)
 
-        const symbol = getCurrencySymbol(settings.currency);
-        if(symbol)
-          setCurrencySymbol(symbol);
-      }
-    } 
+            const symbol = getCurrencySymbol(settings.currency);
+            if(symbol)
+            setCurrencySymbol(symbol);
+        }
+        } 
 
-    if(user.type === "child")
-        getSettings(user.id);
-  }, [user.id, user.type])
+        if(user.type === "child")
+            getSettings(user.id);
+    }, [user.id, user.type])
 
     useEffect(() => {
         if(user.type === "child" && currentChildData){
@@ -100,12 +100,14 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
             if (quote) {
               setQuoteOfTheDay(quote);
               setIsQuotePrompted(true);
+              setIsQuoteExpired(false);
             }
             if(source){
                setQuoteSource(source);
             }
         }
-        if(!quoteOfTheDay && !isQuotePrompted )
+
+        if(!quoteOfTheDay && !isQuotePrompted && isQuoteExpired)
             getQuoteOfTheDay();
     }, [currentChildData, quoteOfTheDay, user.type])
 
@@ -127,7 +129,56 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
       
         return { quote, source };
     }
-      
+    
+    // Load the target time from localStorage or set it to 24 hours from now
+    const getInitialTargetTime = () => {
+        const savedTime = localStorage.getItem('targetTime');
+        if (savedTime) {
+            return new Date(savedTime);
+        } else {
+            const now = new Date();
+            now.setHours(now.getHours() + 24);
+            localStorage.setItem('targetTime', now.toISOString());
+            return now;
+        }
+    };
+
+    const [targetTime, setTargetTime] = useState<Date>(getInitialTargetTime);
+    const [remainingTime, setRemainingTime] = useState<number>(getRemainingTime(targetTime));
+
+    useEffect(() => {
+        // Check the remaining time when the component mounts and every hour
+        const updateRemainingTime = () => {
+            const timeLeft = getRemainingTime(targetTime);
+            setRemainingTime(timeLeft);
+
+            if (timeLeft <= 0) {
+                // When the timer hits 0, do something
+                console.log("Timer reached 0. Perform an action here!");
+                setIsQuoteExpired(true);
+                // Reset the target time for another 24 hours
+                const now = new Date();
+                now.setHours(now.getHours() + 24);
+                setTargetTime(now);
+                localStorage.setItem('targetTime', now.toISOString());
+            }
+        };
+
+        // Update the remaining time immediately
+        updateRemainingTime();
+
+        // Schedule the next update in 1 hour
+        const timeoutId = setTimeout(updateRemainingTime, 1000 * 60 * 60); // Check every hour
+
+        // Cleanup on unmount
+        return () => clearTimeout(timeoutId);
+    }, [targetTime]);
+
+    // Helper function to calculate the remaining time in milliseconds
+    function getRemainingTime(target: Date) {
+        const now = new Date();
+        return target.getTime() - now.getTime();
+    }
     
     useEffect(() => {
         const handleResize = () => {

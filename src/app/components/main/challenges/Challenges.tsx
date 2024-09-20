@@ -45,9 +45,10 @@ const ChallengesPage: React.FC<ChallengesPageProps> = ({ user }) => {
   useEffect(() => {
     if (challengesDB) {
       // Sort challenges by time, newest first
-      const sortedChallenges = challengesDB.challenges.sort((a : any, b : any) => 
-        new Date(b.time).getTime() - new Date(a.time).getTime()
-      );
+      const sortedChallenges =  challengesDB.challenges &&  challengesDB.challenges.length > 0? 
+      challengesDB.challenges.sort((a : any, b : any) => 
+        new Date(b.time).getTime() - new Date(a.time).getTime() 
+      ) : null
       setChallenges(sortedChallenges);
     }
   }, [challengesDB, setChallenges]);

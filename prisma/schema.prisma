@@ -203,3 +203,8 @@ model Quiz {
   completionDate    DateTime?     @map("completion_date")
 }
 
+model Test {  
+  id                Int           @id @default(autoincrement()) @map("id")
+  createdAt      DateTime?     @map("creation_date")
+  name             String?
+}

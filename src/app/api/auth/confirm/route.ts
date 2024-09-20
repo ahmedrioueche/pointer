@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { insertChild } from '@/services/childService';
+import { Child } from '@prisma/client';
 
 async function handlePost(req: Request) {
     try {
-        const { name, age, gender, parent_id, has_device, uses_shared_device, username, password } = await req.json();
+        const { name, age, gender, parentId, hasDevice, usesSharedDevice, username, password } = await req.json();
 
-        if (!name || !age || !gender || !parent_id || !has_device) {
+        if (!name || !age || !gender || !parentId || !hasDevice) {
             return NextResponse.json({ message: 'Please provide all required fields.' }, { status: 400 });
         }
 
@@ -13,9 +14,9 @@ async function handlePost(req: Request) {
             name,
             age,
             gender,
-            parent_id,
-            has_device,
-            uses_shared_device,
+            parentId,
+            hasDevice,
+            usesSharedDevice,
             username,
             password,
         };

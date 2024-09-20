@@ -43,7 +43,7 @@ const Rewards: React.FC = (user : any) => {
   }, [childrenContext, updateChildDataSignal, children, userId, userType]);
 
   useEffect(() => {
-    const parentId = currentChildData?.parent_id;
+    const parentId = currentChildData?.parentId;
     const fetchRewardData = async () => {
         try {
           const data = await fetcher('/api/main/reward/get-reward-parent-id', userType === "child"? assertInt(parentId) : assertInt(userId)); //either child or parent
@@ -173,7 +173,7 @@ const Rewards: React.FC = (user : any) => {
       type: "reward_claimed",
     }
     
-    const notifResponse = await apiSendNotification(currentChildData.id, currentChildData.parent_id, "parent" , notification);
+    const notifResponse = await apiSendNotification(currentChildData.id, currentChildData.parentId, "parent" , notification);
     console.log("apiSendNotification response", notifResponse)
   }
 

@@ -93,7 +93,7 @@ const ChildHome: React.FC<{ user: any }> = ({ user }) => {
 
     console.log("currentChildData", currentChildData);
     
-    const notifResponse = await apiSendNotification(currentChildData.id, currentChildData.parent_id , "parent" , notification);
+    const notifResponse = await apiSendNotification(currentChildData.id, currentChildData.parentId , "parent" , notification);
     console.log("apiSendNotification response", notifResponse)
   }
 
@@ -124,7 +124,7 @@ const ChildHome: React.FC<{ user: any }> = ({ user }) => {
 
     console.log("currentChildData", currentChildData);
     
-    const notifResponse = await apiSendNotification(currentChildData.id, currentChildData.parent_id , "parent" , notification);
+    const notifResponse = await apiSendNotification(currentChildData.id, currentChildData.parentId , "parent" , notification);
     console.log("apiSendNotification response", notifResponse)
   }
 

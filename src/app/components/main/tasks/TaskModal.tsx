@@ -44,7 +44,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
   if (loading) return <MainLoading numCards={3} />;
 
   const assignTask = async (newTask: Task, TaskType : string | undefined) => {
-    newTask = { ...newTask, creatorId: child.parent_id, creatorName: "Parent"};
+    newTask = { ...newTask, creatorId: child.parentId, creatorName: "Parent"};
 
     if (selectedTask) { // Modify task
       const selectedTaskId = selectedTask.id;
@@ -79,8 +79,8 @@ const TaskModal: React.FC<TaskModalProps> = ({
         type: "task_assigned",
       };
       
-      if (child.parent_id && type !== "create_only") {
-        await apiSendNotification(child.parent_id, child.id, "child", notification);
+      if (child.parentId && type !== "create_only") {
+        await apiSendNotification(child.parentId, child.id, "child", notification);
       }
     }
     onUpdate? onUpdate() : null;

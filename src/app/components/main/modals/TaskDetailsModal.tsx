@@ -51,7 +51,7 @@ const TaskDetailsModal: React.FC<TaskDetailsModalProps> = ({ isOpen, task, child
   
 
   const handleModify = async (newTask : Task) => {
-    newTask = { ...newTask, creatorId: child.parent_id, creatorName: "Parent"};
+    newTask = { ...newTask, creatorId: child.parentId, creatorName: "Parent"};
     const response = await apiUpdateTask(task.id, {...newTask, id: task.id});
     console.log("response", response);
   }

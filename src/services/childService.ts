@@ -10,17 +10,17 @@ export const insertChild = async (child: Child): Promise<any> => {
 
     const [username, password] = generateRandomUsernamePassword(child.name);
 
-    let parentId = assertInt(child.parent_id);
+    let parentId = assertInt(child.parentId);
     let age = assertInt(child.age);
     
     const newChild = await prisma.child.create({
       data: {
-        parent_id: parentId,
+        parentId: parentId,
         name: child.name,
         age: age,
         gender: child.gender,
-        has_device: child.has_device? child.has_device : null,
-        uses_shared_device: child.uses_shared_device? child.uses_shared_device : null,
+        hasDevice: child.hasDevice? child.hasDevice : null,
+        usesSharedDevice: child.usesSharedDevice? child.usesSharedDevice : null,
         avatar: child.avatar? child.avatar : getRandomAvatar(child.gender, CHILDREN_AVATAR_COUNT),
         username: username,
         password: password,
@@ -41,7 +41,7 @@ export const insertChild = async (child: Child): Promise<any> => {
 export const getChildrenByParentId = async (parentId: number): Promise<Child[]> => {
   try {
     const children = await prisma.child.findMany({
-      where: { parent_id: parentId },
+      where: { parentId: parentId },
     });
 
     return children as Child[]; 

@@ -64,8 +64,8 @@ const Confirm: React.FC = () => {
                 }
                 if (!child.gender) currentErrors[`childGender${index}`] = `Please select a gender for the child.`;
 
-                if (!child.has_device) currentErrors[`childHasDevice${index}`] = `Please select if ${child.name || `Child ${index + 1}`} is allowed a separate device.`;
-                if (child.has_device === false && !child.uses_shared_device) {
+                if (!child.hasDevice) currentErrors[`childHasDevice${index}`] = `Please select if ${child.name || `Child ${index + 1}`} is allowed a separate device.`;
+                if (child.hasDevice === false && !child.usesSharedDevice) {
                     currentErrors[`childUsesSharedDevice${index}`] = `Please select if ${child.name || `Child ${index + 1}`} uses a shared device with you.`;
                 }
             });
@@ -82,9 +82,9 @@ const Confirm: React.FC = () => {
                     name: child.name,
                     age: child.age,
                     gender: child.gender,
-                    parent_id: parentId,
-                    has_device: child.has_device,
-                    uses_shared_device: child.uses_shared_device,
+                    parentId: parentId,
+                    hasDevice: child.hasDevice,
+                    usesSharedDevice: child.usesSharedDevice,
                 };
 
                 //function to insert child in db 
@@ -128,15 +128,15 @@ const Confirm: React.FC = () => {
         const count = parseInt(e.target.value, 10);
         setChildrenCount(e.target.value);
         if (!isNaN(count) && count > 0) {
-            setChildren(Array(count).fill({ name: '', age: '', gender: '', has_device: true }));
+            setChildren(Array(count).fill({ name: '', age: '', gender: '', hasDevice: true }));
         } else {
             setChildren([]);
         }
     };
 
-    const handleChildChange = (index: number, field: 'name' | 'age' | 'gender' | 'has_device' | 'uses_shared_device', value: string) => {
+    const handleChildChange = (index: number, field: 'name' | 'age' | 'gender' | 'hasDevice' | 'usesSharedDevice', value: string) => {
         const updatedChildren = [...children];
-        if (field === 'has_device' || field === 'uses_shared_device') {
+        if (field === 'hasDevice' || field === 'usesSharedDevice') {
             // Convert value to boolean
             updatedChildren[index] = { ...updatedChildren[index], [field]: value === 'true' };
         } else {
@@ -236,8 +236,8 @@ const Confirm: React.FC = () => {
                                                     <input
                                                         type="radio"
                                                         value="yes"
-                                                        checked={child.has_device === true}
-                                                        onChange={() => handleChildChange(index, 'has_device', 'true')}
+                                                        checked={child.hasDevice === true}
+                                                        onChange={() => handleChildChange(index, 'hasDevice', 'true')}
                                                         className="radio-hidden"
                                                     />
                                                     <div className="radio-custom"></div>
@@ -247,8 +247,8 @@ const Confirm: React.FC = () => {
                                                     <input
                                                         type="radio"
                                                         value="no"
-                                                        checked={child.has_device === false}
-                                                        onChange={() => handleChildChange(index, 'has_device', 'false')}
+                                                        checked={child.hasDevice === false}
+                                                        onChange={() => handleChildChange(index, 'hasDevice', 'false')}
                                                         className="radio-hidden"
                                                     />
                                                     <div className="radio-custom"></div>
@@ -258,7 +258,7 @@ const Confirm: React.FC = () => {
                                             {errors[`childHasDevice${index}`] && <p className="text-red-500 text-sm mt-1">{errors[`childHasDevice${index}`]}</p>}
                                         </div>
 
-                                        {!child.has_device && (
+                                        {!child.hasDevice && (
                                             <div className="space-y-2">
                                                 <p className={`text-lg dark:text-dark-text text-light-text`}>
                                                     Do they use a shared device with you?
@@ -268,8 +268,8 @@ const Confirm: React.FC = () => {
                                                         <input
                                                             type="radio"
                                                             value="yes"
-                                                            checked={child.uses_shared_device === false}
-                                                            onChange={() => handleChildChange(index, 'uses_shared_device', 'true')}
+                                                            checked={child.usesSharedDevice === false}
+                                                            onChange={() => handleChildChange(index, 'usesSharedDevice', 'true')}
                                                             className="radio-hidden"
                                                         />
                                                         <div className="radio-custom"></div>
@@ -279,8 +279,8 @@ const Confirm: React.FC = () => {
                                                         <input
                                                             type="radio"
                                                             value="no"
-                                                            checked={child.uses_shared_device === false}
-                                                            onChange={() => handleChildChange(index, 'uses_shared_device', 'false')}
+                                                            checked={child.usesSharedDevice === false}
+                                                            onChange={() => handleChildChange(index, 'usesSharedDevice', 'false')}
                                                             className="radio-hidden"
                                                         />
                                                         <div className="radio-custom"></div>

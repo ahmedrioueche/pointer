@@ -52,7 +52,7 @@ const ParentHome: React.FC<{id : number}> = ({id}) => {
         const child = {
             id: 0,
             name: name,
-            parent_id: id,
+            parentId: id,
             age: ageNumber,
             gender: gender,
             icon: image ? URL.createObjectURL(image) : getRandomIcon(gender, 6),

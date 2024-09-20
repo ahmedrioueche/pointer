@@ -29,7 +29,7 @@ export const DataProvider: React.FC<{ user: any; children: ReactNode }> = ({ use
   const getParentId = async (childId : number) => {
     const childData = await apiGetChildData(childId);
   
-    return childData.parent_id;
+    return childData.parentId;
   }
   
   useEffect(() => {

@@ -75,9 +75,9 @@ export interface Child {
   name: string;
   age: number;
   gender: 'male' | 'female';
-  parent_id?: number;
-  has_device?: boolean,
-  uses_shared_device?: boolean,
+  parentId?: number;
+  hasDevice?: boolean,
+  usesSharedDevice?: boolean,
   achievedTasks?: Task[];
   pendingTasks?: Task[];
   tasksAssigned?: number;

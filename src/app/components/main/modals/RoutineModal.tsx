@@ -33,7 +33,7 @@ const RoutineModal: React.FC<RoutineModalProps> = ({ type, user, isOpen, child, 
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isSmallScreen, setIsSmallScreen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { data: data, error, mutate } = useSWR('/api/main/task/get-task-parent-id', (url) => fetcher(url, child.parent_id), {
+  const { data: data, error, mutate } = useSWR('/api/main/task/get-task-parent-id', (url) => fetcher(url, child.parentId), {
     revalidateOnFocus: true, 
   });
 

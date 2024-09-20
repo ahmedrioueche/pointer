@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import LoadingButton from '@/app/components/LoadingButton';
 import { useTheme } from '@/app/context/ThemeContext';
+import { apiTest } from '@/lib/apiHelper';
 
 interface LoginDetails {
     identifier: string;
@@ -36,7 +37,8 @@ const Login: React.FC = () => {
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsPrimaryLoading(true);
-
+        const result = await apiTest("Ahmed")
+        console.log("result", result)
         if (!loginDetails.identifier || !loginDetails.password) {
             setIsPrimaryLoading(false);
             setStatus({ success: false, message: 'Please fill in all required fields.' });

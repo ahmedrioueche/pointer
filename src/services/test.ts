@@ -23,4 +23,3 @@ export const test = async (name: string) => {
     }
 };
 
-test("Ahmed")

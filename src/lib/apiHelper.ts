@@ -565,3 +565,27 @@ export const apiGetChildQuizzes = async (childId : number) : Promise<any> => {
     return { status: 'error', message: 'An error occurred' };
   }
 }
+
+export const apiTest = async (name : string) : Promise<any> => {
+  try {
+    const response = await fetch('/api/test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Test failed');
+    }
+
+    const responseData = await response.json();
+    
+    return responseData;
+
+  } catch (error) {
+    console.error('Test failed', error);
+    
+    return { status: 'error', message: 'An error occurred' };
+  }
+}
+

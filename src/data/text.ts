@@ -2,14 +2,14 @@ import { payments } from "./values";
 
 export const heroText = {
     welcome: "Welcome to",
-    tagline: "A Reward System Tailored for Parents",
+    tagline: "Unlock Your Children's Full Potential",
     description: `Pointer is a web application designed to help parents encourage their children's good behavior through a rewarding points system. Children can earn points by completing various tasks, which can then be exchanged for valuable rewards, such as money, trips, and more. It's a fun and effective way to foster positive behavior and motivation.`,
     modal: {
       title: "Discover More About Pointer",
       sections: [
         {
           title: "How It Works",
-          content: `Pointer operates on a straightforward points-based system. Parents assign tasks to their children, who earn points upon completion. These points are tracked in the app and can be redeemed for a range of rewards. This system not only motivates children to complete tasks but also teaches them the value of earning and managing rewards.`
+          content: `Pointer operates on a points-based system. Parents assign tasks to their children, who earn points upon completion. These points are tracked in the app and can be redeemed for a range of rewards. This system not only motivates children to complete tasks but also teaches them the value of earning and managing rewards.`
         },
         {
           title: "Key Features",

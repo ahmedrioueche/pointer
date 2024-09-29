@@ -187,6 +187,7 @@ interface ContactFormData {
   }
 
   export const apiGetTasksByChildId = async (id : number) => {
+    console.log("id in apiGetTasksByChildId", id)
     const response = await fetch("/api/main/task/get-task-child-id", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

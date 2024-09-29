@@ -101,14 +101,15 @@ const DashboardNavbar: React.FC<{user : any }> = ( {user } ) => {
   
   useEffect(() => {
     const checkUserData = () => {
-      console.log("parent", parentData)
+      //test
+      //setIsPayModalOpen(true);
+
     //check if user is in a free trial
       //if yes, check remainingDays 
         //if remainingDays < 0, display "please pay"
         //else display remainingDays
       //if no, check subscription end date
         //if no payment, or payment duration passed, display "please pay"
-        console.log("parentData.isFreeTrial", parentData.isFreeTrial)
         if(parentData.isFreeTrial){
           const remainingDays : number = getRemainingDays();
           if(remainingDays > 0){
@@ -125,8 +126,7 @@ const DashboardNavbar: React.FC<{user : any }> = ( {user } ) => {
   
         setIsChecked(true);
         
-        //test
-       //setIsPayModalOpen(true);
+        
     }
 
     if(parentData && !isChecked){

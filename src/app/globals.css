@@ -10,7 +10,7 @@
 @font-face {
   font-family: 'STIX Two Text';
   src: url('/fonts/STIXTwoText-VariableFont_wght.ttf') format('truetype');
-  font-weight: 100 900; /* Adjust weight range if necessary */
+  font-weight: 100 900;
 }
 
 html {

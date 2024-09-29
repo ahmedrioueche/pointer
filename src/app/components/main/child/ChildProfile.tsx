@@ -65,6 +65,7 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
   useEffect(() => {
     const fetchCompletedTasks = async () => {
       try {
+        console.log("childData", childData)
         const data = childData?.id? await apiGetTasksByChildId(childData?.id) : null;
         if(data){
           const fetchedTasks = data.tasks;
@@ -490,8 +491,8 @@ const ChildProfile: React.FC<{user: any}> = ({user}) => {
                 <DetailCard
                   title="Added On"
                   value={
-                    childData.created_at
-                      ? format(new Date(childData.created_at), 'PPP')
+                    childData.createdAt
+                      ? format(new Date(childData.createdAt), 'PPP')
                       : 'Unknown date'
                   }
                   icon={<FaCalendarAlt />}

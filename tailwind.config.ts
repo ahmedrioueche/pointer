@@ -34,9 +34,9 @@ const config: Config = {
     },
   },
   plugins: [
-    require('tailwind-scrollbar-hide'), // Add the scrollbar-hide plugin
+    require('tailwind-scrollbar-hide'), 
   ],
-  darkMode: 'class',  // Use 'class' to enable dark mode toggling via class names
+  darkMode: 'class',  
 };
 
 export default config;

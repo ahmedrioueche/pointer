@@ -85,7 +85,7 @@ const EditChallengeModal: React.FC<EditChallengeModalProps> = ({ user, challenge
       }`}
     >    {/* Title */}
         <div className="bg-gradient-to-r from-blue-300 via-blue-500 to-blue-700 dark:from-blue-800 dark:via-blue-900 dark:to-blue-600 rounded-lg shadow-lg p-4 px-8 mt-3 w-full md:w-[70vw] lg:w-[70vw] max-h-[95vh] overflow-y-auto flex flex-col task-menu font-stix">
-        <div className="flex justify-between items-center p-3">
+        <div className="flex justify-between items-center">
           <div className="flex items-center text-light-text dark:text-dark-text">
             <FaTrophy className="text-3xl mr-3" />
             <h2 className="text-xl font-bold font-satisfy">Edit Challenge</h2>

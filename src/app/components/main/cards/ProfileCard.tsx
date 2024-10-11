@@ -27,7 +27,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   onAssignTasks,
   onOpenEditAvatarModal,
 }) => {
-  const genderImage = gender?.toLowerCase() === 'male' ? '/icons/boy_1.png' : '/icons/girl_1.png';
+  const genderImage = gender?.toLowerCase() === 'male' ? '/avatars/boy_1.png' : '/avatars/girl_1.png';
 
   return (
     <div className="flex flex-col items-center justify-center bg-gradient-to-r transform transition-transform hover:scale-105 from-teal-500 to-cyan-500 p-4 rounded-lg shadow-lg text-dark-text dark:text-dark-text max-h-[300px] overflow-hidden">

@@ -82,14 +82,6 @@ const Menu: FC<MenuProps> = ({
         {userType !== 'child' && (
           <>
             <Link
-              href="/main/dashboard"
-              className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-              onClick={toggleMenu}
-            >
-              <FaChartBar className="mr-3 text-lg" /> Dashboard
-            </Link>
-
-            <Link
               href="/main/routines"
               className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
               onClick={toggleMenu}
@@ -138,14 +130,6 @@ const Menu: FC<MenuProps> = ({
           onClick={toggleMenu}
         >
           <FaTrophy className="mr-3 text-lg" /> Challenges
-        </Link>
-
-        <Link
-          href="/main/games"
-          className="flex items-center w-full p-4 py-2 text-lg font-medium text-light-text dark:text-dark-text hover:text-dark-text dark:hover:text-light-text hover:bg-light-accent dark:hover:bg-dark-accent transition-colors duration-300"
-          onClick={toggleMenu}
-        >
-          <FaDice className="mr-3 text-lg" /> Games
         </Link>
 
         <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />

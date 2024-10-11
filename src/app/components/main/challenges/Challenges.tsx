@@ -164,7 +164,7 @@ const ChallengesPage: React.FC<ChallengesPageProps> = ({ user }) => {
                 </div>
               ))
             ) : (
-              user.type === "parent" && (
+              user.type != "parent" && (
                 <div className='font-satisfy text-xl text-light-text dark:text-dark-text'>
                   Challenges will appear here
                 </div>

@@ -54,21 +54,7 @@ const SideMenu: React.FC<{ user: any }> = ({ user }) => {
                         {!isCollapsed && <span>Home</span>}
                     </Link>
                 </li>
-                {userType !== "child" && (
-                    <li>
-                    <Link
-                        href="/main/dashboard"
-                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
-                            pathname === '/main/dashboard' 
-                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
-                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
-                        }`}
-                    >
-                        <FaChartBar className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                        {!isCollapsed && <span>Dashboard</span>}
-                    </Link>
-                    </li>
-                )}
+             
                 {userType !== "child" && (
                     <li>
                         <Link
@@ -112,20 +98,7 @@ const SideMenu: React.FC<{ user: any }> = ({ user }) => {
                         {!isCollapsed && <span>Rewards</span>}
                     </Link>
                 </li>
-                <li>
-                    <Link
-                        href="/main/homework"
-                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
-                            pathname === '/main/homework' 
-                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
-                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
-                        }`}
-                    >
-                        <FaBook className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                        {!isCollapsed && <span>Homework</span>}
-                    </Link>
-                </li>
-          
+              
                 <li>
                     <Link
                         href="/main/challenges"
@@ -153,25 +126,12 @@ const SideMenu: React.FC<{ user: any }> = ({ user }) => {
                         {!isCollapsed && <span>Quizzes</span>}
                     </Link>
                 </li>
-                <li>
-                    <Link
-                        href="/main/games"
-                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
-                            pathname === '/main/games' 
-                            ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
-                            : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'
-                        }`}
-                    >
-                        <FaDice className={`text-${isCollapsed ? '3xl' : '2xl'} ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
-                        {!isCollapsed && <span>Games</span>}
-                    </Link>
-                </li>
-             
+                
                 <hr className="w-full border-t border-gray-300 dark:border-gray-600 my-2" />
                 <li>
                     <Link
                         href="/main/help"
-                        className={`flex items-center px-3 rounded-lg transition-colors ${
+                        className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
                             pathname === '/main/help' 
                             ? 'bg-gray-200 dark:bg-gray-700 text-light-accent dark:text-dark-accent' 
                             : 'text-light-text dark:text-dark-text hover:bg-light-accent dark:hover:bg-dark-accent hover:text-light-background dark:hover:text-dark-background'

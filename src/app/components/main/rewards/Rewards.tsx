@@ -241,7 +241,9 @@ const Rewards: React.FC = (user : any) => {
                 />
               </motion.div>
             ))) : (
-              <div className='font-satisfy text-xl text-light-text dark:text-dark-text'>Rewards will appear here</div>
+              user.type !== "parent" && (
+                <div className='font-satisfy text-xl text-light-text dark:text-dark-text'>Rewards will appear here</div>
+              )
             )}
           </div>
         </div>

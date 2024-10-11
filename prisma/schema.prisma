@@ -30,7 +30,7 @@ model Parent {
   paymentMethod           String?   @map("payment_method")
   lastPaymentDate         DateTime? @map("last_payment_date")
   subscriptionPrice       Float?    @map("subscription_price")
-  createdAt               DateTime? @map("created_at")
+  createdAt               DateTime? @map("created_at") @default(now())
   
   // Relations
   tasks                   Task[]

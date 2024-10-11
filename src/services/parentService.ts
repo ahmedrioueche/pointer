@@ -57,6 +57,7 @@ export const insertParent = async (parent: Parent): Promise<Response> => {
             status: 'success',
             parentId: newParent.id,
         };
+        
     } catch (error) {
             return {
                 status: 'failed',

@@ -74,106 +74,106 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
     }, [currentChildData, pointsPerCurrency, user.type])
 
 
-    useEffect(() => {
-        const getQuoteOfTheDay = async () => {
-            let prompt;
-            if(user.type === "child"){
-                prompt = `Give a quote or an advice of the day to a child of age ${currentChildData.age}
-                it should be something wise, educational or funny.
-                Don't give an introduction or a conclusion, your response should be structered in this way:
-                -Quote: "quote..."
-                -Source: "source.." if a source exists.`
-            }
-            else {
-                prompt = `Give a quote or an advice of the day to a grown person,
-                it should be something wise and educational about raising children if possible, or
-                something general.
-                Don't give an introduction or a conclusion, your response should be structered in this way:
-                -Quote: "quote..."
-                -Source: "source.." if a source exists.
-                `
-            }
-              
-            const response = await apiPromptGemini(prompt);
-            const { quote, source } = extractQuote(response);
-      
-            if (quote) {
-              setQuoteOfTheDay(quote);
-              setIsQuotePrompted(true);
-              setIsQuoteExpired(false);
-            }
-            if(source){
-               setQuoteSource(source);
-            }
-        }
-
-        if(!quoteOfTheDay && !isQuotePrompted && isQuoteExpired)
-            getQuoteOfTheDay();
-    }, [currentChildData, quoteOfTheDay, user.type])
-
-    function extractQuote(response : any) {
-        // Split the response by lines to get the quote and source parts
-        const lines = response.split("\n");
-        
-        // Extract the quote (assuming it's always in the first line)
-        const quoteLine = lines.find((line: any)=> line.startsWith("-Quote:"));
-        
-        // Extract the source if it exists (assuming it's in the second line)
-        const sourceLine = lines.find((line: any) => line.startsWith("-Source:"));
-        
-        // Remove "-Quote:" and trim whitespace to get the actual quote
-        const quote = quoteLine ? quoteLine.replace("-Quote:", "").trim() : null;
-        
-        // Remove "-Source:" and trim whitespace to get the actual source
-        const source = sourceLine ? sourceLine.replace("-Source:", "").trim() : null;
-      
-        return { quote, source };
-    }
-    
-    // Load the target time from localStorage or set it to 24 hours from now
-    const getInitialTargetTime = () => {
-        const savedTime = localStorage.getItem('targetTime');
-        if (savedTime) {
-            return new Date(savedTime);
-        } else {
-            const now = new Date();
-            now.setHours(now.getHours() + 24);
-            localStorage.setItem('targetTime', now.toISOString());
-            return now;
-        }
-    };
-
-    const [targetTime, setTargetTime] = useState<Date>(getInitialTargetTime);
-    const [remainingTime, setRemainingTime] = useState<number>(getRemainingTime(targetTime));
-
-    useEffect(() => {
-        // Check the remaining time when the component mounts and every hour
-        const updateRemainingTime = () => {
-            const timeLeft = getRemainingTime(targetTime);
-            setRemainingTime(timeLeft);
-
-            if (timeLeft <= 0) {
-                // When the timer hits 0, do something
-                console.log("Timer reached 0. Perform an action here!");
-                setIsQuoteExpired(true);
-                // Reset the target time for another 24 hours
-                const now = new Date();
-                now.setHours(now.getHours() + 24);
-                setTargetTime(now);
-                localStorage.setItem('targetTime', now.toISOString());
-            }
-        };
-
-        // Update the remaining time immediately
-        updateRemainingTime();
-
-        // Schedule the next update in 1 hour
-        const timeoutId = setTimeout(updateRemainingTime, 1000 * 60 * 60); // Check every hour
-
-        // Cleanup on unmount
-        return () => clearTimeout(timeoutId);
-    }, [targetTime]);
-
+   // useEffect(() => {
+   //     const getQuoteOfTheDay = async () => {
+   //         let prompt;
+   //         if(user.type === "child"){
+   //             prompt = `Give a quote or an advice of the day to a child of age ${currentChildData.age}
+   //             it should be something wise, educational or funny.
+   //             Don't give an introduction or a conclusion, your response should be structered in this way:
+   //             -Quote: "quote..."
+   //             -Source: "source.." if a source exists.`
+   //         }
+   //         else {
+   //             prompt = `Give a quote or an advice of the day to a grown person,
+   //             it should be something wise and educational about raising children if possible, or
+   //             something general.
+   //             Don't give an introduction or a conclusion, your response should be structered in this way:
+   //             -Quote: "quote..."
+   //             -Source: "source.." if a source exists.
+   //             `
+   //         }
+   //           
+   //         const response = await apiPromptGemini(prompt);
+   //         const { quote, source } = extractQuote(response);
+   //   
+   //         if (quote) {
+   //           setQuoteOfTheDay(quote);
+   //           setIsQuotePrompted(true);
+   //           setIsQuoteExpired(false);
+   //         }
+   //         if(source){
+   //            setQuoteSource(source);
+   //         }
+   //     }
+//
+   //     if(!quoteOfTheDay && !isQuotePrompted && isQuoteExpired)
+   //         getQuoteOfTheDay();
+   // }, [currentChildData, quoteOfTheDay, user.type])
+//
+   // function extractQuote(response : any) {
+   //     // Split the response by lines to get the quote and source parts
+   //     const lines = response.split("\n");
+   //     
+   //     // Extract the quote (assuming it's always in the first line)
+   //     const quoteLine = lines.find((line: any)=> line.startsWith("-Quote:"));
+   //     
+   //     // Extract the source if it exists (assuming it's in the second line)
+   //     const sourceLine = lines.find((line: any) => line.startsWith("-Source:"));
+   //     
+   //     // Remove "-Quote:" and trim whitespace to get the actual quote
+   //     const quote = quoteLine ? quoteLine.replace("-Quote:", "").trim() : null;
+   //     
+   //     // Remove "-Source:" and trim whitespace to get the actual source
+   //     const source = sourceLine ? sourceLine.replace("-Source:", "").trim() : null;
+   //   
+   //     return { quote, source };
+   // }
+   // 
+   // // Load the target time from localStorage or set it to 24 hours from now
+   // const getInitialTargetTime = () => {
+   //     const savedTime = localStorage.getItem('targetTime');
+   //     if (savedTime) {
+   //         return new Date(savedTime);
+   //     } else {
+   //         const now = new Date();
+   //         now.setHours(now.getHours() + 24);
+   //         localStorage.setItem('targetTime', now.toISOString());
+   //         return now;
+   //     }
+   // };
+//
+   // const [targetTime, setTargetTime] = useState<Date>(getInitialTargetTime);
+   // const [remainingTime, setRemainingTime] = useState<number>(getRemainingTime(targetTime));
+//
+   // useEffect(() => {
+   //     // Check the remaining time when the component mounts and every hour
+   //     const updateRemainingTime = () => {
+   //         const timeLeft = getRemainingTime(targetTime);
+   //         setRemainingTime(timeLeft);
+//
+   //         if (timeLeft <= 0) {
+   //             // When the timer hits 0, do something
+   //             console.log("Timer reached 0. Perform an action here!");
+   //             setIsQuoteExpired(true);
+   //             // Reset the target time for another 24 hours
+   //             const now = new Date();
+   //             now.setHours(now.getHours() + 24);
+   //             setTargetTime(now);
+   //             localStorage.setItem('targetTime', now.toISOString());
+   //         }
+   //     };
+//
+   //     // Update the remaining time immediately
+   //     updateRemainingTime();
+//
+   //     // Schedule the next update in 1 hour
+   //     const timeoutId = setTimeout(updateRemainingTime, 1000 * 60 * 60); // Check every hour
+//
+   //     // Cleanup on unmount
+   //     return () => clearTimeout(timeoutId);
+   // }, [targetTime]);
+//
     // Helper function to calculate the remaining time in milliseconds
     function getRemainingTime(target: Date) {
         const now = new Date();
@@ -371,10 +371,7 @@ const Header = ({ user, childData, isBudgetModalOpen}: any) => {
                         <span> {childData?.currentPoints? childData?.currentPoints : null}</span>
                        </span>
                   </button>
-                  {showPointsDropDown && (
-                       <></>
-                  )}
-                  
+                 
               </div>
             )}
           

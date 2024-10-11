@@ -38,7 +38,6 @@ body {
   scrollbar-width: none; 
 }
 
-
 .no-spinner::-webkit-outer-spin-button,
 .no-spinner::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -48,7 +47,6 @@ body {
 .no-spinner[type="number"] {
     -moz-appearance: textfield;
 }
-
 
 .radio-hidden {
   display: none;

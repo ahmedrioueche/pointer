@@ -4,7 +4,7 @@
   import { useEffect, useRef, useState } from "react";
   import { FaMoon, FaSun, FaBars, FaTimes, FaHome, FaInfoCircle, FaPhone, FaAppStore, FaSignInAlt, FaUserPlus, FaSpinner } from "react-icons/fa";
   import { useRouter } from 'next/navigation';
-import { useTheme } from "@/app/context/ThemeContext";
+  import { useTheme } from "@/app/context/ThemeContext";
 
   const Navbar = () => {
     const {isDarkMode, toggleDarkMode } = useTheme();

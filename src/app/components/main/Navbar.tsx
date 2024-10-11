@@ -125,8 +125,6 @@ const DashboardNavbar: React.FC<{user : any }> = ( {user } ) => {
           setIsPayModalOpen(true);
   
         setIsChecked(true);
-        
-        
     }
 
     if(parentData && !isChecked){

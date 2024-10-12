@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Pointer
 
-First, run the development server:
+**Pointer** is an engaging web application designed to promote positive behavior in children through a fun and interactive reward system, encouraging discipline and personal growth.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Description
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Pointer allows parents to create routines, assign tasks, and manage rewards to encourage positive behavior in children. It also offers challenges, quizzes, and a budgeting tool, making it a comprehensive solution for motivating and tracking personal development.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Key Features
+- **Routine Creation**: Parents can create and assign routines and tasks for their children.
+- **Reward System**: The app includes a reward system, allowing children to earn points and receive rewards based on their progress.
+- **Challenges & Quizzes**: Engaging challenges and quizzes to stimulate learning and self-improvement.
+- **Child Profile Dashboard**: A dedicated dashboard for each child to track their routines, tasks, and progress.
+- **Budget Management**: Parents can allocate budgets for rewards and track spending.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Future Enhancements
+In future updates, the app aims to introduce a "Teacher Mode" for educators to assign homework and track students' academic progress. Gamification and personalized learning plans are also planned to support academic growth alongside behavioral development.
 
-## Learn More
+## Tech Stack
+- **Next.js (React.js)**
+- **TypeScript**
+- **TailwindCSS**
+- **NextAuth (Google OAuth)** for authentication
+- **PostgreSQL, Prisma** for database management
+- **Supabase** for backend services
+- **Nodemailer** for email verification
+- **Gemini** for quiz generation based on user input and preferences
+- **Stripe** for secure payment processing
+- **Vercel** for deployment
 
-To learn more about Next.js, take a look at the following resources:
+## App Demo
+- [Live Demo](https://pointer-app.vercel.app)
+- [GitHub Repository](https://github.com/ahmedrioueche/pointer)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Screenshots
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- ![Home](public/pointer/pointer_home.png)  
+  An engaging web application designed to promote positive behavior in children through a fun and interactive reward system, encouraging discipline and personal growth.
+  
+- ![Main Dashboard](public/pointer/pointer_main.png)  
+  The app includes several features such as creating routines for children, assigning tasks, creating rewards, challenges, and quizzes, and setting budgets for each kid.
+  
+- ![Rewards](public/pointer/pointer_rewards.png)  
+  Parents can create rewards for completing tasks and assign budgets for children.
+  
+- ![Signup](public/pointer/pointer_signup.png)  
+  Users can either create an account or log in via Google OAuth using NextAuth.
+  
+- ![Email Verification](public/pointer/pointer_verify.png)  
+  Email verification is implemented using Nodemailer.
+  
+- ![Profile Setup](public/pointer/pointer_confirm.png)  
+  Parents are prompted to fill in data about their children during the setup process.
+  
+- ![Plans](public/pointer/pointer_plans_2.png)  
+  Users can choose from free trials or subscription plans.
+  
+- ![Payment](public/pointer/pointer_payment.png)  
+  Secure payment processing is handled by Stripe.
 
-## Deploy on Vercel
+- ![Child Profile](public/pointer/pointer_child_profile.png)  
+  The child’s profile dashboard organizes their routines, tasks, rewards, and progress.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ![Rewards Display](public/pointer/pointer_rewards_child.png)  
+  A space dedicated to celebrating success, displaying rewards and achievements.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- ![Weekly Routines](public/pointer/pointer_routines_weekly.png)  
+  A glance at the weekly routine with task assignment and progress monitoring.
+
+- ![Daily Routine Breakdown](public/pointer/pointer_routine_daily.png)  
+  A daily breakdown showing tasks completed and those that need attention.
+
+- ![Task Assignment](public/pointer/pointer_kids_modal.png)  
+  Parents can assign tasks to specific children or create global tasks for all kids.
+
+- ![Challenge Creation](public/pointer/pointer_challenge_form.png)  
+  Easy and fun challenge creation with custom tasks and rewards.
+
+- ![Challenge Card](public/pointer/pointer_challenge_card.png)  
+  Challenge cards display details, stakes, and the rewards upon completion.
+
+- ![Quizzes](public/pointer/pointer_quizzes.png)  
+  Parents can set up quizzes for their children, generated by Google's Gemini AI.
+
+- ![Child Quizzes](public/pointer/pointer_quizzes_child.png)  
+  Children can participate in quizzes, track their progress, and earn points.
+
+- ![Budget Management](public/pointer/pointer_budget.png)  
+  Parents can manage budgets and allocate rewards for their children.
+
+- ![Notifications](public/pointer/pointer_notif.png)  
+  Parents receive instant notifications on progress and completed activities.
+
+- ![Settings](public/pointer/pointer_settings.png)  
+  The settings page allows customization of notifications and account preferences.
+
+- ![Free Trial](public/pointer/pointer_freeTrial.png)  
+  New users are invited to try the app through a risk-free trial.
+
+- ![Subscription Plans](public/pointer/pointer_plans.png)  
+  Users can choose from various subscription plans based on their needs.
+
+- ![Subscription Modal](public/pointer/pointer_please_pay.png)  
+  A modal prompts parents to pay for a subscription once the free trial ends.
+
+## Conclusion
+While this project is still a work in progress, it has immense potential for future development. Features like a "Teacher Mode" for homework assignments and academic tracking, as well as personalized learning plans, are planned to enhance the app’s capabilities. Gamification elements will make learning more engaging, supporting both behavioral and academic growth in children.

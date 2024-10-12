@@ -44,12 +44,6 @@ In future updates, the app aims to introduce a "Teacher Mode" for educators to a
 - ![Rewards](public/pointer/pointer_rewards.png)  
   Parents can create rewards for completing tasks and assign budgets for children.
   
-- ![Signup](public/pointer/pointer_signup.png)  
-  Users can either create an account or log in via Google OAuth using NextAuth.
-  
-- ![Email Verification](public/pointer/pointer_verify.png)  
-  Email verification is implemented using Nodemailer.
-  
 - ![Profile Setup](public/pointer/pointer_confirm.png)  
   Parents are prompted to fill in data about their children during the setup process.
   

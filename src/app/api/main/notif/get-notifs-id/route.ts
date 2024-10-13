@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getNotificationsById } from '../../../../../services/notifService';
-import { assertInt } from '@/utils/helper';
+import { assertInt } from '@/lib/helper';
 
 export async function POST(request: Request) {
     try {

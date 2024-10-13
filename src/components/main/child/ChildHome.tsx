@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaCalendarAlt, FaFileAlt, FaTrash, FaCheck } from 'react-icons/fa';
 import useSWR from 'swr';
-import { assertInt, fetcher } from '@/utils/helper';
+import { assertInt, fetcher } from '@/lib/helper';
 import TaskDetailsModal from '../modals/TaskDetailsModal';
 import { apiUpdateTaskAssignment } from '@/lib/apiHelper';
 import { useData } from '@/app/context/dataContext';
-import { capitalizeFirstLetter } from '@/utils/formater';
+import { capitalizeFirstLetter } from '@/lib/formater';
 
 interface ChildHomeProps {
   user: any;

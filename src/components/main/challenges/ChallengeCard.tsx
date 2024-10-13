@@ -2,7 +2,7 @@
   import { FaClock, FaUsers, FaGift, FaTrophy, FaArrowCircleDown, FaArrowCircleUp, FaComment, FaFileAlt, FaEdit, FaTrash } from 'react-icons/fa';
   import ChildCardHori from '../child/ChildCardHori'; // Assuming you have this component
   import { Challenge, Child } from '@/types/interface';
-  import { capitalizeFirstLetter, formatDateTime } from '@/utils/formater';
+  import { capitalizeFirstLetter, formatDateTime } from '@/lib/formater';
   import ConfirmModal from '../modals/ConfirmModal';
   import { apiDeleteChallenge } from '@/lib/apiHelper';
   import Alert from '../../Alert';

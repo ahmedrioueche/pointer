@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Task } from "@/types/interface";
 import { FaCheck, FaEdit, FaTrashAlt, FaUserPlus, FaCalendar, FaCalendarDay, FaInfoCircle, FaComment, FaTasks, FaHandPointer, FaUserTie, FaCalendarCheck, FaFileAlt, FaPlus, FaTimes } from "react-icons/fa";
-import { formatDateTime, getRelativeDate, capitalizeFirstLetter } from '@/utils/formater';
-import { getRandomBgColor } from '@/utils/helper';
+import { formatDateTime, getRelativeDate, capitalizeFirstLetter } from '@/lib/formater';
+import { getRandomBgColor } from '@/lib/helper';
 
 interface TaskCardProps extends Task {
   cardType: 

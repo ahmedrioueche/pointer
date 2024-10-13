@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { FaBell, FaEnvelope } from "react-icons/fa";
-import { capitalizeFirstLetter, formatDateTime } from "@/utils/formater";
+import { capitalizeFirstLetter, formatDateTime } from "@/lib/formater";
 import useSWR from "swr";
-import { fetcher_2 } from "@/utils/helper";
+import { fetcher_2 } from "@/lib/helper";
 import { apiMarkNotifRead } from "@/lib/apiHelper";
 import { Notif } from "@/types/interface";
 import { useRouter } from 'next/navigation';

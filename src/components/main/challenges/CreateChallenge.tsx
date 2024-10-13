@@ -4,10 +4,10 @@ import ChildCardHori from '../child/ChildCardHori';
 import { useData } from '@/app/context/dataContext';
 import AddRewardModal from '../modals/AddRewardModal'; // Assuming you have a Modal component
 import { Challenge, Child } from '@/types/interface';
-import { assertInt } from '@/utils/helper';
+import { assertInt } from '@/lib/helper';
 import { User } from 'lucide-react';
 import { Reward } from '@prisma/client';
-import { capitalizeFirstLetter } from '@/utils/formater';
+import { capitalizeFirstLetter } from '@/lib/formater';
 
 interface CreateChallengeProps {
   user : any;

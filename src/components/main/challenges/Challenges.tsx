@@ -7,7 +7,7 @@ import { useData } from '@/app/context/dataContext';
 import { apiCreateChallenge, apiSendNotification, apiUpdateChallenge } from '@/lib/apiHelper';
 import Alert from '../../Alert';
 import useSWR from 'swr';
-import { fetcher } from '@/utils/helper';
+import { fetcher } from '@/lib/helper';
 import ChallengeFetcher from './ChallengeFetcher';
 import EditChallengeModal from '../modals/EditChallengeModal';
 

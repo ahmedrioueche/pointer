@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { TaskCard } from './TaskCard';
 import { Notif, Task } from '@/types/interface';
 import { CreateTask } from './CreateTask';
-import { fetcher, generateUniqueId } from '@/utils/helper';
+import { fetcher, generateUniqueId } from '@/lib/helper';
 import useSWR from 'swr';
 import { apiAddTask, apiAssignTask, apiDeleteTask, apiSendNotification, apiUpdateTask } from '@/lib/apiHelper';
 import KidsModal from '../modals/KidsModal';

@@ -1,5 +1,5 @@
 import { unAssignTask } from '@/services/taskService'; // Import the service function
-import { assertInt } from '@/utils/helper';
+import { assertInt } from '@/lib/helper';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {

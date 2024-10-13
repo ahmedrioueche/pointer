@@ -6,11 +6,11 @@ import QuizForm from './QuizForm';
 import { Child, Notif, Quiz } from '@/types/interface';
 import { useData } from '@/app/context/dataContext';
 import AddQuizzesCard from './AddQuizzes';
-import { assertInt } from '@/utils/helper';
+import { assertInt } from '@/lib/helper';
 import EditQuizModal from '../modals/EditQuizModal';
 import Alert from '../../Alert';
 import { FaCheck, FaStar } from 'react-icons/fa';
-import { capitalizeFirstLetter } from '@/utils/formater';
+import { capitalizeFirstLetter } from '@/lib/formater';
 
 const Quizzes: React.FC<{user : any}> = ({user}) => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);

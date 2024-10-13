@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter, formatDateTime } from '@/utils/formater';
+import { capitalizeFirstLetter, formatDateTime } from '@/lib/formater';
 import { Reward, Task } from '@/types/interface';
 import React from 'react';
 import { FaTimes, FaTasks, FaGift, FaCalendarAlt, FaCheck, FaCommentDots, FaUserCheck, FaFileAlt } from 'react-icons/fa';

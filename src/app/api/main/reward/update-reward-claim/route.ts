@@ -1,4 +1,4 @@
-import { assertInt } from '@/utils/helper';
+import { assertInt } from '@/lib/helper';
 import { updateRewardClaimById } from '../../../../../services/rewardService'; // Import the service function
 import { NextResponse } from 'next/server';
 

@@ -6,7 +6,7 @@ import { Child, Task } from "../../types/interface";
 import TaskModal from './tasks/TaskModal';
 import AddCard from './cards/AddCard';
 import AddChildModal from './modals/AddChildModal';
-import { assertInt, fetcher, getRandomIcon } from '@/utils/helper';
+import { assertInt, fetcher, getRandomIcon } from '@/lib/helper';
 import { apiGetTasksByParentId, apiInsertChild } from '@/lib/apiHelper';
 import { useData } from '@/app/context/dataContext';
 

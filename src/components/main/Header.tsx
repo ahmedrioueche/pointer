@@ -8,7 +8,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import BudgetModal from './modals/BudgetModal';
 import { useData } from '@/app/context/dataContext';
 import { apiGetSettingsByParentId, apiPromptGemini } from '@/lib/apiHelper';
-import { assertPositive, getCurrencySymbol } from '@/utils/helper';
+import { assertPositive, getCurrencySymbol } from '@/lib/helper';
 
 const Header = ({ user, childData, isBudgetModalOpen}: any) => {
     const [showQuote, setShowQuote] = useState(false);

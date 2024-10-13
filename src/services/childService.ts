@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Child } from '@/types/interface';
-import { assertInt, generateRandomUsernamePassword, getRandomIcon as getRandomAvatar } from '@/utils/helper';
+import { assertInt, generateRandomUsernamePassword, getRandomIcon as getRandomAvatar } from '@/lib/helper';
 import { CHILDREN_AVATAR_COUNT } from '@/data/values';
 
 const prisma = new PrismaClient();

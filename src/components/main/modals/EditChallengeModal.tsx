@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaTrophy, FaTasks, FaGift, FaUsers, FaClipboard, FaClock, FaArrowCircleDown, FaArrowCircleUp, FaSpinner, FaTimes, FaPlus } from 'react-icons/fa';
 import ChildCardHori from '../child/ChildCardHori';
 import { Challenge, Child } from '@/types/interface';
-import { assertInt } from '@/utils/helper';
+import { assertInt } from '@/lib/helper';
 
 interface EditChallengeModalProps {
   user: any;

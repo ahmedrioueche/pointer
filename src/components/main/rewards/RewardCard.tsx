@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Reward, RewardCardProps } from "@/types/interface";
 import { FaCheck, FaEdit, FaTrashAlt, FaCalendar, FaCalendarDay, FaInfoCircle, FaComment, FaGift, FaHandPaper, FaUndo, FaTimesCircle, FaFileAlt, FaCalendarCheck, FaClipboardList } from "react-icons/fa";
-import { formatDateTime, capitalizeFirstLetter } from '@/utils/formater';
-import { getRandomBgColor } from '@/utils/helper';
+import { formatDateTime, capitalizeFirstLetter } from '@/lib/formater';
+import { getRandomBgColor } from '@/lib/helper';
 import Alert from '../../Alert';
 import Confetti from 'react-confetti';
 import { apiGetRewardData } from '@/lib/apiHelper';

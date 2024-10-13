@@ -1,6 +1,6 @@
 import { getChildById } from '@/services/childService';
 import { apiGetChildData, apiGetTasksByParentId } from '@/lib/apiHelper';
-import { fetcher } from '@/utils/helper';
+import { fetcher } from '@/lib/helper';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import useSWR from 'swr';
 

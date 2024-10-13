@@ -1,5 +1,5 @@
 import { Task } from '@/types/interface';
-import { assertInt } from '@/utils/helper';
+import { assertInt } from '@/lib/helper';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

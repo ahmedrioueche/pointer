@@ -1,4 +1,4 @@
-import { fetcher } from '@/utils/helper';
+import { fetcher } from '@/lib/helper';
 import React, { useEffect } from 'react';
 import useSWR from 'swr';
 

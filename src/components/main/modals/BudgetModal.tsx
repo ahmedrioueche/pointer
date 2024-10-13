@@ -5,7 +5,7 @@ import ChildCard from '../child/ChildCard'; // Assuming you have this component
 import { useData } from '@/app/context/dataContext';
 import ChildCardHori from '../child/ChildCardHori';
 import { apiGetSettingsByParentId, apiUpdateChild, apiUpdateSettings } from '@/lib/apiHelper';
-import { assertPositive } from '@/utils/helper';
+import { assertPositive } from '@/lib/helper';
 
 interface BudgetModalProps {
   user: any;

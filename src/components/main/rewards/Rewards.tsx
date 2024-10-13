@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Notif, Reward } from '@/types/interface';
 import { RewardCard } from './RewardCard';
-import { assertInt, fetcher, generateUniqueId } from '@/utils/helper';
+import { assertInt, fetcher, generateUniqueId } from '@/lib/helper';
 import { apiAddReward, apiClaimReward, apiDeleteReward, apiGetChildData, apiSendNotification, apiUnClaimReward, apiUpdateChild, apiUpdateReward } from '@/lib/apiHelper';
 import Alert from '../../Alert';
 import { useData } from '@/app/context/dataContext';

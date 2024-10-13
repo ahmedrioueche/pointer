@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FaTasks, FaUser, FaChevronDown, FaSpinner, FaCalendarDay, FaCalendarCheck, FaClock, FaCalendarAlt } from 'react-icons/fa';
 import { Task } from "../../../types/interface";
-import { capitalizeFirstLetter, formatDateTime } from '@/utils/formater';
+import { capitalizeFirstLetter, formatDateTime } from '@/lib/formater';
 
 interface CardProps {
   id?: number;

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { TaskCard } from './TaskCard';
 import { motion } from 'framer-motion';
 import useSWR from 'swr';
-import { fetcher } from '@/utils/helper';
+import { fetcher } from '@/lib/helper';
 import Alert from '../../Alert';
 import DetailsModal from '../modals/DetailsModal';
 import { useData } from '@/app/context/dataContext';

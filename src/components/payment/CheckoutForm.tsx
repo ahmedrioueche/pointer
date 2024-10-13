@@ -5,7 +5,7 @@ import { FaSun, FaMoon } from 'react-icons/fa';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import LoadingButton from '@/components/LoadingButton';
 import { payments } from '@/data/values';
-import { assertInt } from '@/utils/helper';
+import { assertInt } from '@/lib/helper';
 import { useTheme } from '@/app/context/ThemeContext';
 
 const CheckoutForm: React.FC = () => {

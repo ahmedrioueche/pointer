@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaTimes, FaPlus, FaCalendarAlt, FaTasks, FaFileAlt, FaEdit, FaTrash, FaCheck } from 'react-icons/fa';
 import TaskModal from '../tasks/TaskModal';
 import useSWR from 'swr';
-import { assertInt, fetcher } from '@/utils/helper';
+import { assertInt, fetcher } from '@/lib/helper';
 import { Task } from '@/types/interface';
-import { capitalizeFirstLetter } from '@/utils/formater';
+import { capitalizeFirstLetter } from '@/lib/formater';
 import TaskDetailsModal from './TaskDetailsModal';
 import { apiDeleteTask, apiUpdateTaskAssignment } from '@/lib/apiHelper';
 

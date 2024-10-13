@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaClipboardList, FaTimes } from 'react-icons/fa';
 import useSWR from 'swr';
-import { fetcher } from '@/utils/helper';
+import { fetcher } from '@/lib/helper';
 import { Task } from '@/types/interface';
 import { TaskCard } from '../tasks/TaskCard';
 import { motion } from 'framer-motion';

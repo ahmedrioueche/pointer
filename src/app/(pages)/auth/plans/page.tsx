@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { PricingCard } from '../../../components/PricingCard';
+import { PricingCard } from '../../../../components/PricingCard';
 import { apiInsertDB } from "@/lib/dbHelper";
 import { useSession } from 'next-auth/react';
-import Loading from '@/app/components/Loading';
+import Loading from '@/components/Loading';
 import { pricingOptions } from '@/data/text';
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { apiUpdateParent } from '@/lib/apiHelper';

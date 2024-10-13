@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import ChildCard from './child/ChildCard'; 
-import { Child, Task } from "../../../types/interface";
+import { Child, Task } from "../../types/interface";
 import TaskModal from './tasks/TaskModal';
 import AddCard from './cards/AddCard';
 import AddChildModal from './modals/AddChildModal';

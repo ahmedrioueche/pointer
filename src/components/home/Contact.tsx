@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
-import { sendContactForm } from '../../../lib/apiHelper'; // Adjust the import path as necessary
+import { sendContactForm } from '../../lib/apiHelper'; // Adjust the import path as necessary
 import Image from 'next/image'; // Assuming you're using Next.js for image optimization
 import { useTheme } from '@/app/context/ThemeContext';
 import { motion, useInView } from 'framer-motion';

@@ -3,7 +3,7 @@ import React, { useState, FormEvent, useEffect } from 'react';
 import { useRouter, useSearchParams  } from 'next/navigation';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import LoadingButton from '@/app/components/LoadingButton';
+import LoadingButton from '@/components/LoadingButton';
 import { payments } from '@/data/values';
 import { assertInt } from '@/utils/helper';
 import { useTheme } from '@/app/context/ThemeContext';

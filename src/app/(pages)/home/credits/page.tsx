@@ -1,8 +1,8 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import Navbar from "@/app/components/home/Navbar";
-import Footer from "@/app/components/Footer";
-import CreditCard from "@/app/components/CreditCard";
+import Navbar from "@/components/home/Navbar";
+import Footer from "@/components/Footer";
+import CreditCard from "@/components/CreditCard";
 
 const creditsData = [
   {

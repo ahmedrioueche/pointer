@@ -8,7 +8,7 @@
 */
 
 "use client";
-import Loading from '@/app/components/Loading';
+import Loading from '@/components/Loading';
 import { apiInsertDB } from '@/lib/dbHelper';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';

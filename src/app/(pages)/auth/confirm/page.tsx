@@ -2,11 +2,11 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
-import CustomSelect from '@/app/components/CustomSelect';
+import CustomSelect from '@/components/CustomSelect';
 import { useSession } from 'next-auth/react';
-import Loading from '@/app/components/Loading';
+import Loading from '@/components/Loading';
 import { apiInsertChild, apiUpdateParent } from '@/lib/apiHelper';
-import LoadingButton from '@/app/components/LoadingButton';
+import LoadingButton from '@/components/LoadingButton';
 import { Child } from '@/types/interface';
 import { useTheme } from '@/app/context/ThemeContext';
 

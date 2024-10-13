@@ -4,7 +4,7 @@ import { FaSun, FaMoon, FaGoogle, FaSpinner } from 'react-icons/fa';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import LoadingButton from '@/app/components/LoadingButton';
+import LoadingButton from '@/components/LoadingButton';
 import { useTheme } from '@/app/context/ThemeContext';
 import { apiTest } from '@/lib/apiHelper';
 

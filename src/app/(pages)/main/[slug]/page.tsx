@@ -2,13 +2,13 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Loading from '@/app/components/Loading';
-import Navbar from '@/app/components/main/Navbar';
-import SideMenu from '@/app/components/main/SideMenu';
+import Loading from '@/components/Loading';
+import Navbar from '@/components/main/Navbar';
+import SideMenu from '@/components/main/SideMenu';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import MainLoading from '@/app/components/main/MainLoading';
-import LoadingSkeleton from '@/app/components/LoadingSceleton';
+import MainLoading from '@/components/main/MainLoading';
+import LoadingSkeleton from '@/components/LoadingSceleton';
 import { DataProvider } from '@/app/context/dataContext';
 
 interface PageProps {
@@ -46,34 +46,34 @@ const Page = ({ params }: PageProps) => {
   useEffect(() => {
     switch (slug) {
       case 'home':
-        setComponent(() => lazy(() => import('@/app/components/main/Home')));
+        setComponent(() => lazy(() => import('@/components/main/Home')));
         break;
       case 'dashboard':
-        setComponent(() => lazy(() => import('@/app/components/main/Dashboard')));
+        setComponent(() => lazy(() => import('@/components/main/Dashboard')));
         break;
       case 'tasks':
-        setComponent(() => lazy(() => import('@/app/components/main/tasks/Tasks')));
+        setComponent(() => lazy(() => import('@/components/main/tasks/Tasks')));
         break;
       case 'rewards':
-        setComponent(() => lazy(() => import('@/app/components/main/rewards/Rewards')));
+        setComponent(() => lazy(() => import('@/components/main/rewards/Rewards')));
         break;
       case 'settings':
-        setComponent(() => lazy(() => import('@/app/components/main/Settings')));
+        setComponent(() => lazy(() => import('@/components/main/Settings')));
         break;
       case 'routines':
-        setComponent(() => lazy(() => import('@/app/components/main/routines/Routines')));
+        setComponent(() => lazy(() => import('@/components/main/routines/Routines')));
         break;
       case 'success':
-        setComponent(() => lazy(() => import('@/app/components/payment/Success')));
+        setComponent(() => lazy(() => import('@/components/payment/Success')));
         break;
       case 'challenges':
-        setComponent(() => lazy(() => import('@/app/components/main/challenges/Challenges')));
+        setComponent(() => lazy(() => import('@/components/main/challenges/Challenges')));
         break;
       case 'quizzes':
-        setComponent(() => lazy(() => import('@/app/components/main/quizzes/Quizzes')));
+        setComponent(() => lazy(() => import('@/components/main/quizzes/Quizzes')));
           break;
       default:
-        setComponent(() => lazy(() => import('@/app/components/main/Home')));
+        setComponent(() => lazy(() => import('@/components/main/Home')));
         break;
     }
   }, [slug]);

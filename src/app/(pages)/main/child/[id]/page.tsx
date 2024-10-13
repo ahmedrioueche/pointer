@@ -2,9 +2,9 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Loading from '@/app/components/Loading';
-import Navbar from '@/app/components/main/Navbar';
-import SideMenu from '@/app/components/main/SideMenu';
+import Loading from '@/components/Loading';
+import Navbar from '@/components/main/Navbar';
+import SideMenu from '@/components/main/SideMenu';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { DataProvider } from '@/app/context/dataContext';
@@ -37,7 +37,7 @@ const Page = ({ params }: PageProps) => {
   }
 
   useEffect(() => {
-    const Component = dynamic(() => import('@/app/components/main/child/ChildProfile'));
+    const Component = dynamic(() => import('@/components/main/child/ChildProfile'));
     setMainContainer(() => Component);
   }, [id]);
 

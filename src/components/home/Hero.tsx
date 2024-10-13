@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Modal from "./Modal";
-import { heroText } from "../../../data/text";
+import { heroText } from "../../data/text";
 import Image from "next/image"; 
 import { FaSpinner } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
